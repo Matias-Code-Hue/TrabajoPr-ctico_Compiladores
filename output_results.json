@@ -1,0 +1,824 @@
+[
+    {
+        "caso_id": "01",
+        "descripcion": "Servicio lento; luego el cliente dice «Ahora funciona bien».",
+        "sesiones": [
+            {
+                "id": "S01",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "Servicio lento; luego el cliente dice Ahora funciona bien.",
+                        "valoraciones": {
+                            "SERVICIO": "NEGATIVA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "NEGATIVA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "RESUELTO",
+                "entidades": [],
+                "correcciones": [],
+                "errores": [],
+                "tabla_simbolos": [],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "Servicio lento; luego el cliente dice Ahora funciona bien.",
+                        "tokens": [
+                            "Servicio",
+                            "lento",
+                            ";",
+                            "luego",
+                            "el",
+                            "cliente",
+                            "dice",
+                            "Ahora",
+                            "funciona",
+                            "bien",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S01",
+                        "semantica": "Valoraciones: {'SERVICIO': 'NEGATIVA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "02",
+        "descripcion": "«Me atendiste muy bien, pero sigo sin internet».",
+        "sesiones": [
+            {
+                "id": "S02",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "Me atendiste muy bien, pero sigo sin internet.",
+                        "valoraciones": {
+                            "SERVICIO": "POSITIVA",
+                            "ATENCION": "POSITIVA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "POSITIVA",
+                    "ATENCION": "POSITIVA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "TEMPORAL",
+                "entidades": [],
+                "correcciones": [],
+                "errores": [],
+                "tabla_simbolos": [],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "Me atendiste muy bien, pero sigo sin internet.",
+                        "tokens": [
+                            "Me",
+                            "atendiste",
+                            "muy",
+                            "bien",
+                            ",",
+                            "pero",
+                            "sigo",
+                            "sin",
+                            "internet",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S02",
+                        "semantica": "Valoraciones: {'SERVICIO': 'POSITIVA', 'ATENCION': 'POSITIVA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "03",
+        "descripcion": "«Ahora funciona, pero se corta todos los días».",
+        "sesiones": [
+            {
+                "id": "S03",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "Ahora funciona, pero se corta todos los días.",
+                        "valoraciones": {
+                            "SERVICIO": "SIN_EVIDENCIA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "SIN_EVIDENCIA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "TEMPORAL",
+                "entidades": [],
+                "correcciones": [],
+                "errores": [],
+                "tabla_simbolos": [],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "Ahora funciona, pero se corta todos los días.",
+                        "tokens": [
+                            "Ahora",
+                            "funciona",
+                            ",",
+                            "pero",
+                            "se",
+                            "corta",
+                            "todos",
+                            "los",
+                            "días",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S03",
+                        "semantica": "Valoraciones: {'SERVICIO': 'SIN_EVIDENCIA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "04",
+        "descripcion": "«No entendí la explicación, pero el agente fue amable».",
+        "sesiones": [
+            {
+                "id": "S04",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "No entendí la explicación, pero el agente fue amable.",
+                        "valoraciones": {
+                            "SERVICIO": "SIN_EVIDENCIA",
+                            "ATENCION": "NEGATIVA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "SIN_EVIDENCIA",
+                    "ATENCION": "NEGATIVA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "TEMPORAL",
+                "entidades": [],
+                "correcciones": [
+                    {
+                        "original": "explicación",
+                        "corregido": "clara",
+                        "turno": 1
+                    }
+                ],
+                "errores": [],
+                "tabla_simbolos": [],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "No entendí la explicación, pero el agente fue amable.",
+                        "tokens": [
+                            "No",
+                            "entendí",
+                            "la",
+                            "explicación",
+                            ",",
+                            "pero",
+                            "el",
+                            "agente",
+                            "fue",
+                            "amable",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S04",
+                        "semantica": "Valoraciones: {'SERVICIO': 'SIN_EVIDENCIA', 'ATENCION': 'NEGATIVA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "05",
+        "descripcion": "«El internet está lentto»; se menciona TK-204.",
+        "sesiones": [
+            {
+                "id": "S05",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "El internet está lentto; se menciona TK-204.",
+                        "valoraciones": {
+                            "SERVICIO": "NEGATIVA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "NEGATIVA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "NO_RESUELTO",
+                "entidades": [
+                    {
+                        "tipo": "TICKET",
+                        "valor": "TK-204",
+                        "turno": 1
+                    }
+                ],
+                "correcciones": [
+                    {
+                        "original": "lentto",
+                        "corregido": "lento",
+                        "turno": 1
+                    }
+                ],
+                "errores": [],
+                "tabla_simbolos": [
+                    {
+                        "nombre": "TK-204",
+                        "tipo": "TICKET",
+                        "sesion": "S05",
+                        "apariciones": [
+                            [
+                                1,
+                                37
+                            ]
+                        ]
+                    }
+                ],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "El internet está lentto; se menciona TK-204.",
+                        "tokens": [
+                            "El",
+                            "internet",
+                            "está",
+                            "lentto",
+                            ";",
+                            "se",
+                            "menciona",
+                            "TK-204",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S05",
+                        "semantica": "Valoraciones: {'SERVICIO': 'NEGATIVA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "06",
+        "descripcion": "AGENTE: «Mañana revisaremos TK-205»; CLIENTE: «Gracias».",
+        "sesiones": [
+            {
+                "id": "S06",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "AGENTE",
+                        "texto": "Mañana revisaremos TK-205.",
+                        "valoraciones": {
+                            "SERVICIO": "SIN_EVIDENCIA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    },
+                    {
+                        "turno": 2,
+                        "rol": "CLIENTE",
+                        "texto": "Gracias.",
+                        "valoraciones": {
+                            "SERVICIO": "SIN_EVIDENCIA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "SIN_EVIDENCIA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "PENDIENTE",
+                "entidades": [
+                    {
+                        "tipo": "TICKET",
+                        "valor": "TK-205",
+                        "turno": 1
+                    }
+                ],
+                "correcciones": [],
+                "errores": [],
+                "tabla_simbolos": [
+                    {
+                        "nombre": "TK-205",
+                        "tipo": "TICKET",
+                        "sesion": "S06",
+                        "apariciones": [
+                            [
+                                1,
+                                19
+                            ]
+                        ]
+                    }
+                ],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "Mañana revisaremos TK-205.",
+                        "tokens": [
+                            "Mañana",
+                            "revisaremos",
+                            "TK-205",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (AGENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S06",
+                        "semantica": "Valoraciones: {'SERVICIO': 'SIN_EVIDENCIA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    },
+                    {
+                        "turno": 2,
+                        "original": "Gracias.",
+                        "tokens": [
+                            "Gracias",
+                            "."
+                        ],
+                        "estructura": "Turno 2 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S06",
+                        "semantica": "Valoraciones: {'SERVICIO': 'SIN_EVIDENCIA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "07",
+        "descripcion": "Rol inválido SOPORTE entre dos mensajes válidos; luego otra sesión.",
+        "sesiones": [
+            {
+                "id": "S07",
+                "estado_analisis": "parcial",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "Hola",
+                        "valoraciones": {
+                            "SERVICIO": "SIN_EVIDENCIA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    },
+                    {
+                        "turno": 3,
+                        "rol": "CLIENTE",
+                        "texto": "Sigo con problemas.",
+                        "valoraciones": {
+                            "SERVICIO": "SIN_EVIDENCIA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "SIN_EVIDENCIA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "NO_CONFIRMADO",
+                "entidades": [],
+                "correcciones": [],
+                "errores": [
+                    "Turno rechazado o formato inválido en línea: 2 SOPORTE: Rol inválido"
+                ],
+                "tabla_simbolos": [],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "Hola",
+                        "tokens": [
+                            "Hola"
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S07",
+                        "semantica": "Valoraciones: {'SERVICIO': 'SIN_EVIDENCIA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    },
+                    {
+                        "turno": 0,
+                        "original": "2 SOPORTE: Rol inválido",
+                        "tokens": [],
+                        "estructura": "Rechazado (Rol inválido u orden inconsistente)",
+                        "operacion_simbolos": "Ninguna",
+                        "semantica": "Turno rechazado",
+                        "resultado": "RECHAZADO"
+                    },
+                    {
+                        "turno": 3,
+                        "original": "Sigo con problemas.",
+                        "tokens": [
+                            "Sigo",
+                            "con",
+                            "problemas",
+                            "."
+                        ],
+                        "estructura": "Turno 3 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S07",
+                        "semantica": "Valoraciones: {'SERVICIO': 'SIN_EVIDENCIA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "08",
+        "descripcion": "Con diccionario {lenta, lento}: CLIENTE: «lent». Empate a distancia 1.",
+        "sesiones": [
+            {
+                "id": "S08",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "lent",
+                        "valoraciones": {
+                            "SERVICIO": "NEGATIVA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    },
+                    {
+                        "turno": 2,
+                        "rol": "CLIENTE",
+                        "texto": "lento",
+                        "valoraciones": {
+                            "SERVICIO": "NEGATIVA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "NEGATIVA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "NO_RESUELTO",
+                "entidades": [],
+                "correcciones": [
+                    {
+                        "original": "lent",
+                        "corregido": "lento",
+                        "turno": 1
+                    }
+                ],
+                "errores": [],
+                "tabla_simbolos": [],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "lent",
+                        "tokens": [
+                            "lent"
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S08",
+                        "semantica": "Valoraciones: {'SERVICIO': 'NEGATIVA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    },
+                    {
+                        "turno": 2,
+                        "original": "lento",
+                        "tokens": [
+                            "lento"
+                        ],
+                        "estructura": "Turno 2 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S08",
+                        "semantica": "Valoraciones: {'SERVICIO': 'NEGATIVA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "09",
+        "descripcion": "Caso propio: Contraste y negación (servicio no malo pero cortes)",
+        "sesiones": [
+            {
+                "id": "S09",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "El servicio no es malo, pero hay cortes.",
+                        "valoraciones": {
+                            "SERVICIO": "NEGATIVA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "NEGATIVA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "TEMPORAL",
+                "entidades": [],
+                "correcciones": [
+                    {
+                        "original": "malo",
+                        "corregido": "mal",
+                        "turno": 1
+                    }
+                ],
+                "errores": [],
+                "tabla_simbolos": [],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "El servicio no es malo, pero hay cortes.",
+                        "tokens": [
+                            "El",
+                            "servicio",
+                            "no",
+                            "es",
+                            "malo",
+                            ",",
+                            "pero",
+                            "hay",
+                            "cortes",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S09",
+                        "semantica": "Valoraciones: {'SERVICIO': 'NEGATIVA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "10",
+        "descripcion": "Caso propio: Corrección y múltiples tickets",
+        "sesiones": [
+            {
+                "id": "S10",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "Tengo un corte en TK-9999 y va lentto.",
+                        "valoraciones": {
+                            "SERVICIO": "NEGATIVA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "NEGATIVA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "NO_RESUELTO",
+                "entidades": [
+                    {
+                        "tipo": "TICKET",
+                        "valor": "TK-9999",
+                        "turno": 1
+                    }
+                ],
+                "correcciones": [
+                    {
+                        "original": "lentto",
+                        "corregido": "lento",
+                        "turno": 1
+                    }
+                ],
+                "errores": [],
+                "tabla_simbolos": [
+                    {
+                        "nombre": "TK-9999",
+                        "tipo": "TICKET",
+                        "sesion": "S10",
+                        "apariciones": [
+                            [
+                                1,
+                                18
+                            ]
+                        ]
+                    }
+                ],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "Tengo un corte en TK-9999 y va lentto.",
+                        "tokens": [
+                            "Tengo",
+                            "un",
+                            "corte",
+                            "en",
+                            "TK-9999",
+                            "y",
+                            "va",
+                            "lentto",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S10",
+                        "semantica": "Valoraciones: {'SERVICIO': 'NEGATIVA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "11",
+        "descripcion": "Caso propio: Turnos múltiples con resolución",
+        "sesiones": [
+            {
+                "id": "S11",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "No funciona.",
+                        "valoraciones": {
+                            "SERVICIO": "SIN_EVIDENCIA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    },
+                    {
+                        "turno": 2,
+                        "rol": "AGENTE",
+                        "texto": "Reinicie el router.",
+                        "valoraciones": {
+                            "SERVICIO": "SIN_EVIDENCIA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    },
+                    {
+                        "turno": 3,
+                        "rol": "CLIENTE",
+                        "texto": "Ahora funciona bien.",
+                        "valoraciones": {
+                            "SERVICIO": "POSITIVA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "POSITIVA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "RESUELTO",
+                "entidades": [],
+                "correcciones": [],
+                "errores": [],
+                "tabla_simbolos": [],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "No funciona.",
+                        "tokens": [
+                            "No",
+                            "funciona",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S11",
+                        "semantica": "Valoraciones: {'SERVICIO': 'SIN_EVIDENCIA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    },
+                    {
+                        "turno": 2,
+                        "original": "Reinicie el router.",
+                        "tokens": [
+                            "Reinicie",
+                            "el",
+                            "router",
+                            "."
+                        ],
+                        "estructura": "Turno 2 (AGENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S11",
+                        "semantica": "Valoraciones: {'SERVICIO': 'SIN_EVIDENCIA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    },
+                    {
+                        "turno": 3,
+                        "original": "Ahora funciona bien.",
+                        "tokens": [
+                            "Ahora",
+                            "funciona",
+                            "bien",
+                            "."
+                        ],
+                        "estructura": "Turno 3 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S11",
+                        "semantica": "Valoraciones: {'SERVICIO': 'POSITIVA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "caso_id": "12",
+        "descripcion": "Caso propio: Regresión de funcionamiento correcto",
+        "sesiones": [
+            {
+                "id": "S12",
+                "estado_analisis": "completo",
+                "evaluaciones_turnos": [
+                    {
+                        "turno": 1,
+                        "rol": "CLIENTE",
+                        "texto": "El servicio funciona bien.",
+                        "valoraciones": {
+                            "SERVICIO": "POSITIVA",
+                            "ATENCION": "SIN_EVIDENCIA",
+                            "CLARIDAD": "SIN_EVIDENCIA"
+                        }
+                    }
+                ],
+                "resumen_aspectos": {
+                    "SERVICIO": "POSITIVA",
+                    "ATENCION": "SIN_EVIDENCIA",
+                    "CLARIDAD": "SIN_EVIDENCIA"
+                },
+                "estado": "RESUELTO",
+                "entidades": [],
+                "correcciones": [],
+                "errores": [],
+                "tabla_simbolos": [],
+                "traza": [
+                    {
+                        "turno": 1,
+                        "original": "El servicio funciona bien.",
+                        "tokens": [
+                            "El",
+                            "servicio",
+                            "funciona",
+                            "bien",
+                            "."
+                        ],
+                        "estructura": "Turno 1 (CLIENTE): Cláusula reconocida",
+                        "operacion_simbolos": "Inserción/Consulta de tickets en sesión S12",
+                        "semantica": "Valoraciones: {'SERVICIO': 'POSITIVA', 'ATENCION': 'SIN_EVIDENCIA', 'CLARIDAD': 'SIN_EVIDENCIA'}",
+                        "resultado": "OK"
+                    }
+                ]
+            }
+        ]
+    }
+]

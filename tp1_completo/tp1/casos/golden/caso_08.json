@@ -1,0 +1,134 @@
+{
+  "catalogo_reglas": {
+    "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|T_FUTURO] ⇒ compromiso futuro",
+    "R-COP": "sujeto [V_COPULA] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
+    "R-CORTE": "SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (recurrente si hay frecuencia)",
+    "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
+    "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
+    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente",
+    "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
+    "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
+    "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
+    "R-MEN": "sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA",
+    "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
+    "R-SEG-ADJ": "V_SEGUIR modif ⇒ SERVICIO; «sigue» + adjetivo negativo = FALLA, + positivo = OK",
+    "R-SEG-SIN": "V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA",
+    "R-SOLIC": "V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-SUJ": "sujeto ⇒ aspecto: ASP_SERV→SERVICIO, ASP_ATEN→ATENCION, ASP_CLAR→CLARIDAD, AGENTE→ATENCION",
+    "R-TICKET": "TICKET_PAL [V_COPULA] TICKET | TICKET ⇒ referencia a un ticket (entidad)"
+  },
+  "errores_globales": [],
+  "lote": {
+    "archivo": "caso_08.txt",
+    "completas": 1,
+    "parciales": 0,
+    "sesiones": 1
+  },
+  "sesiones": [
+    {
+      "analisis": "COMPLETO",
+      "correcciones": [
+        {
+          "accion": "EMPATE",
+          "candidatos": [
+            "lenta",
+            "lento"
+          ],
+          "desp": 11,
+          "normalizado": "lent",
+          "original": "lent",
+          "resultado": "lent",
+          "turno": 1
+        }
+      ],
+      "entidades": {
+        "participantes": [
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 1
+              }
+            ],
+            "atributos": {},
+            "clave": "CLIENTE",
+            "tipo": "PARTICIPANTE"
+          }
+        ],
+        "tickets": []
+      },
+      "errores": [],
+      "estado": {
+        "evidencias": [],
+        "regla": "R-EST-NC",
+        "valor": "NO_CONFIRMADO"
+      },
+      "evidencias": [],
+      "id": "S01",
+      "no_interpretado": [
+        {
+          "desp": 11,
+          "lexema": "lent",
+          "motivo": "EMPATE_LEVENSHTEIN",
+          "turno": 1
+        }
+      ],
+      "resumen_aspectos": {
+        "ATENCION": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "CLARIDAD": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "SERVICIO": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        }
+      },
+      "turnos": [
+        {
+          "clausulas": [],
+          "estructura": null,
+          "linea": 2,
+          "no_interpretado": [
+            {
+              "desp": 11,
+              "lexema": "lent",
+              "motivo": "EMPATE_LEVENSHTEIN",
+              "turno": 1
+            }
+          ],
+          "numero": 1,
+          "rol": "CLIENTE",
+          "texto": "lent",
+          "tokens": [
+            {
+              "canonico": null,
+              "categoria": "PALABRA",
+              "desp": 11,
+              "lexema": "lent",
+              "normalizado": "lent"
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        }
+      ]
+    }
+  ]
+}

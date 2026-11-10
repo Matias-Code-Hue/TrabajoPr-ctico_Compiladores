@@ -1,0 +1,4 @@
+SESION S01
+1 CLIENTE: El internet está lentto.
+2 AGENTE: Su ticket es TK-204.
+FIN

@@ -1,0 +1,355 @@
+{
+  "catalogo_reglas": {
+    "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|T_FUTURO] ⇒ compromiso futuro",
+    "R-COP": "sujeto [V_COPULA] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
+    "R-CORTE": "SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (recurrente si hay frecuencia)",
+    "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
+    "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
+    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente",
+    "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
+    "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
+    "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
+    "R-MEN": "sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA",
+    "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
+    "R-SEG-ADJ": "V_SEGUIR modif ⇒ SERVICIO; «sigue» + adjetivo negativo = FALLA, + positivo = OK",
+    "R-SEG-SIN": "V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA",
+    "R-SOLIC": "V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-SUJ": "sujeto ⇒ aspecto: ASP_SERV→SERVICIO, ASP_ATEN→ATENCION, ASP_CLAR→CLARIDAD, AGENTE→ATENCION",
+    "R-TICKET": "TICKET_PAL [V_COPULA] TICKET | TICKET ⇒ referencia a un ticket (entidad)"
+  },
+  "errores_globales": [],
+  "lote": {
+    "archivo": "caso_01.txt",
+    "completas": 1,
+    "parciales": 0,
+    "sesiones": 1
+  },
+  "sesiones": [
+    {
+      "analisis": "COMPLETO",
+      "correcciones": [],
+      "entidades": {
+        "participantes": [
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 1
+              },
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 3
+              }
+            ],
+            "atributos": {},
+            "clave": "CLIENTE",
+            "tipo": "PARTICIPANTE"
+          },
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "AGENTE",
+                "turno": 2
+              }
+            ],
+            "atributos": {},
+            "clave": "AGENTE",
+            "tipo": "PARTICIPANTE"
+          }
+        ],
+        "tickets": []
+      },
+      "errores": [],
+      "estado": {
+        "evidencias": [
+          "C3.1"
+        ],
+        "regla": "R-EST-RES",
+        "valor": "RESUELTO"
+      },
+      "evidencias": [
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
+          "declaracion": null,
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "El servicio está lento",
+          "hasta": 33,
+          "id": "C1.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-SUJ",
+            "R-COP"
+          ],
+          "temporal": null,
+          "tipo": "VALORACION",
+          "turno": 1,
+          "valoracion": "NEGATIVA"
+        },
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
+          "declaracion": "OK",
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "Ahora funciona bien",
+          "hasta": 30,
+          "id": "C3.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-FUNC",
+            "R-AHORA"
+          ],
+          "temporal": "AHORA",
+          "tipo": "FUNCIONAMIENTO",
+          "turno": 3,
+          "valoracion": "POSITIVA"
+        }
+      ],
+      "id": "S01",
+      "no_interpretado": [],
+      "resumen_aspectos": {
+        "ATENCION": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "CLARIDAD": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "SERVICIO": {
+          "evidencias": [
+            "C1.1",
+            "C3.1"
+          ],
+          "opiniones_agente": [],
+          "valoracion": "MIXTA"
+        }
+      },
+      "turnos": [
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": null,
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "El servicio está lento",
+              "hasta": 33,
+              "id": "C1.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SUJ",
+                "R-COP"
+              ],
+              "temporal": null,
+              "tipo": "VALORACION",
+              "turno": 1,
+              "valoracion": "NEGATIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[ASP_SERV«servicio»] pred_s[V_COPULA«está» modif[adj[ADJ_NEG«lento»]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 2,
+          "no_interpretado": [],
+          "numero": 1,
+          "rol": "CLIENTE",
+          "texto": "El servicio está lento.",
+          "tokens": [
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 11,
+              "lexema": "El",
+              "normalizado": "el"
+            },
+            {
+              "canonico": "SERVICIO",
+              "categoria": "ASP_SERV",
+              "desp": 14,
+              "lexema": "servicio",
+              "normalizado": "servicio"
+            },
+            {
+              "canonico": "SER_ESTAR",
+              "categoria": "V_COPULA",
+              "desp": 23,
+              "lexema": "está",
+              "normalizado": "esta"
+            },
+            {
+              "canonico": "LENTO",
+              "categoria": "ADJ_NEG",
+              "desp": 28,
+              "lexema": "lento",
+              "normalizado": "lento"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 33,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "NEGATIVA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "AGENTE",
+              "aspecto": null,
+              "conector": null,
+              "declaracion": null,
+              "desde": 10,
+              "entidades": [
+                "ROUTER"
+              ],
+              "fragmento": "Reinicie el router",
+              "hasta": 28,
+              "id": "C2.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SOLIC"
+              ],
+              "temporal": null,
+              "tipo": "SOLICITUD",
+              "turno": 2,
+              "valoracion": null
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_SOLICITUD«Reinicie» obj_router[ROUTER«router»]]]]] texto_r[PUNTO«.»]]",
+          "linea": 3,
+          "no_interpretado": [],
+          "numero": 2,
+          "rol": "AGENTE",
+          "texto": "Reinicie el router.",
+          "tokens": [
+            {
+              "canonico": "REINICIAR",
+              "categoria": "V_SOLICITUD",
+              "desp": 10,
+              "lexema": "Reinicie",
+              "normalizado": "reinicie"
+            },
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 19,
+              "lexema": "el",
+              "normalizado": "el"
+            },
+            {
+              "canonico": "ROUTER",
+              "categoria": "ROUTER",
+              "desp": 22,
+              "lexema": "router",
+              "normalizado": "router"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 28,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": "OK",
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "Ahora funciona bien",
+              "hasta": 30,
+              "id": "C3.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-FUNC",
+                "R-AHORA"
+              ],
+              "temporal": "AHORA",
+              "tipo": "FUNCIONAMIENTO",
+              "turno": 3,
+              "valoracion": "POSITIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 4,
+          "no_interpretado": [],
+          "numero": 3,
+          "rol": "CLIENTE",
+          "texto": "Ahora funciona bien.",
+          "tokens": [
+            {
+              "canonico": "AHORA",
+              "categoria": "T_AHORA",
+              "desp": 11,
+              "lexema": "Ahora",
+              "normalizado": "ahora"
+            },
+            {
+              "canonico": "FUNCIONAR",
+              "categoria": "V_FUNC",
+              "desp": 17,
+              "lexema": "funciona",
+              "normalizado": "funciona"
+            },
+            {
+              "canonico": "BUENO",
+              "categoria": "ADJ_POS",
+              "desp": 26,
+              "lexema": "bien",
+              "normalizado": "bien"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 30,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "POSITIVA"
+          }
+        }
+      ]
+    }
+  ]
+}

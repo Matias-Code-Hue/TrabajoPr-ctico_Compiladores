@@ -1,0 +1,8 @@
+SESION S01
+1 CLIENTE: El servicio está lento.
+2 SOPORTE: Reinicie el router.
+3 CLIENTE: Ahora funciona bien.
+FIN
+SESION S02
+1 CLIENTE: Sigo sin internet.
+FIN

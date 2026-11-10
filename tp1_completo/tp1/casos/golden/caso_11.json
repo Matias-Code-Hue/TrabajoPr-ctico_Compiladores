@@ -1,0 +1,276 @@
+{
+  "catalogo_reglas": {
+    "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|T_FUTURO] ⇒ compromiso futuro",
+    "R-COP": "sujeto [V_COPULA] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
+    "R-CORTE": "SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (recurrente si hay frecuencia)",
+    "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
+    "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
+    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente",
+    "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
+    "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
+    "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
+    "R-MEN": "sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA",
+    "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
+    "R-SEG-ADJ": "V_SEGUIR modif ⇒ SERVICIO; «sigue» + adjetivo negativo = FALLA, + positivo = OK",
+    "R-SEG-SIN": "V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA",
+    "R-SOLIC": "V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-SUJ": "sujeto ⇒ aspecto: ASP_SERV→SERVICIO, ASP_ATEN→ATENCION, ASP_CLAR→CLARIDAD, AGENTE→ATENCION",
+    "R-TICKET": "TICKET_PAL [V_COPULA] TICKET | TICKET ⇒ referencia a un ticket (entidad)"
+  },
+  "errores_globales": [],
+  "lote": {
+    "archivo": "caso_11.txt",
+    "completas": 1,
+    "parciales": 0,
+    "sesiones": 1
+  },
+  "sesiones": [
+    {
+      "analisis": "COMPLETO",
+      "correcciones": [],
+      "entidades": {
+        "participantes": [
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 1
+              },
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 2
+              }
+            ],
+            "atributos": {},
+            "clave": "CLIENTE",
+            "tipo": "PARTICIPANTE"
+          }
+        ],
+        "tickets": []
+      },
+      "errores": [
+        {
+          "codigo": "SINTAXIS",
+          "desp": 14,
+          "detalle": "token ROUTER inesperado al analizar <texto>",
+          "tipo": "SINTAXIS",
+          "turno": 1
+        }
+      ],
+      "estado": {
+        "evidencias": [],
+        "regla": "R-EST-NC",
+        "valor": "NO_CONFIRMADO"
+      },
+      "evidencias": [],
+      "id": "S01",
+      "no_interpretado": [
+        {
+          "desp": 14,
+          "lexema": "router",
+          "motivo": "FUERA_DE_GRAMATICA",
+          "turno": 1
+        },
+        {
+          "desp": 21,
+          "lexema": "hace",
+          "motivo": "PALABRA_DESCONOCIDA",
+          "turno": 1
+        },
+        {
+          "desp": 26,
+          "lexema": "ruidos",
+          "motivo": "PALABRA_DESCONOCIDA",
+          "turno": 1
+        },
+        {
+          "desp": 33,
+          "lexema": "raros",
+          "motivo": "PALABRA_DESCONOCIDA",
+          "turno": 1
+        },
+        {
+          "desp": 11,
+          "lexema": "Muchas",
+          "motivo": "PALABRA_DESCONOCIDA",
+          "turno": 2
+        }
+      ],
+      "resumen_aspectos": {
+        "ATENCION": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "CLARIDAD": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "SERVICIO": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        }
+      },
+      "turnos": [
+        {
+          "clausulas": [],
+          "estructura": "texto!ERROR",
+          "linea": 2,
+          "no_interpretado": [
+            {
+              "desp": 14,
+              "lexema": "router",
+              "motivo": "FUERA_DE_GRAMATICA",
+              "turno": 1
+            },
+            {
+              "desp": 21,
+              "lexema": "hace",
+              "motivo": "PALABRA_DESCONOCIDA",
+              "turno": 1
+            },
+            {
+              "desp": 26,
+              "lexema": "ruidos",
+              "motivo": "PALABRA_DESCONOCIDA",
+              "turno": 1
+            },
+            {
+              "desp": 33,
+              "lexema": "raros",
+              "motivo": "PALABRA_DESCONOCIDA",
+              "turno": 1
+            }
+          ],
+          "numero": 1,
+          "rol": "CLIENTE",
+          "texto": "Mi router hace ruidos raros.",
+          "tokens": [
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 11,
+              "lexema": "Mi",
+              "normalizado": "mi"
+            },
+            {
+              "canonico": "ROUTER",
+              "categoria": "ROUTER",
+              "desp": 14,
+              "lexema": "router",
+              "normalizado": "router"
+            },
+            {
+              "canonico": null,
+              "categoria": "PALABRA",
+              "desp": 21,
+              "lexema": "hace",
+              "normalizado": "hace"
+            },
+            {
+              "canonico": null,
+              "categoria": "PALABRA",
+              "desp": 26,
+              "lexema": "ruidos",
+              "normalizado": "ruidos"
+            },
+            {
+              "canonico": null,
+              "categoria": "PALABRA",
+              "desp": 33,
+              "lexema": "raros",
+              "normalizado": "raros"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 38,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": null,
+              "conector": null,
+              "declaracion": null,
+              "desde": 18,
+              "entidades": [],
+              "fragmento": "gracias",
+              "hasta": 25,
+              "id": "C2.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-CORT"
+              ],
+              "temporal": null,
+              "tipo": "CORTESIA",
+              "turno": 2,
+              "valoracion": null
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[CORTESIA«gracias»]]] texto_r[PUNTO«.»]]",
+          "linea": 3,
+          "no_interpretado": [
+            {
+              "desp": 11,
+              "lexema": "Muchas",
+              "motivo": "PALABRA_DESCONOCIDA",
+              "turno": 2
+            }
+          ],
+          "numero": 2,
+          "rol": "CLIENTE",
+          "texto": "Muchas gracias.",
+          "tokens": [
+            {
+              "canonico": null,
+              "categoria": "PALABRA",
+              "desp": 11,
+              "lexema": "Muchas",
+              "normalizado": "muchas"
+            },
+            {
+              "canonico": "GRACIAS",
+              "categoria": "CORTESIA",
+              "desp": 18,
+              "lexema": "gracias",
+              "normalizado": "gracias"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 25,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,271 @@
+{
+  "catalogo_reglas": {
+    "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|T_FUTURO] ⇒ compromiso futuro",
+    "R-COP": "sujeto [V_COPULA] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
+    "R-CORTE": "SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (recurrente si hay frecuencia)",
+    "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
+    "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
+    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente",
+    "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
+    "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
+    "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
+    "R-MEN": "sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA",
+    "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
+    "R-SEG-ADJ": "V_SEGUIR modif ⇒ SERVICIO; «sigue» + adjetivo negativo = FALLA, + positivo = OK",
+    "R-SEG-SIN": "V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA",
+    "R-SOLIC": "V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-SUJ": "sujeto ⇒ aspecto: ASP_SERV→SERVICIO, ASP_ATEN→ATENCION, ASP_CLAR→CLARIDAD, AGENTE→ATENCION",
+    "R-TICKET": "TICKET_PAL [V_COPULA] TICKET | TICKET ⇒ referencia a un ticket (entidad)"
+  },
+  "errores_globales": [],
+  "lote": {
+    "archivo": "caso_04.txt",
+    "completas": 1,
+    "parciales": 0,
+    "sesiones": 1
+  },
+  "sesiones": [
+    {
+      "analisis": "COMPLETO",
+      "correcciones": [],
+      "entidades": {
+        "participantes": [
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 1
+              }
+            ],
+            "atributos": {},
+            "clave": "CLIENTE",
+            "tipo": "PARTICIPANTE"
+          }
+        ],
+        "tickets": []
+      },
+      "errores": [],
+      "estado": {
+        "evidencias": [],
+        "regla": "R-EST-NC",
+        "valor": "NO_CONFIRMADO"
+      },
+      "evidencias": [
+        {
+          "actor": "CLIENTE",
+          "aspecto": "CLARIDAD",
+          "conector": null,
+          "declaracion": null,
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "No entendí la explicación",
+          "hasta": 36,
+          "id": "C1.1",
+          "intensidad": null,
+          "negada": true,
+          "reglas": [
+            "R-ENT",
+            "R-NEG"
+          ],
+          "temporal": null,
+          "tipo": "VALORACION",
+          "turno": 1,
+          "valoracion": "NEGATIVA"
+        },
+        {
+          "actor": "CLIENTE",
+          "aspecto": "ATENCION",
+          "conector": "PERO",
+          "declaracion": null,
+          "desde": 43,
+          "en_contraste_con": "C1.1",
+          "entidades": [],
+          "fragmento": "el agente fue amable",
+          "hasta": 63,
+          "id": "C1.2",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-SUJ",
+            "R-COP",
+            "R-PERO"
+          ],
+          "temporal": null,
+          "tipo": "VALORACION",
+          "turno": 1,
+          "valoracion": "POSITIVA"
+        }
+      ],
+      "id": "S01",
+      "no_interpretado": [],
+      "resumen_aspectos": {
+        "ATENCION": {
+          "evidencias": [
+            "C1.2"
+          ],
+          "opiniones_agente": [],
+          "valoracion": "POSITIVA"
+        },
+        "CLARIDAD": {
+          "evidencias": [
+            "C1.1"
+          ],
+          "opiniones_agente": [],
+          "valoracion": "NEGATIVA"
+        },
+        "SERVICIO": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        }
+      },
+      "turnos": [
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "CLARIDAD",
+              "conector": null,
+              "declaracion": null,
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "No entendí la explicación",
+              "hasta": 36,
+              "id": "C1.1",
+              "intensidad": null,
+              "negada": true,
+              "reglas": [
+                "R-ENT",
+                "R-NEG"
+              ],
+              "temporal": null,
+              "tipo": "VALORACION",
+              "turno": 1,
+              "valoracion": "NEGATIVA"
+            },
+            {
+              "actor": "CLIENTE",
+              "aspecto": "ATENCION",
+              "conector": "PERO",
+              "declaracion": null,
+              "desde": 43,
+              "en_contraste_con": "C1.1",
+              "entidades": [],
+              "fragmento": "el agente fue amable",
+              "hasta": 63,
+              "id": "C1.2",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SUJ",
+                "R-COP",
+                "R-PERO"
+              ],
+              "temporal": null,
+              "tipo": "VALORACION",
+              "turno": 1,
+              "valoracion": "POSITIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[NEG«No» pred_neg[V_ENTENDER«entendí» obj_clar[ASP_CLAR«explicación»]]]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[sujeto[AGENTE«agente»] pred_s[V_COPULA«fue» modif[adj[ADJ_POS«amable»]]]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 2,
+          "no_interpretado": [],
+          "numero": 1,
+          "rol": "CLIENTE",
+          "texto": "No entendí la explicación, pero el agente fue amable.",
+          "tokens": [
+            {
+              "canonico": "NO",
+              "categoria": "NEG",
+              "desp": 11,
+              "lexema": "No",
+              "normalizado": "no"
+            },
+            {
+              "canonico": "ENTENDER",
+              "categoria": "V_ENTENDER",
+              "desp": 14,
+              "lexema": "entendí",
+              "normalizado": "entendi"
+            },
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 22,
+              "lexema": "la",
+              "normalizado": "la"
+            },
+            {
+              "canonico": "CLARIDAD",
+              "categoria": "ASP_CLAR",
+              "desp": 25,
+              "lexema": "explicación",
+              "normalizado": "explicacion"
+            },
+            {
+              "canonico": null,
+              "categoria": "COMA",
+              "desp": 36,
+              "lexema": ",",
+              "normalizado": ","
+            },
+            {
+              "canonico": "PERO",
+              "categoria": "PERO",
+              "desp": 38,
+              "lexema": "pero",
+              "normalizado": "pero"
+            },
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 43,
+              "lexema": "el",
+              "normalizado": "el"
+            },
+            {
+              "canonico": "AGENTE",
+              "categoria": "AGENTE",
+              "desp": 46,
+              "lexema": "agente",
+              "normalizado": "agente"
+            },
+            {
+              "canonico": "SER_ESTAR",
+              "categoria": "V_COPULA",
+              "desp": 53,
+              "lexema": "fue",
+              "normalizado": "fue"
+            },
+            {
+              "canonico": "AMABLE",
+              "categoria": "ADJ_POS",
+              "desp": 57,
+              "lexema": "amable",
+              "normalizado": "amable"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 63,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "POSITIVA",
+            "CLARIDAD": "NEGATIVA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+SESION S01
+1 CLIENTE: El servicio no funciona, pero la atención fue excelente.
+2 AGENTE: Reinicie el router.
+3 CLIENTE: Sigo sin internet.
+FIN

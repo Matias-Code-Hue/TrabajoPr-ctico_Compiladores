@@ -1,0 +1,83 @@
+══ SESION S01 · análisis PARCIAL ════════════════════════════════════════
+  T1 CLIENTE «Ticket TK-12 sin respuesta.»
+       ⇒ SIN_EVIDENCIA en los tres aspectos
+  T3 CLIENTE «Ahora funciona bien.»
+       ⇒ SERVICIO: POSITIVA
+  Resumen por aspecto (evidencia del CLIENTE):
+     SERVICIO  POSITIVA       C3.1
+     ATENCION  SIN_EVIDENCIA  
+     CLARIDAD  SIN_EVIDENCIA  
+  Estado: RESUELTO  [R-EST-RES]  evidencias: C3.1
+  Entidades: tickets=—; participantes=CLIENTE
+  Error FORMATO/ORDEN_INCONSISTENTE (línea 2): turno 2, se esperaba 1
+  Error FORMATO/ROL_INVALIDO (línea 4): rol 'SOPORTE': debe ser CLIENTE o AGENTE
+  Error LEXICO/TICKET_MAL_FORMADO (T1@18): «TK-12» no es un lexema válido
+  Error SINTAXIS/SINTAXIS (T1@24): token NEG inesperado al analizar <tk_op>
+  NO_INTERPRETADO: T1@11 «Ticket» (FUERA_DE_GRAMATICA)
+  NO_INTERPRETADO: T1@18 «TK-12» (TICKET_MAL_FORMADO)
+  NO_INTERPRETADO: T1@24 «sin» (FUERA_DE_GRAMATICA)
+  NO_INTERPRETADO: T1@28 «respuesta» (PALABRA_DESCONOCIDA)
+
+══ SESION S02 · análisis COMPLETO ════════════════════════════════════════
+  T1 CLIENTE «Sigo sin internet.»
+       ⇒ SERVICIO: NEGATIVA
+  Resumen por aspecto (evidencia del CLIENTE):
+     SERVICIO  NEGATIVA       C1.1
+     ATENCION  SIN_EVIDENCIA  
+     CLARIDAD  SIN_EVIDENCIA  
+  Estado: NO_RESUELTO  [R-EST-NORES]  evidencias: C1.1
+  Entidades: tickets=—; participantes=CLIENTE
+
+Lote: 2 sesiones (1 completas, 1 parciales) → ejemplos/salida_caso_12.json
+
+┌── TRAZA DE LA SESIÓN S01 ────────────────────────────────────────
+│ Turno 1 · CLIENTE · línea 3
+│  [1] Texto original : 1 CLIENTE: Ticket TK-12 sin respuesta.
+│  [2] Tokens         : TICKET_PAL«Ticket»@11=TICKET  TICKET_MAL«TK-12»@18  NEG«sin»@24=SIN  PALABRA«respuesta»@28  PUNTO«.»@37
+│      corrector      : «respuesta» → SIN_CANDIDATO
+│  [3] Estructura     : texto[oracion[clausula[nucleo[TICKET_PAL«Ticket»]]] texto_r[PUNTO«.»]]
+│        · M[texto, TICKET_PAL] = texto → oracion texto_r
+│        · M[oracion, TICKET_PAL] = oracion → clausula cola
+│        · M[clausula, TICKET_PAL] = clausula → ahora_op nucleo
+│        · M[ahora_op, TICKET_PAL] = ahora_op → ε
+│        · M[nucleo, TICKET_PAL] = nucleo → TICKET_PAL tk_op
+│        · ERROR M[tk_op, NEG] vacía → se descartan tokens hasta {COMA, EOL, PERO, PUNTO, TICKET, V_COPULA}
+│        · M[tk_op, PUNTO] = tk_op → ε
+│        · M[cola, PUNTO] = cola → ε
+│        · M[texto_r, PUNTO] = texto_r → PUNTO texto_rr
+│        · M[texto_rr, EOL] = texto_rr → ε
+│  [4] Tabla símbolos :
+│        BUSCAR PARTICIPANTE CLIENTE @S01 -> NO_EXISTE
+│        INSERTAR PARTICIPANTE CLIENTE @S01 (apariciones=1)
+│  [5] Acción semántica:
+│        C1.1 cláusula con error sintáctico → NO_INTERPRETADO: «Ticket» «sin»
+│        NO_INTERPRETADO «Ticket» (FUERA_DE_GRAMATICA)
+│        NO_INTERPRETADO «TK-12» (TICKET_MAL_FORMADO)
+│        NO_INTERPRETADO «sin» (FUERA_DE_GRAMATICA)
+│        NO_INTERPRETADO «respuesta» (PALABRA_DESCONOCIDA)
+│  [6] Resultado      : SERVICIO: SIN_EVIDENCIA | ATENCION: SIN_EVIDENCIA | CLARIDAD: SIN_EVIDENCIA
+│
+│ Turno 3 · CLIENTE · línea 5
+│  [1] Texto original : 3 CLIENTE: Ahora funciona bien.
+│  [2] Tokens         : T_AHORA«Ahora»@11=AHORA  V_FUNC«funciona»@17=FUNCIONAR  ADJ_POS«bien»@26=BUENO  PUNTO«.»@30
+│  [3] Estructura     : texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]
+│        · M[texto, T_AHORA] = texto → oracion texto_r
+│        · M[oracion, T_AHORA] = oracion → clausula cola
+│        · M[clausula, T_AHORA] = clausula → ahora_op nucleo
+│        · M[ahora_op, T_AHORA] = ahora_op → T_AHORA
+│        · M[nucleo, V_FUNC] = nucleo → pred_l
+│        · M[pred_l, V_FUNC] = pred_l → V_FUNC modif_op
+│        · M[modif_op, ADJ_POS] = modif_op → modif
+│        · M[modif, ADJ_POS] = modif → adj
+│        · M[adj, ADJ_POS] = adj → ADJ_POS
+│        · M[cola, PUNTO] = cola → ε
+│        · M[texto_r, PUNTO] = texto_r → PUNTO texto_rr
+│        · M[texto_rr, EOL] = texto_rr → ε
+│  [4] Tabla símbolos :
+│        BUSCAR PARTICIPANTE CLIENTE @S01 -> ENCONTRADO
+│        DUPLICADO->ENLAZAR PARTICIPANTE CLIENTE @S01 (apariciones=2)
+│  [5] Acción semántica:
+│        C3.1 «Ahora funciona bien» → SERVICIO=POSITIVA declaración=OK  [R-FUNC, R-AHORA]
+│  [6] Resultado      : SERVICIO: POSITIVA | ATENCION: SIN_EVIDENCIA | CLARIDAD: SIN_EVIDENCIA
+│
+└────────────────────────────────────────────────────────────

@@ -1,0 +1,501 @@
+{
+  "catalogo_reglas": {
+    "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|T_FUTURO] ⇒ compromiso futuro",
+    "R-COP": "sujeto [V_COPULA] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
+    "R-CORTE": "SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (recurrente si hay frecuencia)",
+    "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
+    "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
+    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente",
+    "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
+    "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
+    "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
+    "R-MEN": "sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA",
+    "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
+    "R-SEG-ADJ": "V_SEGUIR modif ⇒ SERVICIO; «sigue» + adjetivo negativo = FALLA, + positivo = OK",
+    "R-SEG-SIN": "V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA",
+    "R-SOLIC": "V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-SUJ": "sujeto ⇒ aspecto: ASP_SERV→SERVICIO, ASP_ATEN→ATENCION, ASP_CLAR→CLARIDAD, AGENTE→ATENCION",
+    "R-TICKET": "TICKET_PAL [V_COPULA] TICKET | TICKET ⇒ referencia a un ticket (entidad)"
+  },
+  "errores_globales": [],
+  "lote": {
+    "archivo": "caso_10.txt",
+    "completas": 1,
+    "parciales": 0,
+    "sesiones": 1
+  },
+  "sesiones": [
+    {
+      "analisis": "COMPLETO",
+      "correcciones": [
+        {
+          "accion": "CORREGIDA",
+          "candidatos": [
+            "inestable"
+          ],
+          "desp": 28,
+          "normalizado": "inestabl",
+          "original": "inestabl",
+          "resultado": "inestable",
+          "turno": 1
+        }
+      ],
+      "entidades": {
+        "participantes": [
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 1
+              },
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 3
+              }
+            ],
+            "atributos": {},
+            "clave": "CLIENTE",
+            "tipo": "PARTICIPANTE"
+          },
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "AGENTE",
+                "turno": 2
+              },
+              {
+                "desp": 2,
+                "lexema": "AGENTE",
+                "turno": 4
+              }
+            ],
+            "atributos": {},
+            "clave": "AGENTE",
+            "tipo": "PARTICIPANTE"
+          }
+        ],
+        "tickets": [
+          {
+            "apariciones": [
+              {
+                "desp": 29,
+                "lexema": "TK-310",
+                "turno": 2
+              },
+              {
+                "desp": 22,
+                "lexema": "TK-310",
+                "turno": 4
+              }
+            ],
+            "atributos": {
+              "compromiso_actor": "AGENTE",
+              "compromiso_turno": 4,
+              "seguimiento": "COMPROMISO_FUTURO",
+              "ultima_mencion": 4
+            },
+            "clave": "TK-310",
+            "tipo": "TICKET"
+          }
+        ]
+      },
+      "errores": [],
+      "estado": {
+        "evidencias": [
+          "C3.1"
+        ],
+        "nota": "R-EST-PREC: la declaración del cliente (C3.1) prevalece sobre la promesa del agente (C4.1)",
+        "regla": "R-EST-RES",
+        "valor": "RESUELTO"
+      },
+      "evidencias": [
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
+          "declaracion": null,
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "La conexion esta inestabl",
+          "hasta": 36,
+          "id": "C1.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-SUJ",
+            "R-COP"
+          ],
+          "temporal": null,
+          "tipo": "VALORACION",
+          "turno": 1,
+          "valoracion": "NEGATIVA"
+        },
+        {
+          "actor": "AGENTE",
+          "aspecto": null,
+          "conector": null,
+          "declaracion": null,
+          "desde": 10,
+          "entidades": [
+            "TK-310"
+          ],
+          "fragmento": "Mañana revisaremos TK-310",
+          "hasta": 35,
+          "id": "C2.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-COMPR"
+          ],
+          "temporal": null,
+          "tipo": "COMPROMISO",
+          "turno": 2,
+          "valoracion": null
+        },
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
+          "declaracion": "OK",
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "Ahora funciona bien",
+          "hasta": 30,
+          "id": "C3.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-FUNC",
+            "R-AHORA"
+          ],
+          "temporal": "AHORA",
+          "tipo": "FUNCIONAMIENTO",
+          "turno": 3,
+          "valoracion": "POSITIVA"
+        },
+        {
+          "actor": "AGENTE",
+          "aspecto": null,
+          "conector": null,
+          "declaracion": null,
+          "desde": 10,
+          "entidades": [
+            "TK-310"
+          ],
+          "fragmento": "Revisaremos TK-310",
+          "hasta": 28,
+          "id": "C4.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-COMPR"
+          ],
+          "temporal": null,
+          "tipo": "COMPROMISO",
+          "turno": 4,
+          "valoracion": null
+        }
+      ],
+      "id": "S01",
+      "no_interpretado": [],
+      "resumen_aspectos": {
+        "ATENCION": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "CLARIDAD": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "SERVICIO": {
+          "evidencias": [
+            "C1.1",
+            "C3.1"
+          ],
+          "opiniones_agente": [],
+          "valoracion": "MIXTA"
+        }
+      },
+      "turnos": [
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": null,
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "La conexion esta inestabl",
+              "hasta": 36,
+              "id": "C1.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SUJ",
+                "R-COP"
+              ],
+              "temporal": null,
+              "tipo": "VALORACION",
+              "turno": 1,
+              "valoracion": "NEGATIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[ASP_SERV«conexion»] pred_s[V_COPULA«esta» modif[adj[ADJ_NEG«inestabl»]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 2,
+          "no_interpretado": [],
+          "numero": 1,
+          "rol": "CLIENTE",
+          "texto": "La conexion esta inestabl.",
+          "tokens": [
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 11,
+              "lexema": "La",
+              "normalizado": "la"
+            },
+            {
+              "canonico": "SERVICIO",
+              "categoria": "ASP_SERV",
+              "desp": 14,
+              "lexema": "conexion",
+              "normalizado": "conexion"
+            },
+            {
+              "canonico": "SER_ESTAR",
+              "categoria": "V_COPULA",
+              "desp": 23,
+              "lexema": "esta",
+              "normalizado": "esta"
+            },
+            {
+              "canonico": "INESTABLE",
+              "categoria": "ADJ_NEG",
+              "corregido_de": "inestabl",
+              "desp": 28,
+              "lexema": "inestabl",
+              "normalizado": "inestable"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 36,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "NEGATIVA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "AGENTE",
+              "aspecto": null,
+              "conector": null,
+              "declaracion": null,
+              "desde": 10,
+              "entidades": [
+                "TK-310"
+              ],
+              "fragmento": "Mañana revisaremos TK-310",
+              "hasta": 35,
+              "id": "C2.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-COMPR"
+              ],
+              "temporal": null,
+              "tipo": "COMPROMISO",
+              "turno": 2,
+              "valoracion": null
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[T_FUTURO«Mañana» V_COMPROMISO«revisaremos» ref_op[TICKET«TK-310»]]]]] texto_r[PUNTO«.»]]",
+          "linea": 3,
+          "no_interpretado": [],
+          "numero": 2,
+          "rol": "AGENTE",
+          "texto": "Mañana revisaremos TK-310.",
+          "tokens": [
+            {
+              "canonico": "MAÑANA",
+              "categoria": "T_FUTURO",
+              "desp": 10,
+              "lexema": "Mañana",
+              "normalizado": "mañana"
+            },
+            {
+              "canonico": "REVISAR",
+              "categoria": "V_COMPROMISO",
+              "desp": 17,
+              "lexema": "revisaremos",
+              "normalizado": "revisaremos"
+            },
+            {
+              "canonico": null,
+              "categoria": "TICKET",
+              "desp": 29,
+              "lexema": "TK-310",
+              "normalizado": "TK-310"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 35,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": "OK",
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "Ahora funciona bien",
+              "hasta": 30,
+              "id": "C3.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-FUNC",
+                "R-AHORA"
+              ],
+              "temporal": "AHORA",
+              "tipo": "FUNCIONAMIENTO",
+              "turno": 3,
+              "valoracion": "POSITIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 4,
+          "no_interpretado": [],
+          "numero": 3,
+          "rol": "CLIENTE",
+          "texto": "Ahora funciona bien.",
+          "tokens": [
+            {
+              "canonico": "AHORA",
+              "categoria": "T_AHORA",
+              "desp": 11,
+              "lexema": "Ahora",
+              "normalizado": "ahora"
+            },
+            {
+              "canonico": "FUNCIONAR",
+              "categoria": "V_FUNC",
+              "desp": 17,
+              "lexema": "funciona",
+              "normalizado": "funciona"
+            },
+            {
+              "canonico": "BUENO",
+              "categoria": "ADJ_POS",
+              "desp": 26,
+              "lexema": "bien",
+              "normalizado": "bien"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 30,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "POSITIVA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "AGENTE",
+              "aspecto": null,
+              "conector": null,
+              "declaracion": null,
+              "desde": 10,
+              "entidades": [
+                "TK-310"
+              ],
+              "fragmento": "Revisaremos TK-310",
+              "hasta": 28,
+              "id": "C4.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-COMPR"
+              ],
+              "temporal": null,
+              "tipo": "COMPROMISO",
+              "turno": 4,
+              "valoracion": null
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_COMPROMISO«Revisaremos» ref_op[TICKET«TK-310»]]]]] texto_r[PUNTO«.»]]",
+          "linea": 5,
+          "no_interpretado": [],
+          "numero": 4,
+          "rol": "AGENTE",
+          "texto": "Revisaremos TK-310.",
+          "tokens": [
+            {
+              "canonico": "REVISAR",
+              "categoria": "V_COMPROMISO",
+              "desp": 10,
+              "lexema": "Revisaremos",
+              "normalizado": "revisaremos"
+            },
+            {
+              "canonico": null,
+              "categoria": "TICKET",
+              "desp": 22,
+              "lexema": "TK-310",
+              "normalizado": "TK-310"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 28,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        }
+      ]
+    }
+  ]
+}

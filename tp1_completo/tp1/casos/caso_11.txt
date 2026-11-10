@@ -1,0 +1,4 @@
+SESION S01
+1 CLIENTE: Mi router hace ruidos raros.
+2 CLIENTE: Muchas gracias.
+FIN

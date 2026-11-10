@@ -1,0 +1,4 @@
+SESION S01
+1 AGENTE: Mañana revisaremos TK-205.
+2 CLIENTE: Gracias.
+FIN

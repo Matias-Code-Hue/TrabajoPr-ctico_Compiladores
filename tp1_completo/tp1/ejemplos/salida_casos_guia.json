@@ -1,0 +1,2022 @@
+{
+  "lote": {
+    "archivo": "casos_guia.txt",
+    "sesiones": 9,
+    "completas": 8,
+    "parciales": 1
+  },
+  "sesiones": [
+    {
+      "id": "S01",
+      "analisis": "COMPLETO",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "CLIENTE",
+          "linea": 2,
+          "texto": "El servicio está lento.",
+          "tokens": [
+            {
+              "categoria": "RELLENO",
+              "lexema": "El",
+              "normalizado": "el",
+              "canonico": "ART",
+              "desp": 11
+            },
+            {
+              "categoria": "ASP_SERV",
+              "lexema": "servicio",
+              "normalizado": "servicio",
+              "canonico": "SERVICIO",
+              "desp": 14
+            },
+            {
+              "categoria": "V_COPULA",
+              "lexema": "está",
+              "normalizado": "esta",
+              "canonico": "SER_ESTAR",
+              "desp": 23
+            },
+            {
+              "categoria": "ADJ_NEG",
+              "lexema": "lento",
+              "normalizado": "lento",
+              "canonico": "LENTO",
+              "desp": 28
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 33
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[ASP_SERV«servicio»] pred_s[V_COPULA«está» modif[adj[ADJ_NEG«lento»]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C1.1",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "El servicio está lento",
+              "desde": 11,
+              "hasta": 33,
+              "conector": null,
+              "tipo": "VALORACION",
+              "aspecto": "SERVICIO",
+              "valoracion": "NEGATIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": null,
+              "entidades": [],
+              "reglas": [
+                "R-SUJ",
+                "R-COP"
+              ],
+              "temporal": null
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "NEGATIVA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        },
+        {
+          "numero": 2,
+          "rol": "AGENTE",
+          "linea": 3,
+          "texto": "Reinicie el router.",
+          "tokens": [
+            {
+              "categoria": "V_SOLICITUD",
+              "lexema": "Reinicie",
+              "normalizado": "reinicie",
+              "canonico": "REINICIAR",
+              "desp": 10
+            },
+            {
+              "categoria": "RELLENO",
+              "lexema": "el",
+              "normalizado": "el",
+              "canonico": "ART",
+              "desp": 19
+            },
+            {
+              "categoria": "ROUTER",
+              "lexema": "router",
+              "normalizado": "router",
+              "canonico": "ROUTER",
+              "desp": 22
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 28
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_SOLICITUD«Reinicie» obj_router[ROUTER«router»]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C2.1",
+              "turno": 2,
+              "actor": "AGENTE",
+              "fragmento": "Reinicie el router",
+              "desde": 10,
+              "hasta": 28,
+              "conector": null,
+              "tipo": "SOLICITUD",
+              "aspecto": null,
+              "valoracion": null,
+              "intensidad": null,
+              "negada": false,
+              "declaracion": null,
+              "entidades": [
+                "ROUTER"
+              ],
+              "reglas": [
+                "R-SOLIC"
+              ],
+              "temporal": null
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "SIN_EVIDENCIA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        },
+        {
+          "numero": 3,
+          "rol": "CLIENTE",
+          "linea": 4,
+          "texto": "Ahora funciona bien.",
+          "tokens": [
+            {
+              "categoria": "T_AHORA",
+              "lexema": "Ahora",
+              "normalizado": "ahora",
+              "canonico": "AHORA",
+              "desp": 11
+            },
+            {
+              "categoria": "V_FUNC",
+              "lexema": "funciona",
+              "normalizado": "funciona",
+              "canonico": "FUNCIONAR",
+              "desp": 17
+            },
+            {
+              "categoria": "ADJ_POS",
+              "lexema": "bien",
+              "normalizado": "bien",
+              "canonico": "BUENO",
+              "desp": 26
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 30
+            }
+          ],
+          "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C3.1",
+              "turno": 3,
+              "actor": "CLIENTE",
+              "fragmento": "Ahora funciona bien",
+              "desde": 11,
+              "hasta": 30,
+              "conector": null,
+              "tipo": "FUNCIONAMIENTO",
+              "aspecto": "SERVICIO",
+              "valoracion": "POSITIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": "OK",
+              "entidades": [],
+              "reglas": [
+                "R-FUNC",
+                "R-AHORA"
+              ],
+              "temporal": "AHORA"
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "POSITIVA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "MIXTA",
+          "evidencias": [
+            "C1.1",
+            "C3.1"
+          ],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "RESUELTO",
+        "regla": "R-EST-RES",
+        "evidencias": [
+          "C3.1"
+        ]
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              },
+              {
+                "turno": 3,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          },
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "AGENTE",
+            "apariciones": [
+              {
+                "turno": 2,
+                "desp": 2,
+                "lexema": "AGENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": []
+      },
+      "correcciones": [],
+      "errores": [],
+      "no_interpretado": [],
+      "evidencias": [
+        {
+          "id": "C1.1",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "El servicio está lento",
+          "desde": 11,
+          "hasta": 33,
+          "conector": null,
+          "tipo": "VALORACION",
+          "aspecto": "SERVICIO",
+          "valoracion": "NEGATIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": null,
+          "entidades": [],
+          "reglas": [
+            "R-SUJ",
+            "R-COP"
+          ],
+          "temporal": null
+        },
+        {
+          "id": "C3.1",
+          "turno": 3,
+          "actor": "CLIENTE",
+          "fragmento": "Ahora funciona bien",
+          "desde": 11,
+          "hasta": 30,
+          "conector": null,
+          "tipo": "FUNCIONAMIENTO",
+          "aspecto": "SERVICIO",
+          "valoracion": "POSITIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": "OK",
+          "entidades": [],
+          "reglas": [
+            "R-FUNC",
+            "R-AHORA"
+          ],
+          "temporal": "AHORA"
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "analisis": "COMPLETO",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "CLIENTE",
+          "linea": 7,
+          "texto": "Me atendiste muy bien, pero sigo sin internet.",
+          "tokens": [
+            {
+              "categoria": "RELLENO",
+              "lexema": "Me",
+              "normalizado": "me",
+              "canonico": "CLITICO",
+              "desp": 11
+            },
+            {
+              "categoria": "ASP_ATEN",
+              "lexema": "atendiste",
+              "normalizado": "atendiste",
+              "canonico": "ATENCION",
+              "desp": 14
+            },
+            {
+              "categoria": "INT",
+              "lexema": "muy",
+              "normalizado": "muy",
+              "canonico": "MUY",
+              "desp": 24
+            },
+            {
+              "categoria": "ADJ_POS",
+              "lexema": "bien",
+              "normalizado": "bien",
+              "canonico": "BUENO",
+              "desp": 28
+            },
+            {
+              "categoria": "COMA",
+              "lexema": ",",
+              "normalizado": ",",
+              "canonico": null,
+              "desp": 32
+            },
+            {
+              "categoria": "PERO",
+              "lexema": "pero",
+              "normalizado": "pero",
+              "canonico": "PERO",
+              "desp": 34
+            },
+            {
+              "categoria": "V_SEGUIR",
+              "lexema": "sigo",
+              "normalizado": "sigo",
+              "canonico": "SEGUIR",
+              "desp": 39
+            },
+            {
+              "categoria": "NEG",
+              "lexema": "sin",
+              "normalizado": "sin",
+              "canonico": "SIN",
+              "desp": 44
+            },
+            {
+              "categoria": "ASP_SERV",
+              "lexema": "internet",
+              "normalizado": "internet",
+              "canonico": "SERVICIO",
+              "desp": 48
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 56
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[ASP_ATEN«atendiste»] pred_s[modif[INT«muy» adj[ADJ_POS«bien»]]]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[pred_l[V_SEGUIR«sigo» seg[NEG«sin» ASP_SERV«internet»]]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C1.1",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "Me atendiste muy bien",
+              "desde": 11,
+              "hasta": 32,
+              "conector": null,
+              "tipo": "VALORACION",
+              "aspecto": "ATENCION",
+              "valoracion": "POSITIVA",
+              "intensidad": "ALTA",
+              "negada": false,
+              "declaracion": null,
+              "entidades": [],
+              "reglas": [
+                "R-SUJ",
+                "R-COP",
+                "R-MUY"
+              ],
+              "temporal": null
+            },
+            {
+              "id": "C1.2",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "sigo sin internet",
+              "desde": 39,
+              "hasta": 56,
+              "conector": "PERO",
+              "tipo": "FUNCIONAMIENTO",
+              "aspecto": "SERVICIO",
+              "valoracion": "NEGATIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": "FALLA",
+              "entidades": [],
+              "reglas": [
+                "R-SEG-SIN",
+                "R-PERO"
+              ],
+              "temporal": null,
+              "en_contraste_con": "C1.1"
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "NEGATIVA",
+            "ATENCION": "POSITIVA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "NEGATIVA",
+          "evidencias": [
+            "C1.2"
+          ],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "POSITIVA",
+          "evidencias": [
+            "C1.1"
+          ],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "NO_RESUELTO",
+        "regla": "R-EST-NORES",
+        "evidencias": [
+          "C1.2"
+        ]
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": []
+      },
+      "correcciones": [],
+      "errores": [],
+      "no_interpretado": [],
+      "evidencias": [
+        {
+          "id": "C1.1",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "Me atendiste muy bien",
+          "desde": 11,
+          "hasta": 32,
+          "conector": null,
+          "tipo": "VALORACION",
+          "aspecto": "ATENCION",
+          "valoracion": "POSITIVA",
+          "intensidad": "ALTA",
+          "negada": false,
+          "declaracion": null,
+          "entidades": [],
+          "reglas": [
+            "R-SUJ",
+            "R-COP",
+            "R-MUY"
+          ],
+          "temporal": null
+        },
+        {
+          "id": "C1.2",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "sigo sin internet",
+          "desde": 39,
+          "hasta": 56,
+          "conector": "PERO",
+          "tipo": "FUNCIONAMIENTO",
+          "aspecto": "SERVICIO",
+          "valoracion": "NEGATIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": "FALLA",
+          "entidades": [],
+          "reglas": [
+            "R-SEG-SIN",
+            "R-PERO"
+          ],
+          "temporal": null,
+          "en_contraste_con": "C1.1"
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "analisis": "COMPLETO",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "CLIENTE",
+          "linea": 10,
+          "texto": "Ahora funciona, pero se corta todos los días.",
+          "tokens": [
+            {
+              "categoria": "T_AHORA",
+              "lexema": "Ahora",
+              "normalizado": "ahora",
+              "canonico": "AHORA",
+              "desp": 11
+            },
+            {
+              "categoria": "V_FUNC",
+              "lexema": "funciona",
+              "normalizado": "funciona",
+              "canonico": "FUNCIONAR",
+              "desp": 17
+            },
+            {
+              "categoria": "COMA",
+              "lexema": ",",
+              "normalizado": ",",
+              "canonico": null,
+              "desp": 25
+            },
+            {
+              "categoria": "PERO",
+              "lexema": "pero",
+              "normalizado": "pero",
+              "canonico": "PERO",
+              "desp": 27
+            },
+            {
+              "categoria": "SE",
+              "lexema": "se",
+              "normalizado": "se",
+              "canonico": "SE",
+              "desp": 32
+            },
+            {
+              "categoria": "V_CORTA",
+              "lexema": "corta",
+              "normalizado": "corta",
+              "canonico": "CORTAR",
+              "desp": 35
+            },
+            {
+              "categoria": "FREC",
+              "lexema": "todos",
+              "normalizado": "todos",
+              "canonico": "TODOS",
+              "desp": 41
+            },
+            {
+              "categoria": "RELLENO",
+              "lexema": "los",
+              "normalizado": "los",
+              "canonico": "ART",
+              "desp": 47
+            },
+            {
+              "categoria": "FREC",
+              "lexema": "días",
+              "normalizado": "dias",
+              "canonico": "DIA",
+              "desp": 51
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 55
+            }
+          ],
+          "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona»]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[pred_l[SE«se» V_CORTA«corta» frec[FREC«todos» frec[FREC«días»]]]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C1.1",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "Ahora funciona",
+              "desde": 11,
+              "hasta": 25,
+              "conector": null,
+              "tipo": "FUNCIONAMIENTO",
+              "aspecto": "SERVICIO",
+              "valoracion": "POSITIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": "OK",
+              "entidades": [],
+              "reglas": [
+                "R-FUNC",
+                "R-AHORA"
+              ],
+              "temporal": "AHORA"
+            },
+            {
+              "id": "C1.2",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "se corta todos los días",
+              "desde": 32,
+              "hasta": 55,
+              "conector": "PERO",
+              "tipo": "FUNCIONAMIENTO",
+              "aspecto": "SERVICIO",
+              "valoracion": "NEGATIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": "RECUR",
+              "entidades": [],
+              "reglas": [
+                "R-CORTE",
+                "R-PERO"
+              ],
+              "temporal": null,
+              "en_contraste_con": "C1.1"
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "MIXTA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "MIXTA",
+          "evidencias": [
+            "C1.1",
+            "C1.2"
+          ],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "TEMPORAL",
+        "regla": "R-EST-TEMP",
+        "evidencias": [
+          "C1.1",
+          "C1.2"
+        ]
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": []
+      },
+      "correcciones": [],
+      "errores": [],
+      "no_interpretado": [],
+      "evidencias": [
+        {
+          "id": "C1.1",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "Ahora funciona",
+          "desde": 11,
+          "hasta": 25,
+          "conector": null,
+          "tipo": "FUNCIONAMIENTO",
+          "aspecto": "SERVICIO",
+          "valoracion": "POSITIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": "OK",
+          "entidades": [],
+          "reglas": [
+            "R-FUNC",
+            "R-AHORA"
+          ],
+          "temporal": "AHORA"
+        },
+        {
+          "id": "C1.2",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "se corta todos los días",
+          "desde": 32,
+          "hasta": 55,
+          "conector": "PERO",
+          "tipo": "FUNCIONAMIENTO",
+          "aspecto": "SERVICIO",
+          "valoracion": "NEGATIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": "RECUR",
+          "entidades": [],
+          "reglas": [
+            "R-CORTE",
+            "R-PERO"
+          ],
+          "temporal": null,
+          "en_contraste_con": "C1.1"
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "analisis": "COMPLETO",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "CLIENTE",
+          "linea": 13,
+          "texto": "No entendí la explicación, pero el agente fue amable.",
+          "tokens": [
+            {
+              "categoria": "NEG",
+              "lexema": "No",
+              "normalizado": "no",
+              "canonico": "NO",
+              "desp": 11
+            },
+            {
+              "categoria": "V_ENTENDER",
+              "lexema": "entendí",
+              "normalizado": "entendi",
+              "canonico": "ENTENDER",
+              "desp": 14
+            },
+            {
+              "categoria": "RELLENO",
+              "lexema": "la",
+              "normalizado": "la",
+              "canonico": "ART",
+              "desp": 22
+            },
+            {
+              "categoria": "ASP_CLAR",
+              "lexema": "explicación",
+              "normalizado": "explicacion",
+              "canonico": "CLARIDAD",
+              "desp": 25
+            },
+            {
+              "categoria": "COMA",
+              "lexema": ",",
+              "normalizado": ",",
+              "canonico": null,
+              "desp": 36
+            },
+            {
+              "categoria": "PERO",
+              "lexema": "pero",
+              "normalizado": "pero",
+              "canonico": "PERO",
+              "desp": 38
+            },
+            {
+              "categoria": "RELLENO",
+              "lexema": "el",
+              "normalizado": "el",
+              "canonico": "ART",
+              "desp": 43
+            },
+            {
+              "categoria": "AGENTE",
+              "lexema": "agente",
+              "normalizado": "agente",
+              "canonico": "AGENTE",
+              "desp": 46
+            },
+            {
+              "categoria": "V_COPULA",
+              "lexema": "fue",
+              "normalizado": "fue",
+              "canonico": "SER_ESTAR",
+              "desp": 53
+            },
+            {
+              "categoria": "ADJ_POS",
+              "lexema": "amable",
+              "normalizado": "amable",
+              "canonico": "AMABLE",
+              "desp": 57
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 63
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[NEG«No» pred_neg[V_ENTENDER«entendí» obj_clar[ASP_CLAR«explicación»]]]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[sujeto[AGENTE«agente»] pred_s[V_COPULA«fue» modif[adj[ADJ_POS«amable»]]]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C1.1",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "No entendí la explicación",
+              "desde": 11,
+              "hasta": 36,
+              "conector": null,
+              "tipo": "VALORACION",
+              "aspecto": "CLARIDAD",
+              "valoracion": "NEGATIVA",
+              "intensidad": null,
+              "negada": true,
+              "declaracion": null,
+              "entidades": [],
+              "reglas": [
+                "R-ENT",
+                "R-NEG"
+              ],
+              "temporal": null
+            },
+            {
+              "id": "C1.2",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "el agente fue amable",
+              "desde": 43,
+              "hasta": 63,
+              "conector": "PERO",
+              "tipo": "VALORACION",
+              "aspecto": "ATENCION",
+              "valoracion": "POSITIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": null,
+              "entidades": [],
+              "reglas": [
+                "R-SUJ",
+                "R-COP",
+                "R-PERO"
+              ],
+              "temporal": null,
+              "en_contraste_con": "C1.1"
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "SIN_EVIDENCIA",
+            "ATENCION": "POSITIVA",
+            "CLARIDAD": "NEGATIVA"
+          },
+          "no_interpretado": []
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "POSITIVA",
+          "evidencias": [
+            "C1.2"
+          ],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "NEGATIVA",
+          "evidencias": [
+            "C1.1"
+          ],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "NO_CONFIRMADO",
+        "regla": "R-EST-NC",
+        "evidencias": []
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": []
+      },
+      "correcciones": [],
+      "errores": [],
+      "no_interpretado": [],
+      "evidencias": [
+        {
+          "id": "C1.1",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "No entendí la explicación",
+          "desde": 11,
+          "hasta": 36,
+          "conector": null,
+          "tipo": "VALORACION",
+          "aspecto": "CLARIDAD",
+          "valoracion": "NEGATIVA",
+          "intensidad": null,
+          "negada": true,
+          "declaracion": null,
+          "entidades": [],
+          "reglas": [
+            "R-ENT",
+            "R-NEG"
+          ],
+          "temporal": null
+        },
+        {
+          "id": "C1.2",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "el agente fue amable",
+          "desde": 43,
+          "hasta": 63,
+          "conector": "PERO",
+          "tipo": "VALORACION",
+          "aspecto": "ATENCION",
+          "valoracion": "POSITIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": null,
+          "entidades": [],
+          "reglas": [
+            "R-SUJ",
+            "R-COP",
+            "R-PERO"
+          ],
+          "temporal": null,
+          "en_contraste_con": "C1.1"
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "analisis": "COMPLETO",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "CLIENTE",
+          "linea": 16,
+          "texto": "El internet está lentto.",
+          "tokens": [
+            {
+              "categoria": "RELLENO",
+              "lexema": "El",
+              "normalizado": "el",
+              "canonico": "ART",
+              "desp": 11
+            },
+            {
+              "categoria": "ASP_SERV",
+              "lexema": "internet",
+              "normalizado": "internet",
+              "canonico": "SERVICIO",
+              "desp": 14
+            },
+            {
+              "categoria": "V_COPULA",
+              "lexema": "está",
+              "normalizado": "esta",
+              "canonico": "SER_ESTAR",
+              "desp": 23
+            },
+            {
+              "categoria": "ADJ_NEG",
+              "lexema": "lentto",
+              "normalizado": "lento",
+              "canonico": "LENTO",
+              "desp": 28,
+              "corregido_de": "lentto"
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 34
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[ASP_SERV«internet»] pred_s[V_COPULA«está» modif[adj[ADJ_NEG«lentto»]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C1.1",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "El internet está lentto",
+              "desde": 11,
+              "hasta": 34,
+              "conector": null,
+              "tipo": "VALORACION",
+              "aspecto": "SERVICIO",
+              "valoracion": "NEGATIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": null,
+              "entidades": [],
+              "reglas": [
+                "R-SUJ",
+                "R-COP"
+              ],
+              "temporal": null
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "NEGATIVA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        },
+        {
+          "numero": 2,
+          "rol": "AGENTE",
+          "linea": 17,
+          "texto": "Su ticket es TK-204.",
+          "tokens": [
+            {
+              "categoria": "RELLENO",
+              "lexema": "Su",
+              "normalizado": "su",
+              "canonico": "ART",
+              "desp": 10
+            },
+            {
+              "categoria": "TICKET_PAL",
+              "lexema": "ticket",
+              "normalizado": "ticket",
+              "canonico": "TICKET",
+              "desp": 13
+            },
+            {
+              "categoria": "V_COPULA",
+              "lexema": "es",
+              "normalizado": "es",
+              "canonico": "SER_ESTAR",
+              "desp": 20
+            },
+            {
+              "categoria": "TICKET",
+              "lexema": "TK-204",
+              "normalizado": "TK-204",
+              "canonico": null,
+              "desp": 23
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 29
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[TICKET_PAL«ticket» tk_op[V_COPULA«es» TICKET«TK-204»]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C2.1",
+              "turno": 2,
+              "actor": "AGENTE",
+              "fragmento": "Su ticket es TK-204",
+              "desde": 10,
+              "hasta": 29,
+              "conector": null,
+              "tipo": "TICKET",
+              "aspecto": null,
+              "valoracion": null,
+              "intensidad": null,
+              "negada": false,
+              "declaracion": null,
+              "entidades": [
+                "TK-204"
+              ],
+              "reglas": [
+                "R-TICKET"
+              ],
+              "temporal": null
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "SIN_EVIDENCIA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "NEGATIVA",
+          "evidencias": [
+            "C1.1"
+          ],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "NO_CONFIRMADO",
+        "regla": "R-EST-NC",
+        "evidencias": []
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          },
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "AGENTE",
+            "apariciones": [
+              {
+                "turno": 2,
+                "desp": 2,
+                "lexema": "AGENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": [
+          {
+            "tipo": "TICKET",
+            "clave": "TK-204",
+            "apariciones": [
+              {
+                "turno": 2,
+                "desp": 23,
+                "lexema": "TK-204"
+              }
+            ],
+            "atributos": {
+              "ultima_mencion": 2
+            }
+          }
+        ]
+      },
+      "correcciones": [
+        {
+          "turno": 1,
+          "desp": 28,
+          "original": "lentto",
+          "normalizado": "lentto",
+          "resultado": "lento",
+          "accion": "CORREGIDA",
+          "candidatos": [
+            "lento"
+          ]
+        }
+      ],
+      "errores": [],
+      "no_interpretado": [],
+      "evidencias": [
+        {
+          "id": "C1.1",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "El internet está lentto",
+          "desde": 11,
+          "hasta": 34,
+          "conector": null,
+          "tipo": "VALORACION",
+          "aspecto": "SERVICIO",
+          "valoracion": "NEGATIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": null,
+          "entidades": [],
+          "reglas": [
+            "R-SUJ",
+            "R-COP"
+          ],
+          "temporal": null
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "analisis": "COMPLETO",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "AGENTE",
+          "linea": 20,
+          "texto": "Mañana revisaremos TK-205.",
+          "tokens": [
+            {
+              "categoria": "T_FUTURO",
+              "lexema": "Mañana",
+              "normalizado": "mañana",
+              "canonico": "MAÑANA",
+              "desp": 10
+            },
+            {
+              "categoria": "V_COMPROMISO",
+              "lexema": "revisaremos",
+              "normalizado": "revisaremos",
+              "canonico": "REVISAR",
+              "desp": 17
+            },
+            {
+              "categoria": "TICKET",
+              "lexema": "TK-205",
+              "normalizado": "TK-205",
+              "canonico": null,
+              "desp": 29
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 35
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[T_FUTURO«Mañana» V_COMPROMISO«revisaremos» ref_op[TICKET«TK-205»]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C1.1",
+              "turno": 1,
+              "actor": "AGENTE",
+              "fragmento": "Mañana revisaremos TK-205",
+              "desde": 10,
+              "hasta": 35,
+              "conector": null,
+              "tipo": "COMPROMISO",
+              "aspecto": null,
+              "valoracion": null,
+              "intensidad": null,
+              "negada": false,
+              "declaracion": null,
+              "entidades": [
+                "TK-205"
+              ],
+              "reglas": [
+                "R-COMPR"
+              ],
+              "temporal": null
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "SIN_EVIDENCIA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        },
+        {
+          "numero": 2,
+          "rol": "CLIENTE",
+          "linea": 21,
+          "texto": "Gracias.",
+          "tokens": [
+            {
+              "categoria": "CORTESIA",
+              "lexema": "Gracias",
+              "normalizado": "gracias",
+              "canonico": "GRACIAS",
+              "desp": 11
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 18
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[CORTESIA«Gracias»]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C2.1",
+              "turno": 2,
+              "actor": "CLIENTE",
+              "fragmento": "Gracias",
+              "desde": 11,
+              "hasta": 18,
+              "conector": null,
+              "tipo": "CORTESIA",
+              "aspecto": null,
+              "valoracion": null,
+              "intensidad": null,
+              "negada": false,
+              "declaracion": null,
+              "entidades": [],
+              "reglas": [
+                "R-CORT"
+              ],
+              "temporal": null
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "SIN_EVIDENCIA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "PENDIENTE",
+        "regla": "R-EST-PEND",
+        "evidencias": [
+          "C1.1"
+        ]
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "AGENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "AGENTE"
+              }
+            ],
+            "atributos": {}
+          },
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 2,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": [
+          {
+            "tipo": "TICKET",
+            "clave": "TK-205",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 29,
+                "lexema": "TK-205"
+              }
+            ],
+            "atributos": {
+              "ultima_mencion": 1,
+              "seguimiento": "COMPROMISO_FUTURO",
+              "compromiso_turno": 1,
+              "compromiso_actor": "AGENTE"
+            }
+          }
+        ]
+      },
+      "correcciones": [],
+      "errores": [],
+      "no_interpretado": [],
+      "evidencias": [
+        {
+          "id": "C1.1",
+          "turno": 1,
+          "actor": "AGENTE",
+          "fragmento": "Mañana revisaremos TK-205",
+          "desde": 10,
+          "hasta": 35,
+          "conector": null,
+          "tipo": "COMPROMISO",
+          "aspecto": null,
+          "valoracion": null,
+          "intensidad": null,
+          "negada": false,
+          "declaracion": null,
+          "entidades": [
+            "TK-205"
+          ],
+          "reglas": [
+            "R-COMPR"
+          ],
+          "temporal": null
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "analisis": "PARCIAL",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "CLIENTE",
+          "linea": 24,
+          "texto": "El servicio está lento.",
+          "tokens": [
+            {
+              "categoria": "RELLENO",
+              "lexema": "El",
+              "normalizado": "el",
+              "canonico": "ART",
+              "desp": 11
+            },
+            {
+              "categoria": "ASP_SERV",
+              "lexema": "servicio",
+              "normalizado": "servicio",
+              "canonico": "SERVICIO",
+              "desp": 14
+            },
+            {
+              "categoria": "V_COPULA",
+              "lexema": "está",
+              "normalizado": "esta",
+              "canonico": "SER_ESTAR",
+              "desp": 23
+            },
+            {
+              "categoria": "ADJ_NEG",
+              "lexema": "lento",
+              "normalizado": "lento",
+              "canonico": "LENTO",
+              "desp": 28
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 33
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[ASP_SERV«servicio»] pred_s[V_COPULA«está» modif[adj[ADJ_NEG«lento»]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C1.1",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "El servicio está lento",
+              "desde": 11,
+              "hasta": 33,
+              "conector": null,
+              "tipo": "VALORACION",
+              "aspecto": "SERVICIO",
+              "valoracion": "NEGATIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": null,
+              "entidades": [],
+              "reglas": [
+                "R-SUJ",
+                "R-COP"
+              ],
+              "temporal": null
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "NEGATIVA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        },
+        {
+          "numero": 3,
+          "rol": "CLIENTE",
+          "linea": 26,
+          "texto": "Ahora funciona bien.",
+          "tokens": [
+            {
+              "categoria": "T_AHORA",
+              "lexema": "Ahora",
+              "normalizado": "ahora",
+              "canonico": "AHORA",
+              "desp": 11
+            },
+            {
+              "categoria": "V_FUNC",
+              "lexema": "funciona",
+              "normalizado": "funciona",
+              "canonico": "FUNCIONAR",
+              "desp": 17
+            },
+            {
+              "categoria": "ADJ_POS",
+              "lexema": "bien",
+              "normalizado": "bien",
+              "canonico": "BUENO",
+              "desp": 26
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 30
+            }
+          ],
+          "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C3.1",
+              "turno": 3,
+              "actor": "CLIENTE",
+              "fragmento": "Ahora funciona bien",
+              "desde": 11,
+              "hasta": 30,
+              "conector": null,
+              "tipo": "FUNCIONAMIENTO",
+              "aspecto": "SERVICIO",
+              "valoracion": "POSITIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": "OK",
+              "entidades": [],
+              "reglas": [
+                "R-FUNC",
+                "R-AHORA"
+              ],
+              "temporal": "AHORA"
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "POSITIVA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "MIXTA",
+          "evidencias": [
+            "C1.1",
+            "C3.1"
+          ],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "RESUELTO",
+        "regla": "R-EST-RES",
+        "evidencias": [
+          "C3.1"
+        ]
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              },
+              {
+                "turno": 3,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": []
+      },
+      "correcciones": [],
+      "errores": [
+        {
+          "tipo": "FORMATO",
+          "linea": 25,
+          "codigo": "ROL_INVALIDO",
+          "detalle": "rol 'SOPORTE': debe ser CLIENTE o AGENTE",
+          "contenido": "2 SOPORTE: Reinicie el router."
+        }
+      ],
+      "no_interpretado": [],
+      "evidencias": [
+        {
+          "id": "C1.1",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "El servicio está lento",
+          "desde": 11,
+          "hasta": 33,
+          "conector": null,
+          "tipo": "VALORACION",
+          "aspecto": "SERVICIO",
+          "valoracion": "NEGATIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": null,
+          "entidades": [],
+          "reglas": [
+            "R-SUJ",
+            "R-COP"
+          ],
+          "temporal": null
+        },
+        {
+          "id": "C3.1",
+          "turno": 3,
+          "actor": "CLIENTE",
+          "fragmento": "Ahora funciona bien",
+          "desde": 11,
+          "hasta": 30,
+          "conector": null,
+          "tipo": "FUNCIONAMIENTO",
+          "aspecto": "SERVICIO",
+          "valoracion": "POSITIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": "OK",
+          "entidades": [],
+          "reglas": [
+            "R-FUNC",
+            "R-AHORA"
+          ],
+          "temporal": "AHORA"
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "analisis": "COMPLETO",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "CLIENTE",
+          "linea": 29,
+          "texto": "Ahora funciona bien.",
+          "tokens": [
+            {
+              "categoria": "T_AHORA",
+              "lexema": "Ahora",
+              "normalizado": "ahora",
+              "canonico": "AHORA",
+              "desp": 11
+            },
+            {
+              "categoria": "V_FUNC",
+              "lexema": "funciona",
+              "normalizado": "funciona",
+              "canonico": "FUNCIONAR",
+              "desp": 17
+            },
+            {
+              "categoria": "ADJ_POS",
+              "lexema": "bien",
+              "normalizado": "bien",
+              "canonico": "BUENO",
+              "desp": 26
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 30
+            }
+          ],
+          "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C1.1",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "Ahora funciona bien",
+              "desde": 11,
+              "hasta": 30,
+              "conector": null,
+              "tipo": "FUNCIONAMIENTO",
+              "aspecto": "SERVICIO",
+              "valoracion": "POSITIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": "OK",
+              "entidades": [],
+              "reglas": [
+                "R-FUNC",
+                "R-AHORA"
+              ],
+              "temporal": "AHORA"
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "POSITIVA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "POSITIVA",
+          "evidencias": [
+            "C1.1"
+          ],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "RESUELTO",
+        "regla": "R-EST-RES",
+        "evidencias": [
+          "C1.1"
+        ]
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": []
+      },
+      "correcciones": [],
+      "errores": [],
+      "no_interpretado": [],
+      "evidencias": [
+        {
+          "id": "C1.1",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "Ahora funciona bien",
+          "desde": 11,
+          "hasta": 30,
+          "conector": null,
+          "tipo": "FUNCIONAMIENTO",
+          "aspecto": "SERVICIO",
+          "valoracion": "POSITIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": "OK",
+          "entidades": [],
+          "reglas": [
+            "R-FUNC",
+            "R-AHORA"
+          ],
+          "temporal": "AHORA"
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "analisis": "COMPLETO",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "CLIENTE",
+          "linea": 32,
+          "texto": "lent",
+          "tokens": [
+            {
+              "categoria": "PALABRA",
+              "lexema": "lent",
+              "normalizado": "lent",
+              "canonico": null,
+              "desp": 11
+            }
+          ],
+          "estructura": null,
+          "clausulas": [],
+          "valoraciones": {
+            "SERVICIO": "SIN_EVIDENCIA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": [
+            {
+              "turno": 1,
+              "desp": 11,
+              "lexema": "lent",
+              "motivo": "EMPATE_LEVENSHTEIN"
+            }
+          ]
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "NO_CONFIRMADO",
+        "regla": "R-EST-NC",
+        "evidencias": []
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": []
+      },
+      "correcciones": [
+        {
+          "turno": 1,
+          "desp": 11,
+          "original": "lent",
+          "normalizado": "lent",
+          "resultado": "lent",
+          "accion": "EMPATE",
+          "candidatos": [
+            "lenta",
+            "lento"
+          ]
+        }
+      ],
+      "errores": [],
+      "no_interpretado": [
+        {
+          "turno": 1,
+          "desp": 11,
+          "lexema": "lent",
+          "motivo": "EMPATE_LEVENSHTEIN"
+        }
+      ],
+      "evidencias": []
+    }
+  ],
+  "errores_globales": [],
+  "catalogo_reglas": {
+    "R-SUJ": "sujeto ⇒ aspecto: ASP_SERV→SERVICIO, ASP_ATEN→ATENCION, ASP_CLAR→CLARIDAD, AGENTE→ATENCION",
+    "R-COP": "sujeto [V_COPULA] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA",
+    "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
+    "R-SEG-ADJ": "V_SEGUIR modif ⇒ SERVICIO; «sigue» + adjetivo negativo = FALLA, + positivo = OK",
+    "R-SEG-SIN": "V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA",
+    "R-CORTE": "SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (recurrente si hay frecuencia)",
+    "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-MEN": "sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-SOLIC": "V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|T_FUTURO] ⇒ compromiso futuro",
+    "R-TICKET": "TICKET_PAL [V_COPULA] TICKET | TICKET ⇒ referencia a un ticket (entidad)",
+    "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
+    "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
+    "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
+    "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
+    "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
+    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
+    "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
+    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente"
+  }
+}

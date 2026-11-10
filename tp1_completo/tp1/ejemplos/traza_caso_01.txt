@@ -1,0 +1,51 @@
+══ SESION S01 · análisis COMPLETO ════════════════════════════════════════
+  T1 CLIENTE «El servicio está lento.»
+       ⇒ SERVICIO: NEGATIVA
+  T2 AGENTE  «Reinicie el router.»
+       ⇒ SIN_EVIDENCIA en los tres aspectos
+  T3 CLIENTE «Ahora funciona bien.»
+       ⇒ SERVICIO: POSITIVA
+  Resumen por aspecto (evidencia del CLIENTE):
+     SERVICIO  MIXTA          C1.1, C3.1
+     ATENCION  SIN_EVIDENCIA  
+     CLARIDAD  SIN_EVIDENCIA  
+  Estado: RESUELTO  [R-EST-RES]  evidencias: C3.1
+  Entidades: tickets=—; participantes=CLIENTE, AGENTE
+
+Lote: 1 sesiones (1 completas, 0 parciales) → ejemplos/salida_caso_01.json
+
+┌── TRAZA DE LA SESIÓN S01 ────────────────────────────────────────
+│ Turno 1 · CLIENTE · línea 2
+│  [1] Texto original : 1 CLIENTE: El servicio está lento.
+│  [2] Tokens         : RELLENO«El»@11=ART  ASP_SERV«servicio»@14=SERVICIO  V_COPULA«está»@23=SER_ESTAR  ADJ_NEG«lento»@28=LENTO  PUNTO«.»@33
+│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[ASP_SERV«servicio»] pred_s[V_COPULA«está» modif[adj[ADJ_NEG«lento»]]]]]] texto_r[PUNTO«.»]]
+│  [4] Tabla símbolos :
+│        BUSCAR PARTICIPANTE CLIENTE @S01 -> NO_EXISTE
+│        INSERTAR PARTICIPANTE CLIENTE @S01 (apariciones=1)
+│  [5] Acción semántica:
+│        C1.1 «El servicio está lento» → SERVICIO=NEGATIVA  [R-SUJ, R-COP]
+│  [6] Resultado      : SERVICIO: NEGATIVA | ATENCION: SIN_EVIDENCIA | CLARIDAD: SIN_EVIDENCIA
+│
+│ Turno 2 · AGENTE · línea 3
+│  [1] Texto original : 2 AGENTE: Reinicie el router.
+│  [2] Tokens         : V_SOLICITUD«Reinicie»@10=REINICIAR  RELLENO«el»@19=ART  ROUTER«router»@22=ROUTER  PUNTO«.»@28
+│  [3] Estructura     : texto[oracion[clausula[nucleo[pred_l[V_SOLICITUD«Reinicie» obj_router[ROUTER«router»]]]]] texto_r[PUNTO«.»]]
+│  [4] Tabla símbolos :
+│        BUSCAR PARTICIPANTE AGENTE @S01 -> NO_EXISTE
+│        INSERTAR PARTICIPANTE AGENTE @S01 (apariciones=1)
+│  [5] Acción semántica:
+│        C2.1 «Reinicie el router» → SOLICITUD  [R-SOLIC]
+│  [6] Resultado      : SERVICIO: SIN_EVIDENCIA | ATENCION: SIN_EVIDENCIA | CLARIDAD: SIN_EVIDENCIA
+│
+│ Turno 3 · CLIENTE · línea 4
+│  [1] Texto original : 3 CLIENTE: Ahora funciona bien.
+│  [2] Tokens         : T_AHORA«Ahora»@11=AHORA  V_FUNC«funciona»@17=FUNCIONAR  ADJ_POS«bien»@26=BUENO  PUNTO«.»@30
+│  [3] Estructura     : texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]
+│  [4] Tabla símbolos :
+│        BUSCAR PARTICIPANTE CLIENTE @S01 -> ENCONTRADO
+│        DUPLICADO->ENLAZAR PARTICIPANTE CLIENTE @S01 (apariciones=2)
+│  [5] Acción semántica:
+│        C3.1 «Ahora funciona bien» → SERVICIO=POSITIVA declaración=OK  [R-FUNC, R-AHORA]
+│  [6] Resultado      : SERVICIO: POSITIVA | ATENCION: SIN_EVIDENCIA | CLARIDAD: SIN_EVIDENCIA
+│
+└────────────────────────────────────────────────────────────

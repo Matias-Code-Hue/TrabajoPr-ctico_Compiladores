@@ -42,5 +42,13 @@
   "esperado": {"S01": {"analisis": "PARCIAL", "aspectos": {"SERVICIO": "POSITIVA"}, "estado": "RESUELTO",
                        "errores": ["ORDEN_INCONSISTENTE", "ROL_INVALIDO", "SINTAXIS", "TICKET_MAL_FORMADO"],
                        "no_interpretado": ["TK-12", "Ticket", "respuesta", "sin"]},
-               "S02": {"analisis": "COMPLETO", "aspectos": {"SERVICIO": "NEGATIVA"}, "estado": "NO_RESUELTO"}}}
+               "S02": {"analisis": "COMPLETO", "aspectos": {"SERVICIO": "NEGATIVA"}, "estado": "NO_RESUELTO"}}},
+ {"caso": "13", "archivo": "caso_13.txt", "origen": "propio (sujeto explícito + «sigue» / «se corta»)",
+  "situacion": "«El internet sigue lento»; luego «Ahora funciona, pero el servicio se corta todos los días».",
+  "esperado": {"S01": {"analisis": "COMPLETO", "aspectos": {"SERVICIO": "MIXTA"}, "estado": "TEMPORAL"}}},
+ {"caso": "14", "archivo": "caso_14.txt", "origen": "propio (recuperación de formato)",
+  "situacion": "Salto de número (1, 3, 4): solo se rechaza el 3. Id de sesión repetido: la segunda S01 se descarta y no contamina la tabla de símbolos.",
+  "esperado": {"S01": {"analisis": "PARCIAL", "aspectos": {"SERVICIO": "MIXTA"}, "estado": "RESUELTO",
+                       "errores": ["ORDEN_INCONSISTENTE"]},
+               "S02": {"analisis": "COMPLETO", "aspectos": {"SERVICIO": "POSITIVA"}, "estado": "RESUELTO"}}}
 ]

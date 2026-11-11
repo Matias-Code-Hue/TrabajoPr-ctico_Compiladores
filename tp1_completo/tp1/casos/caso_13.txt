@@ -1,0 +1,5 @@
+SESION S01
+1 CLIENTE: El internet sigue lento.
+2 AGENTE: Reinicie el router.
+3 CLIENTE: Ahora funciona, pero el servicio se corta todos los días.
+FIN

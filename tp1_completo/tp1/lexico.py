@@ -171,7 +171,7 @@ ESTRUCTURA = [  # (categoría, canónico, ER)   -- orden = prioridad
 
 
 def cargar_vocabulario(ruta):
-    with open(ruta, encoding='utf-8') as f:
+    with open(ruta, encoding='utf-8-sig') as f:        # utf-8-sig: tolera el BOM de los editores de Windows
         return json.load(f)
 
 

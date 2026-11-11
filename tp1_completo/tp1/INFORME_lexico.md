@@ -20,7 +20,7 @@ Procedimiento aplicado (apuntes de clase, Clases 4 y 5): **ER → AFN (Thompson)
 |---|---|---|
 | **Diccionario de vocabulario** | Palabras del dominio con su categoría y forma canónica | `vocabulario.json` |
 | **Estructura fija** | `SESION`, `FIN`, `CLIENTE`, `AGENTE` | código (`ESTRUCTURA`) |
-| **Tabla de símbolos** | Sesión, rol, tickets y apariciones (ámbito: sesión) | módulo aparte (paso posterior) |
+| **Tabla de símbolos** | Sesión, rol, tickets y apariciones (ámbito: sesión) | `simbolos.py` |
 
 El vocabulario se mantiene **separado de la tabla de símbolos**, como exige el enunciado. Se carga por parámetro (`construir_afd(vocab)`), lo que permite probar el caso 08 con el diccionario reducido `{lenta, lento}`.
 
@@ -228,8 +228,10 @@ devolver ultimo       # si es nulo → error léxico
 - No hay palabras compuestas: «todos los días» son tres tokens (`FREC`, `RELLENO`, `FREC`) y la gramática los compone.
 - Está pendiente la minimización del AFD completo (Clase 5, §5.4); el AFD de `TICKET` ya es mínimo.
 
-## 5. Próximos pasos
+## 5. Etapas siguientes del pipeline
 
-1. Lector de formato: `SESION Sxx` / turno / `FIN`, con rechazo de rol inválido y resincronización en la línea siguiente.
-2. BNF y gramática LL(1) con PRIM/SGTE, usando estas categorías como terminales.
-3. Tabla de símbolos, acciones semánticas y corrector de Levenshtein.
+1. Lector de formato (`lector.py`): `SESION Sxx` / turno / `FIN`. Antes de escanear normaliza cada línea a NFC
+   (una «á» escrita como `a` + tilde combinante pasa a ser un solo carácter) y descarta el BOM inicial.
+2. Corrector (`corrector.py`): Levenshtein sobre los tokens `PALABRA`.
+3. Gramática LL(1) y parser (`GRAMATICA.md`, `DERIVACION.md`), con estas categorías como terminales.
+4. Reglas semánticas y estado (`REGLAS_SEMANTICAS.md`) y tabla de símbolos (`simbolos.py`).

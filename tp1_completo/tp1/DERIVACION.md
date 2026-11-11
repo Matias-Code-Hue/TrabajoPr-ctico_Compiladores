@@ -40,7 +40,7 @@ de la gramática original:
 | Parte | Longitud máx. | Cadenas generadas | Original = L1 = L2 = final |
 |---|---|---|---|
 | Formato | 21 tokens | 18 | sí |
-| Lingüística | 5 tokens | 27 533 | sí |
+| Lingüística | 5 tokens | 28 425 | sí |
 
 Es una verificación **acotada**, no una demostración; las transformaciones de clase preservan el lenguaje por
 construcción, y la enumeración protege contra errores de aplicación (exactamente el caso de `VIV` en el ejercicio de números romanos).
@@ -84,7 +84,7 @@ PRIM(`turnos_r`) = {NUM, ε} y SGTE(`turnos_r`) = {KW_FIN}: disjuntos. No hay fa
 
 Se escribió pensando solo en **describir** el lenguaje: sin preocuparse por la predictividad, con recursión por la
 izquierda natural para listas, y con una alternativa por cada forma de escribir una cláusula
-(`sujeto V_COPULA modif`, `sujeto modif`, `sujeto V_FUNC`, …). El alcance de la negación ya está fijado aquí:
+(`sujeto V_COPULA modif`, `sujeto modif`, `sujeto V_FUNC`, `sujeto V_SEGUIR seg`, `sujeto SE V_CORTA`, …). El alcance de la negación ya está fijado aquí:
 `NEG` solo precede a `pred_neg` o a un sustantivo (`seg`). Gramática completa en el apéndice A.2.
 
 Fragmento representativo:
@@ -94,6 +94,7 @@ Fragmento representativo:
 <oracion> ::= <oracion> <sep> <clausula> | <clausula>
 <sep>     ::= PERO | COMA | COMA PERO
 <nucleo>  ::= <sujeto> | <sujeto> V_COPULA <modif> | <sujeto> <modif> | <sujeto> V_FUNC | <sujeto> V_FUNC <modif>
+            | <sujeto> V_SEGUIR <seg> | <sujeto> SE V_CORTA | <sujeto> SE V_CORTA <frec>
             | <sujeto> NEG <pred_neg> | <pred_l> | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
 <frec>    ::= <frec> FREC | FREC
 ```
@@ -142,10 +143,10 @@ Regla de clase: `A → αβ₁ | αβ₂  ≡  A → αR ; R → β₁ | β₂`.
 |---|---|---|
 | `texto` | `lista`, `lista PUNTO` (α = `lista`) | `texto → lista texto_p` ; `texto_p → PUNTO \| ε` |
 | `sep` | `COMA`, `COMA PERO` (α = `COMA`) | `sep → PERO \| COMA sep_c` ; `sep_c → PERO \| ε` |
-| `nucleo` | seis alternativas que empiezan con `sujeto` | `nucleo → sujeto pred_s \| …` ; `pred_s → V_COPULA modif \| V_FUNC modif_op \| NEG pred_neg \| modif \| ε` |
+| `nucleo` | nueve alternativas que empiezan con `sujeto` | `nucleo → sujeto pred_s \| …` ; `pred_s → NEG pred_neg \| V_COPULA modif \| V_FUNC modif_op \| V_SEGUIR seg \| SE V_CORTA frec_op \| modif \| ε` |
 | `nucleo` | `TICKET_PAL`, `TICKET_PAL TICKET`, `TICKET_PAL V_COPULA TICKET` | `TICKET_PAL tk_op` ; `tk_op → V_COPULA TICKET \| TICKET \| ε` |
 | `pred_l` / `pred_neg` | `V_FUNC`, `V_FUNC modif` | `V_FUNC modif_op` ; `modif_op → modif \| ε` |
-| `pred_l` | `SE V_CORTA`, `SE V_CORTA frec` | `SE V_CORTA frec_op` |
+| `pred_l` / `pred_s` | `SE V_CORTA`, `SE V_CORTA frec` | `SE V_CORTA frec_op` |
 | `pred_l` / `pred_neg` | `V_ENTENDER`, `V_ENTENDER ASP_CLAR` | `V_ENTENDER obj_clar` ; `obj_clar → ASP_CLAR \| ε` |
 | `pred_l` | `V_SOLICITUD`, `V_SOLICITUD ROUTER` | `V_SOLICITUD obj_router` ; `obj_router → ROUTER \| ε` |
 | `pred_l` | `T_FUTURO V_COMPROMISO [TICKET \| T_FUTURO]` y `V_COMPROMISO [TICKET \| T_FUTURO]` | `… V_COMPROMISO ref_op` ; `ref_op → TICKET \| T_FUTURO \| ε` |
@@ -153,14 +154,14 @@ Regla de clase: `A → αβ₁ | αβ₂  ≡  A → αR ; R → β₁ | β₂`.
 
 Observaciones de método (como en el ejercicio de romanos):
 
-- **`nucleo` es un caso de factor común *directo***: seis alternativas comparten el prefijo `sujeto`. Se factoriza
+- **`nucleo` es un caso de factor común *directo***: nueve alternativas comparten el prefijo `sujeto`. Se factoriza
   `sujeto` una sola vez y la decisión pasa a `pred_s`. Como `sujeto` deriva cuatro terminales distintos
   (`ASP_SERV`, `ASP_ATEN`, `ASP_CLAR`, `AGENTE`), el PRIM de esas alternativas coincide completo.
 - **`NEG` dentro de `pred_s`**: al factorizar, la alternativa `sujeto NEG pred_neg` pasa a ser `pred_s → NEG pred_neg`.
   El alcance de la negación **no cambió**: sigue siendo exactamente `pred_neg`.
 - Se introdujo la alternativa `pred_s → ε` (sujeto solo, p. ej. «el servicio»). Fue necesario
   comprobar que su SGTE `{COMA, EOL, PERO, PUNTO}` no se superpone con los PRIM de las demás alternativas de
-  `pred_s` (`NEG`, `V_COPULA`, `V_FUNC`, `INT`, `ADJ_*`). **No se superpone.**
+  `pred_s` (`NEG`, `V_COPULA`, `V_FUNC`, `V_SEGUIR`, `SE`, `INT`, `ADJ_*`). **No se superpone.**
 
 **Diagnóstico L2** (calculado): **PRIM∩PRIM = ∅** en todas las variables. Solo persiste el conflicto
 PRIM∩SGTE de `lista_r` con `PUNTO`.
@@ -227,9 +228,9 @@ Además se fusionan `frec_op` y `frec_r` en una sola variable (`frec → FREC fr
 | Recursión por la izquierda | ninguna |
 | PRIM de alternativas disjuntos | **sí**, en todas las variables |
 | PRIM∩SGTE en alternativas anulables | **vacío** |
-| Lenguaje igual a L0 (≤ 5 tokens, 27 533 cadenas) | **sí** |
+| Lenguaje igual a L0 (≤ 5 tokens, 28 425 cadenas) | **sí** |
 
-**L3 es LL(1)** y es la gramática de `GRAMATICA.md`, con su tabla de PRIM/SGTE y su tabla predictiva (197 celdas, sin colisiones).
+**L3 es LL(1)** y es la gramática de `GRAMATICA.md`, con su tabla de PRIM/SGTE y su tabla predictiva (199 celdas, sin colisiones).
 
 ---
 
@@ -263,7 +264,7 @@ Además se fusionan `frec_op` y `frec_r` en una sola variable (`frec → FREC fr
 <oracion> ::= <oracion> <sep> <clausula> | <clausula>
 <sep> ::= PERO | COMA | COMA PERO
 <clausula> ::= T_AHORA <nucleo> | <nucleo>
-<nucleo> ::= <sujeto> | <sujeto> V_COPULA <modif> | <sujeto> <modif> | <sujeto> V_FUNC | <sujeto> V_FUNC <modif> | <sujeto> NEG <pred_neg> | <pred_l> | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
+<nucleo> ::= <sujeto> | <sujeto> V_COPULA <modif> | <sujeto> <modif> | <sujeto> V_FUNC | <sujeto> V_FUNC <modif> | <sujeto> V_SEGUIR <seg> | <sujeto> SE V_CORTA | <sujeto> SE V_CORTA <frec> | <sujeto> NEG <pred_neg> | <pred_l> | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
 <sujeto> ::= ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
 <pred_l> ::= NEG <pred_neg> | V_FUNC | V_FUNC <modif> | V_SEGUIR <seg> | SE V_CORTA | SE V_CORTA <frec> | V_ENTENDER | V_ENTENDER ASP_CLAR | V_SOLICITUD | V_SOLICITUD ROUTER | T_FUTURO V_COMPROMISO | T_FUTURO V_COMPROMISO TICKET | T_FUTURO V_COMPROMISO T_FUTURO | V_COMPROMISO | V_COMPROMISO TICKET | V_COMPROMISO T_FUTURO
 <pred_neg> ::= V_FUNC | V_FUNC <modif> | V_COPULA <modif> | V_ENTENDER | V_ENTENDER ASP_CLAR
@@ -283,7 +284,7 @@ Además se fusionan `frec_op` y `frec_r` en una sola variable (`frec → FREC fr
 <oracion_r> ::= <sep> <clausula> <oracion_r> | ε
 <sep> ::= PERO | COMA | COMA PERO
 <clausula> ::= T_AHORA <nucleo> | <nucleo>
-<nucleo> ::= <sujeto> | <sujeto> V_COPULA <modif> | <sujeto> <modif> | <sujeto> V_FUNC | <sujeto> V_FUNC <modif> | <sujeto> NEG <pred_neg> | <pred_l> | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
+<nucleo> ::= <sujeto> | <sujeto> V_COPULA <modif> | <sujeto> <modif> | <sujeto> V_FUNC | <sujeto> V_FUNC <modif> | <sujeto> V_SEGUIR <seg> | <sujeto> SE V_CORTA | <sujeto> SE V_CORTA <frec> | <sujeto> NEG <pred_neg> | <pred_l> | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
 <sujeto> ::= ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
 <pred_l> ::= NEG <pred_neg> | V_FUNC | V_FUNC <modif> | V_SEGUIR <seg> | SE V_CORTA | SE V_CORTA <frec> | V_ENTENDER | V_ENTENDER ASP_CLAR | V_SOLICITUD | V_SOLICITUD ROUTER | T_FUTURO V_COMPROMISO | T_FUTURO V_COMPROMISO TICKET | T_FUTURO V_COMPROMISO T_FUTURO | V_COMPROMISO | V_COMPROMISO TICKET | V_COMPROMISO T_FUTURO
 <pred_neg> ::= V_FUNC | V_FUNC <modif> | V_COPULA <modif> | V_ENTENDER | V_ENTENDER ASP_CLAR
@@ -308,7 +309,7 @@ Además se fusionan `frec_op` y `frec_r` en una sola variable (`frec → FREC fr
 <clausula> ::= T_AHORA <nucleo> | <nucleo>
 <nucleo> ::= <sujeto> <pred_s> | <pred_l> | TICKET_PAL <tk_op> | TICKET | CORTESIA
 <sujeto> ::= ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
-<pred_s> ::= NEG <pred_neg> | V_COPULA <modif> | V_FUNC <modif_op> | <modif> | ε
+<pred_s> ::= NEG <pred_neg> | V_COPULA <modif> | V_FUNC <modif_op> | V_SEGUIR <seg> | SE V_CORTA <frec_op> | <modif> | ε
 <pred_l> ::= NEG <pred_neg> | V_FUNC <modif_op> | V_SEGUIR <seg> | SE V_CORTA <frec_op> | V_ENTENDER <obj_clar> | V_SOLICITUD <obj_router> | T_FUTURO V_COMPROMISO <ref_op> | V_COMPROMISO <ref_op>
 <pred_neg> ::= V_FUNC <modif_op> | V_COPULA <modif> | V_ENTENDER <obj_clar>
 <seg> ::= <modif> | NEG ASP_SERV
@@ -336,7 +337,7 @@ Además se fusionan `frec_op` y `frec_r` en una sola variable (`frec → FREC fr
 <ahora_op> ::= T_AHORA | ε
 <nucleo> ::= <sujeto> <pred_s> | <pred_l> | TICKET_PAL <tk_op> | TICKET | CORTESIA
 <sujeto> ::= ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
-<pred_s> ::= NEG <pred_neg> | V_COPULA <modif> | V_FUNC <modif_op> | <modif> | ε
+<pred_s> ::= NEG <pred_neg> | V_COPULA <modif> | V_FUNC <modif_op> | V_SEGUIR <seg> | SE V_CORTA <frec> | <modif> | ε
 <pred_l> ::= NEG <pred_neg> | V_FUNC <modif_op> | V_SEGUIR <seg> | SE V_CORTA <frec> | V_ENTENDER <obj_clar> | V_SOLICITUD <obj_router> | T_FUTURO V_COMPROMISO <ref_op> | V_COMPROMISO <ref_op>
 <pred_neg> ::= V_FUNC <modif_op> | V_COPULA <modif> | V_ENTENDER <obj_clar>
 <seg> ::= <modif> | NEG ASP_SERV

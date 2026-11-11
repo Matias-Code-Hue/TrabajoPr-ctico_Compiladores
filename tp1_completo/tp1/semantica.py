@@ -30,9 +30,9 @@ REGLAS = {
     'R-FUNC':   'V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA',
     'R-NEG':    'NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA',
     'R-MUY':    'INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad',
-    'R-SEG-ADJ': 'V_SEGUIR modif ⇒ SERVICIO; «sigue» + adjetivo negativo = FALLA, + positivo = OK',
+    'R-SEG-ADJ': '[sujeto] V_SEGUIR modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK',
     'R-SEG-SIN': 'V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA',
-    'R-CORTE':  'SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (recurrente si hay frecuencia)',
+    'R-CORTE':  '[sujeto] SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin expresión de frecuencia)',
     'R-ENT':    '[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG',
     'R-MEN':    'sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)',
     'R-SOLIC':  'V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)',
@@ -229,11 +229,13 @@ def _seg_sin(n):
     return {'k': 'SEG_SIN', 'pol': -1, 'reglas': ['R-SEG-SIN']}
 
 
+@acc('pred_s', 'V_SEGUIR seg')
 @acc('pred_l', 'V_SEGUIR seg')
 def _p_seguir(n):
     return ev(n.hijos[1])
 
 
+@acc('pred_s', 'SE V_CORTA frec')
 @acc('pred_l', 'SE V_CORTA frec')
 def _p_corta(n):
     return {'k': 'CORTE', 'pol': -1, 'n_frec': ev(n.hijos[2]), 'reglas': ['R-CORTE']}
@@ -274,6 +276,8 @@ def _construir(p, aspecto, con_sujeto):
         tk = p['ref'].get('ticket')
         return _hecho('COMPROMISO', entidades=[tk.norm] if tk else [], reglas=reglas)
     asp = aspecto or ('CLARIDAD' if k == 'ENT' else 'SERVICIO')
+    if k == 'SEG_SIN':
+        asp = 'SERVICIO'                 # «sigo sin internet»: lo negado es el sustantivo ASP_SERV, no el sujeto
     pol, neg = p['pol'], p.get('neg', False)
     if neg:
         pol, reglas = -pol, reglas + ['R-NEG']
@@ -287,7 +291,7 @@ def _construir(p, aspecto, con_sujeto):
             decl = 'FALLA'
         elif k == 'CORTE':
             decl = 'RECUR'
-    tipo = 'VALORACION' if k in ('COP', 'ENT') else 'FUNCIONAMIENTO'
+    tipo = 'FUNCIONAMIENTO' if decl else 'VALORACION'   # solo hay declaración de funcionamiento sobre el SERVICIO
     return _hecho(tipo, aspecto=asp, valoracion=NOMBRE_POL[pol], intensidad=p.get('int'), negada=neg,
                   declaracion=decl, reglas=reglas)
 

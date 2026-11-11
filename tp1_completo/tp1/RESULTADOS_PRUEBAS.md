@@ -279,3 +279,60 @@ Reglas activadas: `R-EST-NORES` (C1.1); `R-SEG-SIN` (C1.1)
 
 - C1.1 (CLIENTE) «Sigo sin internet» → SERVICIO NEGATIVA, declaración FALLA
 - Estado: **NO_RESUELTO** por `R-EST-NORES`
+
+## Caso 13 — «El internet sigue lento»; luego «Ahora funciona, pero el servicio se corta todos los días».
+
+- Origen: propio (sujeto explícito + «sigue» / «se corta») · archivo `casos/caso_13.txt`
+
+**Sesión S01: OK**
+
+| | Esperado | Obtenido |
+|---|---|---|
+| analisis | COMPLETO | COMPLETO |
+| estado | TEMPORAL | TEMPORAL |
+| SERVICIO | MIXTA | MIXTA |
+| ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
+
+Reglas activadas: `R-AHORA` (C3.1); `R-CORTE` (C3.2); `R-EST-TEMP` (C3.1, C3.2); `R-FUNC` (C3.1); `R-PERO` (C3.2); `R-SEG-ADJ` (C1.1); `R-SUJ` (C1.1, C3.2)
+
+- C1.1 (CLIENTE) «El internet sigue lento» → SERVICIO NEGATIVA, declaración FALLA
+- C3.1 (CLIENTE) «Ahora funciona» → SERVICIO POSITIVA, declaración OK
+- C3.2 (CLIENTE) «el servicio se corta todos los días» → SERVICIO NEGATIVA, declaración RECUR
+- Estado: **TEMPORAL** por `R-EST-TEMP`
+
+## Caso 14 — Salto de número (1, 3, 4): solo se rechaza el 3. Id de sesión repetido: la segunda S01 se descarta y no contamina la tabla de símbolos.
+
+- Origen: propio (recuperación de formato) · archivo `casos/caso_14.txt`
+
+**Sesión S01: OK**
+
+| | Esperado | Obtenido |
+|---|---|---|
+| analisis | PARCIAL | PARCIAL |
+| estado | RESUELTO | RESUELTO |
+| SERVICIO | MIXTA | MIXTA |
+| ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| errores | ['ORDEN_INCONSISTENTE'] | ['ORDEN_INCONSISTENTE'] |
+
+Reglas activadas: `R-AHORA` (C4.1); `R-EST-RES` (C4.1); `R-FUNC` (C1.1, C4.1); `R-NEG` (C1.1)
+
+- C1.1 (CLIENTE) «No funciona» → SERVICIO NEGATIVA, declaración FALLA
+- C4.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
+- Estado: **RESUELTO** por `R-EST-RES`
+
+**Sesión S02: OK**
+
+| | Esperado | Obtenido |
+|---|---|---|
+| analisis | COMPLETO | COMPLETO |
+| estado | RESUELTO | RESUELTO |
+| SERVICIO | POSITIVA | POSITIVA |
+| ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
+
+Reglas activadas: `R-EST-RES` (C1.1); `R-SEG-ADJ` (C1.1); `R-SUJ` (C1.1)
+
+- C1.1 (CLIENTE) «El servicio sigue estable» → SERVICIO POSITIVA, declaración OK
+- Estado: **RESUELTO** por `R-EST-RES`

@@ -10,12 +10,14 @@ Uso:
 """
 import argparse
 import json
+import os
 import sys
 
 from analizador import analizar_lote
 from lexico import cargar_vocabulario
 
 ASPECTOS = ('SERVICIO', 'ATENCION', 'CLARIDAD')
+VOCAB_POR_DEFECTO = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vocabulario.json')
 
 
 def _vista_sesion(s):
@@ -80,7 +82,7 @@ def _traza_sesion(sid, trazas, detalle):
 def main(argv=None):
     ap = argparse.ArgumentParser(description='Speech Analytics (TP1 Diseño de Compiladores)')
     ap.add_argument('entrada')
-    ap.add_argument('--vocab', default='vocabulario.json')
+    ap.add_argument('--vocab', default=VOCAB_POR_DEFECTO)
     ap.add_argument('--dic', help='diccionario reducido «forma1,forma2,…» (todas bajo ADJ_NEG/LENTO); para el caso 08')
     ap.add_argument('--json', default='salida.json')
     ap.add_argument('--traza', metavar='SID|todas')
@@ -88,11 +90,19 @@ def main(argv=None):
     ap.add_argument('--quiet', action='store_true', help='no imprimir la vista legible')
     a = ap.parse_args(argv)
 
-    vocab = cargar_vocabulario(a.vocab)
-    if a.dic:
-        vocab = {'ADJ_NEG': {'LENTO': [x.strip() for x in a.dic.split(',')]}}
-    with open(a.entrada, encoding='utf-8') as f:
-        resultado, trazas = analizar_lote(f.readlines(), vocab, a.entrada)
+    try:
+        vocab = cargar_vocabulario(a.vocab)
+        if a.dic:
+            vocab = {'ADJ_NEG': {'LENTO': [x.strip() for x in a.dic.split(',')]}}
+        with open(a.entrada, encoding='utf-8-sig') as f:       # utf-8-sig: tolera el BOM de los editores de Windows
+            lineas = f.readlines()
+        resultado, trazas = analizar_lote(lineas, vocab, a.entrada)
+    except (OSError, UnicodeDecodeError) as e:                 # archivo inexistente o que no es UTF-8
+        print(f'No se pudo leer la entrada o el vocabulario: {e}', file=sys.stderr)
+        return 2
+    except ValueError as e:                                    # JSON inválido o forma duplicada en el vocabulario
+        print(f'Vocabulario inválido: {e}', file=sys.stderr)
+        return 2
     with open(a.json, 'w', encoding='utf-8') as f:
         json.dump(resultado, f, ensure_ascii=False, indent=2)
     if not a.quiet:

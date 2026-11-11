@@ -42,7 +42,7 @@ lista -> lista PUNTO oracion | oracion
 oracion -> oracion sep clausula | clausula
 sep -> PERO | COMA | COMA PERO
 clausula -> T_AHORA nucleo | nucleo
-nucleo -> sujeto | sujeto V_COPULA modif | sujeto modif | sujeto V_FUNC | sujeto V_FUNC modif | sujeto NEG pred_neg | pred_l | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
+nucleo -> sujeto | sujeto V_COPULA modif | sujeto modif | sujeto V_FUNC | sujeto V_FUNC modif | sujeto V_SEGUIR seg | sujeto SE V_CORTA | sujeto SE V_CORTA frec | sujeto NEG pred_neg | pred_l | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
 sujeto -> ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
 pred_l -> NEG pred_neg | V_FUNC | V_FUNC modif | V_SEGUIR seg | SE V_CORTA | SE V_CORTA frec | V_ENTENDER | V_ENTENDER ASP_CLAR | V_SOLICITUD | V_SOLICITUD ROUTER | T_FUTURO V_COMPROMISO | T_FUTURO V_COMPROMISO TICKET | T_FUTURO V_COMPROMISO T_FUTURO | V_COMPROMISO | V_COMPROMISO TICKET | V_COMPROMISO T_FUTURO
 pred_neg -> V_FUNC | V_FUNC modif | V_COPULA modif | V_ENTENDER | V_ENTENDER ASP_CLAR
@@ -61,7 +61,7 @@ oracion -> clausula oracion_r
 oracion_r -> sep clausula oracion_r | ε
 sep -> PERO | COMA | COMA PERO
 clausula -> T_AHORA nucleo | nucleo
-nucleo -> sujeto | sujeto V_COPULA modif | sujeto modif | sujeto V_FUNC | sujeto V_FUNC modif | sujeto NEG pred_neg | pred_l | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
+nucleo -> sujeto | sujeto V_COPULA modif | sujeto modif | sujeto V_FUNC | sujeto V_FUNC modif | sujeto V_SEGUIR seg | sujeto SE V_CORTA | sujeto SE V_CORTA frec | sujeto NEG pred_neg | pred_l | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
 sujeto -> ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
 pred_l -> NEG pred_neg | V_FUNC | V_FUNC modif | V_SEGUIR seg | SE V_CORTA | SE V_CORTA frec | V_ENTENDER | V_ENTENDER ASP_CLAR | V_SOLICITUD | V_SOLICITUD ROUTER | T_FUTURO V_COMPROMISO | T_FUTURO V_COMPROMISO TICKET | T_FUTURO V_COMPROMISO T_FUTURO | V_COMPROMISO | V_COMPROMISO TICKET | V_COMPROMISO T_FUTURO
 pred_neg -> V_FUNC | V_FUNC modif | V_COPULA modif | V_ENTENDER | V_ENTENDER ASP_CLAR
@@ -85,7 +85,7 @@ sep_c -> PERO | ε
 clausula -> T_AHORA nucleo | nucleo
 nucleo -> sujeto pred_s | pred_l | TICKET_PAL tk_op | TICKET | CORTESIA
 sujeto -> ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
-pred_s -> NEG pred_neg | V_COPULA modif | V_FUNC modif_op | modif | ε
+pred_s -> NEG pred_neg | V_COPULA modif | V_FUNC modif_op | V_SEGUIR seg | SE V_CORTA frec_op | modif | ε
 pred_l -> NEG pred_neg | V_FUNC modif_op | V_SEGUIR seg | SE V_CORTA frec_op | V_ENTENDER obj_clar | V_SOLICITUD obj_router | T_FUTURO V_COMPROMISO ref_op | V_COMPROMISO ref_op
 pred_neg -> V_FUNC modif_op | V_COPULA modif | V_ENTENDER obj_clar
 seg -> modif | NEG ASP_SERV

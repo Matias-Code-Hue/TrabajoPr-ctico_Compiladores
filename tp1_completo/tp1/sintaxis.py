@@ -2,10 +2,13 @@
 
 Un único procedimiento parse(A) elige la producción con M[A, lookahead] (PRIM / SGTE de clase), llama
 recursivamente a parse() por cada variable de la producción y a _match() por cada terminal.
-Recuperación de errores: modo pánico con conjuntos de sincronización = PRIM(A) ∪ SGTE(A) ∪ {EOL}
-(Aho, §4.4.5): ante M[A, a] vacía se descartan tokens hasta uno de sincronización; si es de SGTE(A)
-se abandona A (nodo de error) y el análisis continúa. Una cláusula con error queda marcada y el
-resto del turno se sigue analizando.
+Es el analizador sintáctico predictivo de la Clase 8 (§8.2) con la pila de llamadas en lugar de la pila
+explícita, para poder devolver el árbol sobre el que se evalúan las reglas semánticas.
+Recuperación de errores (Clase 8, §8.5.4), con EOL en el papel de $:
+  · terminal esperado ≠ token      -> se informa y NO se consume entrada (se «desapila» el terminal): _match()
+  · M[A, a] vacía, a ∉ SGTE(A)     -> se informa y se descartan tokens hasta uno de PRIM(A) ∪ SGTE(A) ∪ {EOL}
+  · M[A, a] = sinc (a ∈ SGTE(A))   -> se abandona A sin consumir (nodo de error) y el análisis continúa
+Una cláusula con error queda marcada (no se interpreta) y el resto del turno se sigue analizando.
 """
 from dataclasses import dataclass, field
 

@@ -1,0 +1,12 @@
+SESION S01
+1 CLIENTE: No funciona.
+3 AGENTE: Mañana revisaremos TK-400.
+4 CLIENTE: Ahora funciona bien.
+FIN
+SESION S01
+1 CLIENTE: Sigo sin internet.
+2 AGENTE: Su ticket es TK-401.
+FIN
+SESION S02
+1 CLIENTE: El servicio sigue estable.
+FIN

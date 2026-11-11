@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Ejecutor de pruebas del TP1.
-  python3 pruebas.py                 corre los 12 casos y compara contra lo esperado
+  python3 pruebas.py                 corre todos los casos de casos/casos.json y compara contra lo esperado
   python3 pruebas.py --regresion     además compara el JSON completo contra casos/golden/ (caso de regresión)
   python3 pruebas.py --golden        (re)genera casos/golden/ con la salida actual (revisarla antes de confirmar)
   python3 pruebas.py --informe       escribe RESULTADOS_PRUEBAS.md (esperado, obtenido y reglas activadas)
@@ -20,7 +20,7 @@ def correr(caso):
     vocab_f = caso.get('vocab')
     vocab = cargar_vocabulario(os.path.join(DIR, vocab_f)) if vocab_f else cargar_vocabulario(
         os.path.join(os.path.dirname(DIR), 'vocabulario.json'))
-    with open(os.path.join(DIR, caso['archivo']), encoding='utf-8') as f:
+    with open(os.path.join(DIR, caso['archivo']), encoding='utf-8-sig') as f:
         return analizar_lote(f.readlines(), vocab, caso['archivo'])[0]
 
 
@@ -64,6 +64,9 @@ def informe(casos, resultados):
               + (f' · diccionario `casos/{caso["vocab"]}`' if caso.get('vocab') else ''), '']
         for sid, ok, exp, obt in comparar(caso, res):
             L += [f'**Sesión {sid}: {"OK" if ok else "FALLA"}**', '', '| | Esperado | Obtenido |', '|---|---|---|']
+            if obt is None:
+                L += ['| sesión | presente | **no existe en la salida** |', '']
+                continue
             if isinstance(exp, dict):
                 for k in ('analisis', 'estado'):
                     L.append(f'| {k} | {exp[k]} | {obt[k]} |')

@@ -39,7 +39,7 @@ Antes del parser, el filtro de tokens elimina `RELLENO` y `SIGNO` (sin semántic
 <ahora_op> ::= T_AHORA | ε
 <nucleo> ::= <sujeto> <pred_s> | <pred_l> | TICKET_PAL <tk_op> | TICKET | CORTESIA
 <sujeto> ::= ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
-<pred_s> ::= NEG <pred_neg> | V_COPULA <modif> | V_FUNC <modif_op> | <modif> | ε
+<pred_s> ::= NEG <pred_neg> | V_COPULA <modif> | V_FUNC <modif_op> | V_SEGUIR <seg> | SE V_CORTA <frec> | <modif> | ε
 <pred_l> ::= NEG <pred_neg> | V_FUNC <modif_op> | V_SEGUIR <seg> | SE V_CORTA <frec> | V_ENTENDER <obj_clar> | V_SOLICITUD <obj_router> | T_FUTURO V_COMPROMISO <ref_op> | V_COMPROMISO <ref_op>
 <pred_neg> ::= V_FUNC <modif_op> | V_COPULA <modif> | V_ENTENDER <obj_clar>
 <seg> ::= <modif> | NEG ASP_SERV
@@ -60,6 +60,8 @@ Antes del parser, el filtro de tokens elimina `RELLENO` y `SIGNO` (sin semántic
 | «El servicio está lento.» | `sujeto(ASP_SERV)` `pred_s → V_COPULA modif → adj(ADJ_NEG)` |
 | «Ahora funciona bien.» | `ahora_op(T_AHORA)` `pred_l → V_FUNC modif_op → adj(ADJ_POS)` |
 | «Me atendiste muy bien, pero sigo sin internet.» | `sujeto(ASP_ATEN)` `pred_s → modif → INT adj` · `cola → COMA cola_c → PERO clausula` · `pred_l → V_SEGUIR seg → NEG ASP_SERV` |
+| «El internet sigue lento.» | `sujeto(ASP_SERV)` `pred_s → V_SEGUIR seg → modif → adj(ADJ_NEG)` |
+| «El servicio se corta todos los días.» | `sujeto(ASP_SERV)` `pred_s → SE V_CORTA frec` (`FREC FREC`) |
 | «Ahora funciona, pero se corta todos los días.» | `V_FUNC modif_op(ε)` · `PERO` · `pred_l → SE V_CORTA frec` (`FREC FREC`) |
 | «No entendí la explicación, pero el agente fue amable.» | `pred_l → NEG pred_neg → V_ENTENDER obj_clar(ASP_CLAR)` · `sujeto(AGENTE) pred_s → V_COPULA modif` |
 | «Mañana revisaremos TK-205.» | `pred_l → T_FUTURO V_COMPROMISO ref_op(TICKET)` |
@@ -97,8 +99,8 @@ Decisión de diseño asociada: se exige `PUNTO` *entre* oraciones. Si se admitie
 | `<clausula>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_AHORA, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {COMA, EOL, PERO, PUNTO} |
 | `<ahora_op>` | {T_AHORA, ε} | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} |
 | `<nucleo>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {COMA, EOL, PERO, PUNTO} |
-| `<sujeto>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV} | {ADJ_NEG, ADJ_POS, COMA, EOL, INT, NEG, PERO, PUNTO, V_COPULA, V_FUNC} |
-| `<pred_s>` | {ADJ_NEG, ADJ_POS, INT, NEG, V_COPULA, V_FUNC, ε} | {COMA, EOL, PERO, PUNTO} |
+| `<sujeto>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV} | {ADJ_NEG, ADJ_POS, COMA, EOL, INT, NEG, PERO, PUNTO, SE, V_COPULA, V_FUNC, V_SEGUIR} |
+| `<pred_s>` | {ADJ_NEG, ADJ_POS, INT, NEG, SE, V_COPULA, V_FUNC, V_SEGUIR, ε} | {COMA, EOL, PERO, PUNTO} |
 | `<pred_l>` | {NEG, SE, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {COMA, EOL, PERO, PUNTO} |
 | `<pred_neg>` | {V_COPULA, V_ENTENDER, V_FUNC} | {COMA, EOL, PERO, PUNTO} |
 | `<seg>` | {ADJ_NEG, ADJ_POS, INT, NEG} | {COMA, EOL, PERO, PUNTO} |
@@ -119,7 +121,7 @@ Condiciones comprobadas por `verificar_ll1()`:
 2. Para cada variable, los PRIM de sus alternativas son **disjuntos** (sin factor común directo ni indirecto).
 3. Si una alternativa deriva `ε`, su SGTE es disjunto de los PRIM de las demás, y hay como máximo una alternativa anulable.
 
-**Resultado: ningún conflicto.** La gramática es LL(1) y la tabla predictiva tiene 197 celdas sin colisiones.
+**Resultado: ningún conflicto.** La gramática es LL(1) y la tabla predictiva tiene 199 celdas sin colisiones.
 
 ### 4.1 Decisiones del parser (variables con más de una alternativa)
 
@@ -154,6 +156,8 @@ Condiciones comprobadas por `verificar_ll1()`:
 | `<pred_s>` | NEG <pred_neg> | {NEG} |
 | `<pred_s>` | V_COPULA <modif> | {V_COPULA} |
 | `<pred_s>` | V_FUNC <modif_op> | {V_FUNC} |
+| `<pred_s>` | V_SEGUIR <seg> | {V_SEGUIR} |
+| `<pred_s>` | SE V_CORTA <frec> | {SE} |
 | `<pred_s>` | <modif> | {ADJ_NEG, ADJ_POS, INT} |
 | `<pred_s>` | ε | se elige con SGTE(`<pred_s>`) = {COMA, EOL, PERO, PUNTO} |
 | `<pred_l>` | NEG <pred_neg> | {NEG} |
@@ -198,8 +202,24 @@ El alcance **queda determinado por la gramática**, no por una heurística:
   «No entendí la explicación, pero el agente fue amable» conserva CLARIDAD negativa y ATENCION positiva por separado.
 - `INT` (muy) solo aparece en `modif → INT adj`: intensifica únicamente al adjetivo inmediato.
 
-## 6. Próximo paso: parser y acciones semánticas
+## 6. Parser y recuperación de errores (implementado en `sintaxis.py`)
 
-Parser descendente recursivo con un procedimiento por variable (como en `UNI()`, `W()` de los apuntes) y atributos
-sintetizados/heredados por valor de retorno. La recuperación usa SGTE: ante un token inesperado se descartan tokens
-hasta uno de `{COMA, PERO, PUNTO, EOL}`, marcando lo descartado como NO_INTERPRETADO.
+**Parser.** Descendente recursivo predictivo: un único procedimiento `parse(A)` consulta la tabla `M[A, a]`
+(Clase 7, §7.5) con el token de anticipación `a`, emite la producción elegida, llama a `parse()` por cada variable
+del cuerpo y a `_match()` por cada terminal (el `match()` de clase). Es el mismo algoritmo del analizador sintáctico
+predictivo de la Clase 8 (§8.2): la pila explícita se reemplaza por la pila de llamadas, lo que permite devolver el
+árbol de derivación sobre el que luego se evalúan las reglas semánticas (`REGLAS_SEMANTICAS.md`).
+Dentro de un turno, `EOL` cumple el papel de `$`.
+
+**Recuperación** (Clase 8, §8.5.4), con sincronización en SGTE:
+
+| Situación | Acción de clase | En `sintaxis.py` |
+|---|---|---|
+| Tope terminal ≠ token | informar y desapilar el terminal esperado | `_match()` registra el error y no consume entrada |
+| `M[A, a]` vacía y `a ∉ SGTE(A)` | informar y descartar el token | `parse()` descarta tokens hasta uno de PRIM(A) ∪ SGTE(A) ∪ {EOL} |
+| `M[A, a]` = *sinc* (`a ∈ SGTE(A)`) | informar y desapilar `A` sin consumir | `parse()` abandona `A` (nodo `A!ERROR`) |
+| Fin de entrada | terminar | `EOL` pertenece a todo conjunto de sincronización: el descarte siempre termina |
+
+Diferencia con el pseudocódigo de clase: se informa **un** error por cada celda vacía (no uno por token descartado).
+Los tokens descartados y la cláusula que contiene el error se marcan `NO_INTERPRETADO`; el resto del turno se
+sigue analizando. Para ver cada decisión: `python3 main.py casos/caso_12.txt --traza S01 --detalle`.

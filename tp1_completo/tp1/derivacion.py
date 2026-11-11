@@ -19,7 +19,7 @@ def gram(texto):
 # ===================================================================== FORMATO
 F0 = gram("""
 lote -> lote sesion | sesion
-sesion -> KW_SESION ID_SESION EOL turnos KW_FIN EOL
+sesion -> SESION ID_SESION EOL turnos FIN EOL
 turnos -> turnos turno | turno
 turno -> NUM rol DOSPUNTOS texto EOL
 rol -> CLIENTE | AGENTE
@@ -27,7 +27,7 @@ rol -> CLIENTE | AGENTE
 F1 = gram("""
 lote -> sesion lote_r
 lote_r -> sesion lote_r | ε
-sesion -> KW_SESION ID_SESION EOL turnos KW_FIN EOL
+sesion -> SESION ID_SESION EOL turnos FIN EOL
 turnos -> turno turnos_r
 turnos_r -> turno turnos_r | ε
 turno -> NUM rol DOSPUNTOS texto EOL

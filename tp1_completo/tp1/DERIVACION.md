@@ -72,8 +72,8 @@ a `lote()` sin consumir ningún token y no terminaría.
 <lote_r>   ::= <sesion> <lote_r> | ε       <turnos_r> ::= <turno> <turnos_r> | ε
 ```
 
-**Verificación de predictividad (F1).** PRIM(`lote_r`) = {KW_SESION, ε} y SGTE(`lote_r`) = {$}: disjuntos.
-PRIM(`turnos_r`) = {NUM, ε} y SGTE(`turnos_r`) = {KW_FIN}: disjuntos. No hay factores comunes
+**Verificación de predictividad (F1).** PRIM(`lote_r`) = {SESION, ε} y SGTE(`lote_r`) = {$}: disjuntos.
+PRIM(`turnos_r`) = {NUM, ε} y SGTE(`turnos_r`) = {FIN}: disjuntos. No hay factores comunes
 (`rol` se decide por `CLIENTE`/`AGENTE`). **F1 es LL(1)** y es la gramática de formato final.
 
 ---
@@ -250,7 +250,7 @@ Además se fusionan `frec_op` y `frec_r` en una sola variable (`frec → FREC fr
 
 ```
 <lote> ::= <lote> <sesion> | <sesion>
-<sesion> ::= KW_SESION ID_SESION EOL <turnos> KW_FIN EOL
+<sesion> ::= SESION ID_SESION EOL <turnos> FIN EOL
 <turnos> ::= <turnos> <turno> | <turno>
 <turno> ::= NUM <rol> DOSPUNTOS texto EOL
 <rol> ::= CLIENTE | AGENTE

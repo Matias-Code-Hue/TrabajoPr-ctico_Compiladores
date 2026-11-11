@@ -8,7 +8,7 @@ _PROD = [
     # ---------------- formato (una línea = un EOL) ----------------
     ('lote',      ['sesion lote_r']),
     ('lote_r',    ['sesion lote_r', 'ε']),
-    ('sesion',    ['KW_SESION ID_SESION EOL turnos KW_FIN EOL']),
+    ('sesion',    ['SESION ID_SESION EOL turnos FIN EOL']),
     ('turnos',    ['turno turnos_r']),
     ('turnos_r',  ['turno turnos_r', 'ε']),
     ('turno',     ['NUM rol DOSPUNTOS texto EOL']),

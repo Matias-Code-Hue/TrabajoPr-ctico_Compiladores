@@ -12,7 +12,7 @@ punto de sincronización, de modo que un turno inválido se rechaza y el anális
 ```
 <lote> ::= <sesion> <lote_r>
 <lote_r> ::= <sesion> <lote_r> | ε
-<sesion> ::= KW_SESION ID_SESION EOL <turnos> KW_FIN EOL
+<sesion> ::= SESION ID_SESION EOL <turnos> FIN EOL
 <turnos> ::= <turno> <turnos_r>
 <turnos_r> ::= <turno> <turnos_r> | ε
 <turno> ::= NUM <rol> DOSPUNTOS <texto> EOL
@@ -83,12 +83,12 @@ Decisión de diseño asociada: se exige `PUNTO` *entre* oraciones. Si se admitie
 
 | Variable | PRIM | SGTE |
 |---|---|---|
-| `<lote>` | {KW_SESION} | {$} |
-| `<lote_r>` | {KW_SESION, ε} | {$} |
-| `<sesion>` | {KW_SESION} | {$, KW_SESION} |
-| `<turnos>` | {NUM} | {KW_FIN} |
-| `<turnos_r>` | {NUM, ε} | {KW_FIN} |
-| `<turno>` | {NUM} | {KW_FIN, NUM} |
+| `<lote>` | {SESION} | {$} |
+| `<lote_r>` | {SESION, ε} | {$} |
+| `<sesion>` | {SESION} | {$, SESION} |
+| `<turnos>` | {NUM} | {FIN} |
+| `<turnos_r>` | {NUM, ε} | {FIN} |
+| `<turno>` | {NUM} | {FIN, NUM} |
 | `<rol>` | {AGENTE, CLIENTE} | {DOSPUNTOS} |
 | `<texto>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_AHORA, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {EOL} |
 | `<texto_r>` | {PUNTO, ε} | {EOL} |
@@ -127,10 +127,10 @@ Condiciones comprobadas por `verificar_ll1()`:
 
 | Variable | Alternativa | PRIM de la alternativa (token de decisión) |
 |---|---|---|
-| `<lote_r>` | <sesion> <lote_r> | {KW_SESION} |
+| `<lote_r>` | <sesion> <lote_r> | {SESION} |
 | `<lote_r>` | ε | se elige con SGTE(`<lote_r>`) = {$} |
 | `<turnos_r>` | <turno> <turnos_r> | {NUM} |
-| `<turnos_r>` | ε | se elige con SGTE(`<turnos_r>`) = {KW_FIN} |
+| `<turnos_r>` | ε | se elige con SGTE(`<turnos_r>`) = {FIN} |
 | `<rol>` | CLIENTE | {CLIENTE} |
 | `<rol>` | AGENTE | {AGENTE} |
 | `<texto_r>` | PUNTO <texto_rr> | {PUNTO} |

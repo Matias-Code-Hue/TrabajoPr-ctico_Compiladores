@@ -155,8 +155,8 @@ def construir(patrones, alfabeto=ALFABETO):
 
 # ---------------------------------------------------------------- 4. Patrones del TP
 ESTRUCTURA = [  # (categoría, canónico, ER)   -- orden = prioridad
-    ('KW_SESION', 'SESION', lit('sesion')),
-    ('KW_FIN', 'FIN', lit('fin')),
+    ('SESION', 'SESION', lit('sesion')),
+    ('FIN', 'FIN', lit('fin')),
     ('CLIENTE', 'CLIENTE', lit('cliente')),
     ('AGENTE', 'AGENTE', lit('agente')),
     ('ID_SESION', None, cat(lit('s'), DIG, DIG)),

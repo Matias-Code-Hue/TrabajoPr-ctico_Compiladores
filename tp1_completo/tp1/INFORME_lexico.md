@@ -82,7 +82,7 @@ La **prioridad** es el orden de declaración (índice menor = más prioridad).
 
 | Prio | Categoría | ER (sobre el texto plegado) | Observación |
 |---|---|---|---|
-| 1 | `KW_SESION`, `KW_FIN`, `CLIENTE`, `AGENTE` | literales: `sesion`, `fin`, `cliente`, `agente` | estructura fija |
+| 1 | `SESION`, `FIN`, `CLIENTE`, `AGENTE` | literales: `sesion`, `fin`, `cliente`, `agente` | estructura fija |
 | 2 | `ID_SESION` | `s D D` | `S01` |
 | 3 | `NUM` | `D+` | número de turno |
 | 4 | `DOSPUNTOS`, `PUNTO`, `COMA`, `SIGNO` | `:` · `.` · `,` · `[¿?¡!]` | puntuación |

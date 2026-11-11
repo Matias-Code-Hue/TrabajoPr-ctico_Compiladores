@@ -63,7 +63,7 @@ def leer_lote(lineas, afd):
         toks = escanear(linea, afd, ses.id if ses else None)
         c0 = toks[0].categoria
 
-        if c0 == 'KW_SESION':
+        if c0 == 'SESION':
             if ses and not ses.cerrada:
                 err('SESION_SIN_FIN', f'{ses.id} no cerró con FIN antes de la línea {n}', n, linea)
             sid = toks[1].norm.upper() if len(toks) == 2 and toks[1].categoria == 'ID_SESION' else None
@@ -78,7 +78,7 @@ def leer_lote(lineas, afd):
                 ses, descarte = None, True
                 err('SESION_MAL_FORMADA', 'se esperaba «SESION Sxx»', n, linea)
 
-        elif c0 == 'KW_FIN':
+        elif c0 == 'FIN':
             if descarte:
                 descarte = False
             elif ses is None:

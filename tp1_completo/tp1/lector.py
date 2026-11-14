@@ -4,6 +4,8 @@ Implementa, línea a línea, la gramática de formato (ver GRAMATICA.md):
     lote -> sesion lote'   sesion -> SESION Sxx EOL turnos FIN EOL   turno -> NUM rol ':' texto EOL
 Cada EOL es un punto de sincronización: ante un error de formato la línea se rechaza, se registra
 el error y el análisis continúa en la línea SIGUIENTE (recuperación en modo pánico por línea).
+Excepción (respuesta del profesor): un número de turno fuera de orden descarta TODO el resto de la sesión hasta su FIN
+(ORDEN_INCONSISTENTE y luego TURNO_DESCARTADO por cada turno siguiente); la sesión siguiente se analiza normalmente.
 """
 import unicodedata
 from dataclasses import dataclass, field
@@ -46,8 +48,8 @@ class Sesion:
 def leer_lote(lineas, afd):
     sesiones, globales = [], []
     ses, esperado, descarte = None, 1, False
-    previo = 0               # número del último turno leído en la sesión (aceptado o rechazado)
-    ids = set()              # control de duplicados: el id de sesión es el ámbito de la tabla de símbolos
+    truncada = False         # True tras un orden inconsistente: se descartan los turnos restantes de la sesión
+    ids = set()              # control de duplicados: el id de sesión es el ámbito de la tabla de entidades
 
     def err(codigo, detalle, n, contenido):
         (ses.errores if ses else globales).append(
@@ -72,7 +74,7 @@ def leer_lote(lineas, afd):
                 err('SESION_DUPLICADA', f'el id {sid} ya fue usado en este lote; la sesión se descarta', n, linea)
             elif sid:
                 ids.add(sid)
-                ses, esperado, previo, descarte = Sesion(sid, n), 1, 0, False
+                ses, esperado, truncada, descarte = Sesion(sid, n), 1, False, False
                 sesiones.append(ses)
             else:                                   # encabezado inválido: se descarta hasta el próximo SESION/FIN
                 ses, descarte = None, True
@@ -96,12 +98,17 @@ def leer_lote(lineas, afd):
                 err('TURNO_FUERA_DE_SESION', 'turno fuera de una sesión', n, linea)
                 continue
             num = int(toks[0].norm)
-            # En orden: es el número esperado o, tras un rechazo por orden, el consecutivo del último turno leído
-            # (resincronización: «1, 3, 4» rechaza solo el 3; sin esto se rechazaría en cascada el resto de la sesión).
-            en_orden = (num == esperado) or (previo >= esperado and num == previo + 1)
-            esperado_txt, previo = esperado, num
-            if en_orden:
-                esperado = num + 1                  # un turno rechazado por rol/formato consume igualmente su número
+            # Respuesta del profesor: ante un orden inconsistente se conserva lo anterior y se descarta TODO lo que
+            # sigue en la sesión («1, 3, 4» -> solo el 1). La sesión queda PARCIAL y las siguientes no se afectan.
+            if truncada:
+                err('TURNO_DESCARTADO', f'turno {num} posterior a un orden inconsistente', n, linea)
+                continue
+            if num != esperado:
+                truncada = True
+                err('ORDEN_INCONSISTENTE', f'turno {num}, se esperaba {esperado}; se descarta el resto de la sesión',
+                    n, linea)
+                continue
+            esperado = num + 1                      # un turno rechazado por rol/formato consume igualmente su número
             if len(toks) < 2 or toks[1].categoria not in ('CLIENTE', 'AGENTE'):
                 rol = toks[1].lexema if len(toks) > 1 else ''
                 err('ROL_INVALIDO', f'rol {rol!r}: debe ser CLIENTE o AGENTE', n, linea)
@@ -109,8 +116,6 @@ def leer_lote(lineas, afd):
                 err('FALTA_DOSPUNTOS', 'se esperaba «:» después del rol', n, linea)
             elif len(toks) == 3:
                 err('TEXTO_VACIO', 'el turno no tiene texto', n, linea)
-            elif not en_orden:
-                err('ORDEN_INCONSISTENTE', f'turno {num}, se esperaba {esperado_txt}', n, linea)
             else:
                 texto_toks = toks[3:]
                 for t in texto_toks:

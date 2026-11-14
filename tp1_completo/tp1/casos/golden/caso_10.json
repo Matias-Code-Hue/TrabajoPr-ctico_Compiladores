@@ -8,8 +8,8 @@
     "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
     "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
     "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
-    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
-    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente",
+    "R-EST-PEND": "compromiso futuro del agente sin declaración posterior del CLIENTE ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: prevalece lo último entre la última declaración del CLIENTE y la última promesa del agente",
     "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
     "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
     "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
@@ -111,11 +111,11 @@
       "errores": [],
       "estado": {
         "evidencias": [
-          "C3.1"
+          "C4.1"
         ],
-        "nota": "R-EST-PREC: la declaración del cliente (C3.1) prevalece sobre la promesa del agente (C4.1)",
-        "regla": "R-EST-RES",
-        "valor": "RESUELTO"
+        "nota": "R-EST-PREC: la promesa del agente (C4.1) es posterior a la última declaración del cliente (C3.1, que daba RESUELTO); prevalece lo último",
+        "regla": "R-EST-PEND",
+        "valor": "PENDIENTE"
       },
       "evidencias": [
         {

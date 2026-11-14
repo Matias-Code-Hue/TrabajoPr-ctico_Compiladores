@@ -2015,8 +2015,8 @@
     "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
     "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
     "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
-    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
+    "R-EST-PEND": "compromiso futuro del agente sin declaración posterior del CLIENTE ⇒ PENDIENTE",
     "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
-    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente"
+    "R-EST-PREC": "precedencia: prevalece lo último entre la última declaración del CLIENTE y la última promesa del agente"
   }
 }

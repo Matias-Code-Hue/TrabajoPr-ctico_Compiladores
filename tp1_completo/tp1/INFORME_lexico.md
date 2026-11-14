@@ -18,11 +18,11 @@ Procedimiento aplicado (apuntes de clase, Clases 4 y 5): **ER → AFN (Thompson)
 
 | Componente | Contenido | Dónde vive |
 |---|---|---|
-| **Diccionario de vocabulario** | Palabras del dominio con su categoría y forma canónica | `vocabulario.json` |
+| **Tabla de símbolos léxica** (diccionario de vocabulario) | Palabras del dominio con su categoría y forma canónica; persistente, se enriquece (§1.5) | `vocabulario.json` (precarga) + `vocabulario_aprendido.json`; `tabla_lexica.py` |
 | **Estructura fija** | `SESION`, `FIN`, `CLIENTE`, `AGENTE` | código (`ESTRUCTURA`) |
-| **Tabla de símbolos** | Sesión, rol, tickets y apariciones (ámbito: sesión) | `simbolos.py` |
+| **Tabla de entidades** | Sesión, rol, tickets y apariciones (ámbito: sesión; efímera) | `entidades.py` |
 
-El vocabulario se mantiene **separado de la tabla de símbolos**, como exige el enunciado. Se carga por parámetro (`construir_afd(vocab)`), lo que permite probar el caso 08 con el diccionario reducido `{lenta, lento}`.
+La tabla léxica se mantiene **separada de la tabla de entidades**, como exige el enunciado («mantener separado el diccionario de vocabulario»). El léxico la recibe por parámetro (`construir_afd(vocab)`), lo que permite probar el caso 08 con el diccionario reducido `{lenta, lento}`.
 
 ### 1.2 Estructura del vocabulario
 
@@ -71,6 +71,50 @@ Cada entrada tiene la forma `categoría → forma canónica → [formas superfic
 | `RELLENO` | Pertenece al lenguaje (no es `NO_INTERPRETADO`) pero no aporta semántica; el parser lo saltea. |
 | El corrector actúa solo sobre `PALABRA` | `no`, números y `TK-xxx` quedan intactos sin reglas especiales. |
 | Estructura fuera del JSON | En el caso 08 el diccionario es `{lenta, lento}`, pero la sesión igual debe poder leerse. |
+
+### 1.5 Tabla de símbolos léxica persistente
+
+La tabla léxica se **precarga** a mano y se **enriquece** sesión a sesión con las respuestas del usuario.
+Se guarda en tres archivos JSON (sin base de datos):
+
+| Archivo | Contenido | Quién lo escribe |
+|---|---|---|
+| `vocabulario.json` | precarga manual (`categoría → canónico → formas`) | solo el grupo, a mano; el programa **nunca** lo modifica |
+| `vocabulario_aprendido.json` | `{forma: {categoria, canonico, fecha, origen}}`; origen = archivo, sesión, turno, desplazamiento y texto | el programa, con escritura atómica (archivo temporal + `os.replace`) |
+| `vocabulario_auditoria.jsonl` | una línea JSON por cambio: `fecha`, `operacion`, `forma`, `antes`, `despues`, `operador`, `origen`, `decision` | el programa; **solo se agregan líneas** |
+
+Tabla vigente = precarga ∪ aprendido. Operaciones:
+
+- **buscar(forma)** → `(categoría, canónico, origen)`, con origen `PRECARGA` o `APRENDIDA`.
+- **insertar(forma, categoría, canónico)** → falla si la forma ya existe (control de duplicados); si no, persiste y
+  audita `INSERTAR`.
+- **Conciliación**: si una forma aprendida se agrega después a la precarga, gana la precarga y la entrada aprendida se
+  da de baja (`BAJA_POR_PRECARGA` en la auditoría). Sin esto la forma tendría dos entradas y el léxico la rechazaría.
+
+**Consulta al usuario** (`consulta.py`). Toda palabra desconocida (`PALABRA` de al menos `MIN_LONG = 4` letras) pasa
+por Levenshtein y se consulta:
+
+```
+Palabra desconocida «lentto» · sesión S01, turno 3: «El internet está lentto.»
+   1) usar «lento» (ADJ_NEG / LENTO) solo en esta aparición
+   n) insertar «lentto» como palabra nueva en la tabla de símbolos léxica
+   Enter) regla del enunciado: corregir a «lento» (único candidato a distancia 1)
+```
+
+| Respuesta | Efecto | ¿Cambia la tabla? | Acción registrada |
+|---|---|---|---|
+| `1..k` | se toma ese candidato **solo en esta aparición** | no | `CORREGIDA_USUARIO` |
+| `n` | se elige categoría (terminales de la gramática, `RELLENO` o `FUERA_DE_GRAMATICA`) y canónico; la forma se incorpora | sí, con auditoría | `INSERTADA` |
+| Enter | regla del enunciado: candidato único → se corrige; empate o ninguno → se conserva | no | `CORREGIDA`, `EMPATE`, `SIN_CANDIDATO` |
+
+- Los errores de tipeo no se guardan: elegir «lento» para «lentto» no agrega «lentto» a la tabla.
+- `FUERA_DE_GRAMATICA` sirve para palabras conocidas sin función en la gramática («igual», «ayer»): quedan
+  `NO_INTERPRETADO` y el corrector no las vuelve a tocar.
+- Cada palabra se consulta una vez por ejecución. Una forma insertada se reconoce en el resto del lote y, en la
+  ejecución siguiente, el AFD ya la incluye como patrón.
+- Si la entrada estándar se termina (Ctrl-D o `< /dev/null`), el resto se resuelve con la regla del enunciado. Así
+  Enter (o ninguna respuesta) reproduce siempre los resultados de la guía (casos 05 y 08).
+- `--dic` (caso 08) usa una tabla solo en memoria: lo insertado no se guarda.
 
 ---
 
@@ -232,6 +276,6 @@ devolver ultimo       # si es nulo → error léxico
 
 1. Lector de formato (`lector.py`): `SESION Sxx` / turno / `FIN`. Antes de escanear normaliza cada línea a NFC
    (una «á» escrita como `a` + tilde combinante pasa a ser un solo carácter) y descarta el BOM inicial.
-2. Corrector (`corrector.py`): Levenshtein sobre los tokens `PALABRA`.
+2. Corrector (`corrector.py`, `consulta.py`): Levenshtein sobre los tokens `PALABRA`, con consulta al usuario (§1.5).
 3. Gramática LL(1) y parser (`GRAMATICA.md`, `DERIVACION.md`), con estas categorías como terminales.
-4. Reglas semánticas y estado (`REGLAS_SEMANTICAS.md`) y tabla de símbolos (`simbolos.py`).
+4. Reglas semánticas y estado (`REGLAS_SEMANTICAS.md`) y tabla de entidades (`entidades.py`).

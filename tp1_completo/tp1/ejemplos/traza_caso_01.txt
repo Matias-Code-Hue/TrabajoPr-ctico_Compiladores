@@ -19,7 +19,7 @@ Lote: 1 sesiones (1 completas, 0 parciales) → ejemplos/salida_caso_01.json
 │  [1] Texto original : 1 CLIENTE: El servicio está lento.
 │  [2] Tokens         : RELLENO«El»@11=ART  ASP_SERV«servicio»@14=SERVICIO  V_COPULA«está»@23=SER_ESTAR  ADJ_NEG«lento»@28=LENTO  PUNTO«.»@33
 │  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[ASP_SERV«servicio»] pred_s[V_COPULA«está» modif[adj[ADJ_NEG«lento»]]]]]] texto_r[PUNTO«.»]]
-│  [4] Tabla símbolos :
+│  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> NO_EXISTE
 │        INSERTAR PARTICIPANTE CLIENTE @S01 (apariciones=1)
 │  [5] Acción semántica:
@@ -30,7 +30,7 @@ Lote: 1 sesiones (1 completas, 0 parciales) → ejemplos/salida_caso_01.json
 │  [1] Texto original : 2 AGENTE: Reinicie el router.
 │  [2] Tokens         : V_SOLICITUD«Reinicie»@10=REINICIAR  RELLENO«el»@19=ART  ROUTER«router»@22=ROUTER  PUNTO«.»@28
 │  [3] Estructura     : texto[oracion[clausula[nucleo[pred_l[V_SOLICITUD«Reinicie» obj_router[ROUTER«router»]]]]] texto_r[PUNTO«.»]]
-│  [4] Tabla símbolos :
+│  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE AGENTE @S01 -> NO_EXISTE
 │        INSERTAR PARTICIPANTE AGENTE @S01 (apariciones=1)
 │  [5] Acción semántica:
@@ -41,7 +41,7 @@ Lote: 1 sesiones (1 completas, 0 parciales) → ejemplos/salida_caso_01.json
 │  [1] Texto original : 3 CLIENTE: Ahora funciona bien.
 │  [2] Tokens         : T_AHORA«Ahora»@11=AHORA  V_FUNC«funciona»@17=FUNCIONAR  ADJ_POS«bien»@26=BUENO  PUNTO«.»@30
 │  [3] Estructura     : texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]
-│  [4] Tabla símbolos :
+│  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> ENCONTRADO
 │        DUPLICADO->ENLAZAR PARTICIPANTE CLIENTE @S01 (apariciones=2)
 │  [5] Acción semántica:

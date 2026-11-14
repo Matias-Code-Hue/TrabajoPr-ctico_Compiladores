@@ -4,10 +4,18 @@
   python3 pruebas.py --regresion     además compara el JSON completo contra casos/golden/ (caso de regresión)
   python3 pruebas.py --golden        (re)genera casos/golden/ con la salida actual (revisarla antes de confirmar)
   python3 pruebas.py --informe       escribe RESULTADOS_PRUEBAS.md (esperado, obtenido y reglas activadas)
+
+Los casos se corren SIN consulta al usuario (regla del enunciado) y con la precarga vocabulario.json, nunca con lo
+aprendido: así el resultado no depende de ejecuciones interactivas anteriores. Aparte, `probar_tabla_lexica()`
+verifica la tabla de símbolos léxica persistente con respuestas simuladas, en una carpeta temporal.
 """
+import hashlib
+import io
 import json
 import os
+import shutil
 import sys
+import tempfile
 
 from analizador import analizar_lote
 from lexico import cargar_vocabulario
@@ -52,6 +60,67 @@ def comparar(caso, res):
         out.append((sid, obt == exp, exp, obt))
     if set(sesiones) != set(caso['esperado']):
         out.append(('(sesiones)', False, sorted(caso['esperado']), sorted(sesiones)))
+    return out
+
+
+def probar_tabla_lexica():
+    """Inserción, persistencia, auditoría, corrección de una sola aparición y control de duplicados.
+    Devuelve [(nombre, ok, detalle)]."""
+    from consulta import categorias_insertables, crear_consulta
+    from sintaxis import TERMINALES_TEXTO
+    from tabla_lexica import TablaSimbolosLexica, rutas_por_defecto
+    base = os.path.dirname(DIR)
+    tmp = tempfile.mkdtemp(prefix='tp1_tabla_')
+    out = []
+    try:
+        pre = os.path.join(tmp, 'vocabulario.json')
+        shutil.copy(os.path.join(base, 'vocabulario.json'), pre)
+        huella = hashlib.sha256(open(pre, 'rb').read()).hexdigest()
+        ap, aud = rutas_por_defecto(pre)
+        lote = ['SESION S01\n', '1 CLIENTE: El servicio anda fatal.\n', '2 CLIENTE: El internet está lentto.\n', 'FIN\n']
+
+        def correr(respuestas):
+            tabla = TablaSimbolosLexica(pre, ap, aud)
+            vocab = tabla.vocabulario()
+            cats = categorias_insertables(vocab, TERMINALES_TEXTO)
+            resp = [str(cats.index(r[1:]) + 1) if r.startswith('#') else r for r in respuestas]
+            dec = crear_consulta(tabla, 'prueba.txt', cats, io.StringIO(''.join(x + '\n' for x in resp)), io.StringIO())
+            r, _ = analizar_lote(lote, vocab, 'prueba.txt', dec)
+            return tabla, r['sesiones'][0]
+
+        def lineas_auditoria():
+            return [json.loads(x) for x in open(aud, encoding='utf-8')] if os.path.exists(aud) else []
+
+        # ejecución 1: «fatal» -> insertar como ADJ_NEG/FATAL; «lentto» -> elegir el candidato 1 (solo esa aparición)
+        tabla, s = correr(['n', '#ADJ_NEG', 'FATAL', '1'])
+        acc = {c['original']: c['accion'] for c in s['correcciones']}
+        out.append(('inserción interactiva', acc.get('fatal') == 'INSERTADA' and s['estado']['valor'] == 'NO_RESUELTO',
+                    f'acciones={acc} estado={s["estado"]["valor"]}'))
+        aprendido = json.load(open(ap, encoding='utf-8'))
+        out.append(('persistencia en vocabulario_aprendido.json',
+                    set(aprendido) == {'fatal'} and aprendido['fatal']['categoria'] == 'ADJ_NEG', f'{sorted(aprendido)}'))
+        aud1 = lineas_auditoria()
+        out.append(('auditoría: una línea INSERTAR con origen', len(aud1) == 1 and aud1[0]['operacion'] == 'INSERTAR'
+                    and aud1[0]['origen'].get('turno') == 1, f'{[(a["operacion"], a["forma"]) for a in aud1]}'))
+        out.append(('corrección de una sola aparición no cambia la tabla',
+                    acc.get('lentto') == 'CORREGIDA_USUARIO' and 'lentto' not in aprendido, f'acciones={acc}'))
+        # ejecución 2: sin respuestas -> «fatal» ya está en la tabla; no hay cambios ni líneas nuevas de auditoría
+        tabla, s = correr([])
+        cat = next(t['categoria'] for t in s['turnos'][0]['tokens'] if t['normalizado'] == 'fatal')
+        out.append(('segunda ejecución reconoce lo aprendido', cat == 'ADJ_NEG' and s['estado']['valor'] == 'NO_RESUELTO'
+                    and len(lineas_auditoria()) == 1, f'categoría={cat} estado={s["estado"]["valor"]}'))
+        out.append(('control de duplicados', not tabla.insertar('fatal', 'ADJ_POS', 'X') and not tabla.insertar('lento', 'ADJ_POS', 'X'),
+                    'insertar(fatal) e insertar(lento) rechazados'))
+        out.append(('la precarga no se modifica', hashlib.sha256(open(pre, 'rb').read()).hexdigest() == huella, 'sha256 igual'))
+        # conciliación: la forma pasa a la precarga -> la entrada aprendida se da de baja y se audita
+        v = json.load(open(pre, encoding='utf-8'))
+        v['ADJ_NEG']['FATAL'] = ['fatal']
+        json.dump(v, open(pre, 'w', encoding='utf-8'), ensure_ascii=False)
+        tabla = TablaSimbolosLexica(pre, ap, aud)
+        out.append(('baja por precarga auditada', 'fatal' not in tabla.aprendido
+                    and lineas_auditoria()[-1]['operacion'] == 'BAJA_POR_PRECARGA', f'{lineas_auditoria()[-1]["operacion"]}'))
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
     return out
 
 
@@ -118,6 +187,10 @@ def main():
             elif isinstance(obt, dict):
                 det = f'{obt["estado"]:<15}' + ' '.join(f'{a[:3]}={v}' for a, v in obt['aspectos'].items() if v != 'SIN_EVIDENCIA')
             print(f'{c["caso"]:<5}{sid:<8}{"OK" if ok else "FALLA":<10}{det}')
+    print('\nTabla de símbolos léxica (persistencia, auditoría, consulta simulada):')
+    for nombre, ok, det in probar_tabla_lexica():
+        fallas += not ok
+        print(f'  {"OK" if ok else "FALLA":<6}{nombre}' + ('' if ok else f'  → {det}'))
     if '--regresion' in args:
         print('\nRegresión contra casos/golden/:')
         for c, r in zip(casos, resultados):

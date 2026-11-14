@@ -3,6 +3,12 @@ Regla del enunciado: se corrige automáticamente SOLO si existe un único candid
   · 0 candidatos  -> SIN_CANDIDATO (queda PALABRA; el parser la marcará NO_INTERPRETADO)
   · ≥2 candidatos -> EMPATE (se conserva la palabra y se registra el empate)
 Solo se evalúan tokens PALABRA (no `no`, ni números, ni TK-xxx, que ya tienen otra categoría).
+
+Con una función `decidir` (main.py la conecta a la terminal), antes de aplicar la regla se consulta al usuario por
+cada palabra desconocida (salvo las de menos de MIN_LONG letras):
+  · CORREGIDA_USUARIO -> se toma el candidato elegido, SOLO para esa aparición (la tabla no cambia)
+  · INSERTADA         -> la palabra se incorpora a la tabla de símbolos léxica con la categoría elegida
+  · None              -> regla del enunciado (la respuesta por defecto)
 """
 from dataclasses import dataclass, replace
 from lexico import plegar
@@ -31,9 +37,11 @@ def indice_vocabulario(vocab):
 @dataclass
 class Correccion:
     original: str
-    accion: str            # CORREGIDA | EMPATE | SIN_CANDIDATO | OMITIDA_CORTA
+    accion: str            # CORREGIDA | EMPATE | SIN_CANDIDATO | OMITIDA_CORTA | CORREGIDA_USUARIO | INSERTADA | APRENDIDA
     resultado: str         # forma final (igual al original si no se corrigió)
     candidatos: list
+    categoria: str | None = None     # solo INSERTADA: token elegido por el usuario
+    canonico: str | None = None
 
 
 def evaluar(norm, indice, min_long=MIN_LONG):
@@ -47,19 +55,31 @@ def evaluar(norm, indice, min_long=MIN_LONG):
     return Correccion(norm, 'SIN_CANDIDATO', norm, [])
 
 
-def corregir_tokens(tokens, indice, min_long=MIN_LONG):
+def corregir_tokens(tokens, indice, min_long=MIN_LONG, decidir=None):
     """Devuelve (tokens_nuevos, correcciones). El lexema original se conserva; el token corregido
-    se re-categoriza con la categoría de la forma corregida."""
+    se re-categoriza con la categoría de la forma corregida.
+    decidir(token, correccion_propuesta) -> Correccion | None : consulta al usuario (None = regla del enunciado).
+    Una forma INSERTADA se agrega a `indice`, así sus otras apariciones en el mismo lote ya se reconocen."""
     salida, regs = [], []
     for t in tokens:
         if t.categoria != 'PALABRA':
             salida.append(t)
             continue
+        if t.norm in indice:                         # incorporada a la tabla en esta misma ejecución
+            cat, canon = indice[t.norm]
+            regs.append((t, Correccion(t.norm, 'APRENDIDA', t.norm, [])))
+            salida.append(replace(t, categoria=cat, canon=canon))
+            continue
         c = evaluar(t.norm, indice, min_long)
+        if decidir is not None and c.accion != 'OMITIDA_CORTA':
+            c = decidir(t, c) or c
         regs.append((t, c))
-        if c.accion == 'CORREGIDA':
+        if c.accion in ('CORREGIDA', 'CORREGIDA_USUARIO'):
             cat, canon = indice[c.resultado]
             t = replace(t, categoria=cat, canon=canon, norm=c.resultado, corregido_de=c.original)
+        elif c.accion == 'INSERTADA':
+            indice[t.norm] = (c.categoria, c.canonico)
+            t = replace(t, categoria=c.categoria, canon=c.canonico)
         salida.append(t)
     return salida, regs
 

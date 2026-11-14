@@ -12,10 +12,12 @@ from sintaxis import Nodo, G
 from lexico import Token
 
 # ============================================================ 0. Interruptores de política
-# False: la última declaración del CLIENTE sobre el funcionamiento prevalece SIEMPRE sobre las promesas
-#        del agente (lectura literal del enunciado, §5).
-# True : una promesa del agente POSTERIOR a una falla declarada por el cliente deja el estado PENDIENTE.
-PROMESA_POSTERIOR_A_FALLA_ES_PENDIENTE = False
+# Precedencia entre la última declaración del CLIENTE y las promesas del AGENTE.
+# True  (respuesta del profesor: «se tiene en cuenta lo último»): prevalece lo último que se dijo. Una promesa del
+#        agente POSTERIOR a la última declaración del cliente (falla o confirmación) deja la sesión PENDIENTE; una
+#        declaración del cliente posterior a la promesa prevalece sobre ella.
+# False (lectura literal del enunciado, §5): la última declaración del cliente prevalece SIEMPRE sobre las promesas.
+LO_ULTIMO_PREVALECE = True
 
 ASPECTOS = ('SERVICIO', 'ATENCION', 'CLARIDAD')
 ASP_DE = {'ASP_SERV': 'SERVICIO', 'ASP_ATEN': 'ATENCION', 'ASP_CLAR': 'CLARIDAD',
@@ -44,9 +46,9 @@ REGLAS = {
     'R-EST-RES':  'última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO',
     'R-EST-NORES': 'última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO',
     'R-EST-TEMP': 'el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL',
-    'R-EST-PEND': 'sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE',
+    'R-EST-PEND': 'compromiso futuro del agente sin declaración posterior del CLIENTE ⇒ PENDIENTE',
     'R-EST-NC':   'sin evidencia suficiente ⇒ NO_CONFIRMADO',
-    'R-EST-PREC': 'precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente',
+    'R-EST-PREC': 'precedencia: prevalece lo último entre la última declaración del CLIENTE y la última promesa del agente',
 }
 
 # ============================================================ 2. Reglas semánticas por producción
@@ -400,11 +402,13 @@ def decidir_estado(cls):
                 estado, regla, evid = 'TEMPORAL', 'R-EST-TEMP', [ds[-1]['id']]   # recurrencia tras una recuperación
             else:                                                                 # FALLA, o RECUR sin recuperación previa
                 estado, regla, evid = 'NO_RESUELTO', 'R-EST-NORES', [ds[-1]['id']]
+        pos = {id(c): i for i, c in enumerate(cls)}           # orden textual (no se comparan ids como texto)
         ultima_decl = decl[-1]
-        posteriores = [c for c in comps if (c['turno'], c['id']) > (ultima_decl['turno'], ultima_decl['id'])]
-        if PROMESA_POSTERIOR_A_FALLA_ES_PENDIENTE and estado == 'NO_RESUELTO' and posteriores:
+        posteriores = [c for c in comps if pos[id(c)] > pos[id(ultima_decl)]]
+        if LO_ULTIMO_PREVALECE and posteriores:              # R-EST-PREC: lo último es la promesa del agente
             return {'valor': 'PENDIENTE', 'regla': 'R-EST-PEND', 'evidencias': [posteriores[-1]['id']],
-                    'nota': 'promesa del agente posterior a la falla declarada por el cliente'}
+                    'nota': ('R-EST-PREC: la promesa del agente (%s) es posterior a la última declaración del cliente '
+                             '(%s, que daba %s); prevalece lo último' % (posteriores[-1]['id'], ultima_decl['id'], estado))}
         out = {'valor': estado, 'regla': regla, 'evidencias': evid}
         if comps:
             out['nota'] = ('R-EST-PREC: la declaración del cliente (%s) prevalece sobre la promesa del agente (%s)'

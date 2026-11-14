@@ -200,7 +200,7 @@ Reglas activadas: `R-COP` (C1.2); `R-EST-NORES` (C3.1); `R-FUNC` (C1.1); `R-NEG`
 - C3.1 (CLIENTE) «Sigo sin internet» → SERVICIO NEGATIVA, declaración FALLA
 - Estado: **NO_RESUELTO** por `R-EST-NORES`
 
-## Caso 10 — «inestabl» se corrige; el cliente confirma tras la promesa y el agente promete de nuevo.
+## Caso 10 — «inestabl» se corrige; el cliente confirma tras la promesa y el agente promete de nuevo: prevalece lo último (la promesa) → PENDIENTE.
 
 - Origen: propio (corrección y precedencia) · archivo `casos/caso_10.txt`
 
@@ -209,20 +209,20 @@ Reglas activadas: `R-COP` (C1.2); `R-EST-NORES` (C3.1); `R-FUNC` (C1.1); `R-NEG`
 | | Esperado | Obtenido |
 |---|---|---|
 | analisis | COMPLETO | COMPLETO |
-| estado | RESUELTO | RESUELTO |
+| estado | PENDIENTE | PENDIENTE |
 | SERVICIO | MIXTA | MIXTA |
 | ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | correcciones | [['inestabl', 'inestable', 'CORREGIDA']] | [['inestabl', 'inestable', 'CORREGIDA']] |
 | tickets | ['TK-310'] | ['TK-310'] |
 
-Reglas activadas: `R-AHORA` (C3.1); `R-COMPR` (C2.1, C4.1); `R-COP` (C1.1); `R-EST-RES` (C3.1); `R-FUNC` (C3.1); `R-SUJ` (C1.1)
+Reglas activadas: `R-AHORA` (C3.1); `R-COMPR` (C2.1, C4.1); `R-COP` (C1.1); `R-EST-PEND` (C4.1); `R-FUNC` (C3.1); `R-SUJ` (C1.1)
 
 - C1.1 (CLIENTE) «La conexion esta inestabl» → SERVICIO NEGATIVA
 - C2.1 (AGENTE) «Mañana revisaremos TK-310» → COMPROMISO
 - C3.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
 - C4.1 (AGENTE) «Revisaremos TK-310» → COMPROMISO
-- Estado: **RESUELTO** por `R-EST-RES` — R-EST-PREC: la declaración del cliente (C3.1) prevalece sobre la promesa del agente (C4.1)
+- Estado: **PENDIENTE** por `R-EST-PEND` — R-EST-PREC: la promesa del agente (C4.1) es posterior a la última declaración del cliente (C3.1, que daba RESUELTO); prevalece lo último
 
 ## Caso 11 — Palabras y fragmentos fuera de la gramática: no se inventa valoración.
 
@@ -244,7 +244,7 @@ Reglas activadas: `R-EST-NC` (—)
 
 - Estado: **NO_CONFIRMADO** por `R-EST-NC`
 
-## Caso 12 — Orden inconsistente, rol inválido, ticket mal formado y error sintáctico; la sesión siguiente se analiza.
+## Caso 12 — Rol inválido (SOPORTE), ticket mal formado con error sintáctico y orden inconsistente (6 antes de 5): se descarta todo lo posterior; la sesión siguiente se analiza.
 
 - Origen: propio (recuperación) · archivo `casos/caso_12.txt`
 
@@ -254,15 +254,16 @@ Reglas activadas: `R-EST-NC` (—)
 |---|---|---|
 | analisis | PARCIAL | PARCIAL |
 | estado | RESUELTO | RESUELTO |
-| SERVICIO | POSITIVA | POSITIVA |
+| SERVICIO | MIXTA | MIXTA |
 | ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
-| errores | ['ORDEN_INCONSISTENTE', 'ROL_INVALIDO', 'SINTAXIS', 'TICKET_MAL_FORMADO'] | ['ORDEN_INCONSISTENTE', 'ROL_INVALIDO', 'SINTAXIS', 'TICKET_MAL_FORMADO'] |
+| errores | ['ORDEN_INCONSISTENTE', 'ROL_INVALIDO', 'SINTAXIS', 'TICKET_MAL_FORMADO', 'TURNO_DESCARTADO'] | ['ORDEN_INCONSISTENTE', 'ROL_INVALIDO', 'SINTAXIS', 'TICKET_MAL_FORMADO', 'TURNO_DESCARTADO'] |
 | no_interpretado | ['TK-12', 'Ticket', 'respuesta', 'sin'] | ['TK-12', 'Ticket', 'respuesta', 'sin'] |
 
-Reglas activadas: `R-AHORA` (C3.1); `R-EST-RES` (C3.1); `R-FUNC` (C3.1)
+Reglas activadas: `R-AHORA` (C4.1); `R-COP` (C1.1); `R-EST-RES` (C4.1); `R-FUNC` (C4.1); `R-SUJ` (C1.1)
 
-- C3.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
+- C1.1 (CLIENTE) «El servicio está lento» → SERVICIO NEGATIVA
+- C4.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
 - Estado: **RESUELTO** por `R-EST-RES`
 
 **Sesión S02: OK**
@@ -301,7 +302,7 @@ Reglas activadas: `R-AHORA` (C3.1); `R-CORTE` (C3.2); `R-EST-TEMP` (C3.1, C3.2);
 - C3.2 (CLIENTE) «el servicio se corta todos los días» → SERVICIO NEGATIVA, declaración RECUR
 - Estado: **TEMPORAL** por `R-EST-TEMP`
 
-## Caso 14 — Salto de número (1, 3, 4): solo se rechaza el 3. Id de sesión repetido: la segunda S01 se descarta y no contamina la tabla de símbolos.
+## Caso 14 — Salto de número (1, 3, 4): se conserva solo el 1 y se descarta todo lo posterior. Id de sesión repetido: la segunda S01 se descarta y no contamina la tabla de entidades.
 
 - Origen: propio (recuperación de formato) · archivo `casos/caso_14.txt`
 
@@ -310,17 +311,16 @@ Reglas activadas: `R-AHORA` (C3.1); `R-CORTE` (C3.2); `R-EST-TEMP` (C3.1, C3.2);
 | | Esperado | Obtenido |
 |---|---|---|
 | analisis | PARCIAL | PARCIAL |
-| estado | RESUELTO | RESUELTO |
-| SERVICIO | MIXTA | MIXTA |
+| estado | NO_RESUELTO | NO_RESUELTO |
+| SERVICIO | NEGATIVA | NEGATIVA |
 | ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
-| errores | ['ORDEN_INCONSISTENTE'] | ['ORDEN_INCONSISTENTE'] |
+| errores | ['ORDEN_INCONSISTENTE', 'TURNO_DESCARTADO'] | ['ORDEN_INCONSISTENTE', 'TURNO_DESCARTADO'] |
 
-Reglas activadas: `R-AHORA` (C4.1); `R-EST-RES` (C4.1); `R-FUNC` (C1.1, C4.1); `R-NEG` (C1.1)
+Reglas activadas: `R-EST-NORES` (C1.1); `R-FUNC` (C1.1); `R-NEG` (C1.1)
 
 - C1.1 (CLIENTE) «No funciona» → SERVICIO NEGATIVA, declaración FALLA
-- C4.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
-- Estado: **RESUELTO** por `R-EST-RES`
+- Estado: **NO_RESUELTO** por `R-EST-NORES`
 
 **Sesión S02: OK**
 
@@ -336,3 +336,58 @@ Reglas activadas: `R-EST-RES` (C1.1); `R-SEG-ADJ` (C1.1); `R-SUJ` (C1.1)
 
 - C1.1 (CLIENTE) «El servicio sigue estable» → SERVICIO POSITIVA, declaración OK
 - Estado: **RESUELTO** por `R-EST-RES`
+
+## Caso 15 — Prevalece lo último: falla + promesa posterior → PENDIENTE; promesa + falla posterior → NO_RESUELTO; confirmación + promesa posterior → PENDIENTE.
+
+- Origen: propio (precedencia: respuesta del profesor) · archivo `casos/caso_15.txt`
+
+**Sesión S01: OK**
+
+| | Esperado | Obtenido |
+|---|---|---|
+| analisis | COMPLETO | COMPLETO |
+| estado | PENDIENTE | PENDIENTE |
+| SERVICIO | NEGATIVA | NEGATIVA |
+| ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| tickets | ['TK-205'] | ['TK-205'] |
+
+Reglas activadas: `R-COMPR` (C2.1); `R-EST-PEND` (C2.1); `R-SEG-SIN` (C1.1)
+
+- C1.1 (CLIENTE) «Sigo sin internet» → SERVICIO NEGATIVA, declaración FALLA
+- C2.1 (AGENTE) «Mañana revisaremos TK-205» → COMPROMISO
+- Estado: **PENDIENTE** por `R-EST-PEND` — R-EST-PREC: la promesa del agente (C2.1) es posterior a la última declaración del cliente (C1.1, que daba NO_RESUELTO); prevalece lo último
+
+**Sesión S02: OK**
+
+| | Esperado | Obtenido |
+|---|---|---|
+| analisis | COMPLETO | COMPLETO |
+| estado | NO_RESUELTO | NO_RESUELTO |
+| SERVICIO | NEGATIVA | NEGATIVA |
+| ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| tickets | ['TK-206'] | ['TK-206'] |
+
+Reglas activadas: `R-COMPR` (C1.1); `R-EST-NORES` (C2.1); `R-SEG-SIN` (C2.1)
+
+- C1.1 (AGENTE) «Mañana revisaremos TK-206» → COMPROMISO
+- C2.1 (CLIENTE) «Sigo sin internet» → SERVICIO NEGATIVA, declaración FALLA
+- Estado: **NO_RESUELTO** por `R-EST-NORES` — R-EST-PREC: la declaración del cliente (C2.1) prevalece sobre la promesa del agente (C1.1)
+
+**Sesión S03: OK**
+
+| | Esperado | Obtenido |
+|---|---|---|
+| analisis | COMPLETO | COMPLETO |
+| estado | PENDIENTE | PENDIENTE |
+| SERVICIO | POSITIVA | POSITIVA |
+| ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| tickets | ['TK-207'] | ['TK-207'] |
+
+Reglas activadas: `R-AHORA` (C1.1); `R-COMPR` (C2.1); `R-EST-PEND` (C2.1); `R-FUNC` (C1.1)
+
+- C1.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
+- C2.1 (AGENTE) «Revisaremos TK-207» → COMPROMISO
+- Estado: **PENDIENTE** por `R-EST-PEND` — R-EST-PREC: la promesa del agente (C2.1) es posterior a la última declaración del cliente (C1.1, que daba RESUELTO); prevalece lo último

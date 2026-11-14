@@ -1,7 +1,9 @@
-"""Tabla de símbolos (ámbito = sesión). Separada del diccionario de vocabulario.
+"""Tabla de entidades (ámbito = sesión, EFÍMERA): la «tabla de símbolos» de sesión, participante/rol y ticket del enunciado.
 Entradas: SESION, PARTICIPANTE (rol), TICKET. Menciones repetidas -> UNA entrada con varias apariciones.
 Operaciones: insertar (con control de duplicados), buscar, actualizar. Toda operación queda en `bitacora`
-(para la traza: «consulta/inserción en tabla de símbolos»).
+(para la traza: «consulta/inserción en la tabla de entidades»).
+No persiste: se crea vacía en cada ejecución. Está separada de la tabla de símbolos léxica (tabla_lexica.py),
+que guarda el vocabulario y sí persiste.
 """
 from dataclasses import dataclass, field
 
@@ -24,7 +26,7 @@ class Entrada:
     atributos: dict = field(default_factory=dict)
 
 
-class TablaSimbolos:
+class TablaEntidades:
     def __init__(self):
         self.ambitos = {}       # sesión -> {(tipo, clave): Entrada}
         self.bitacora = []
@@ -67,7 +69,7 @@ class TablaSimbolos:
 
 
 if __name__ == '__main__':
-    ts = TablaSimbolos()
+    ts = TablaEntidades()
     ts.insertar('S01', 'PARTICIPANTE', 'CLIENTE', Aparicion(1, 2, 'CLIENTE'))
     ts.insertar('S01', 'TICKET', 'TK-204', Aparicion(2, 40, 'TK-204'))
     ts.insertar('S01', 'TICKET', 'TK-204', Aparicion(3, 12, 'tk-204'))     # mención repetida

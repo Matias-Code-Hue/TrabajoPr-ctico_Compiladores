@@ -8,8 +8,8 @@
     "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
     "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
     "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
-    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
-    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente",
+    "R-EST-PEND": "compromiso futuro del agente sin declaración posterior del CLIENTE ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: prevalece lo último entre la última declaración del CLIENTE y la última promesa del agente",
     "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
     "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
     "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
@@ -46,7 +46,12 @@
               {
                 "desp": 2,
                 "lexema": "CLIENTE",
-                "turno": 3
+                "turno": 2
+              },
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 4
               }
             ],
             "atributos": {},
@@ -58,17 +63,24 @@
       },
       "errores": [
         {
-          "codigo": "ORDEN_INCONSISTENTE",
-          "contenido": "2 CLIENTE: El servicio está lento.",
-          "detalle": "turno 2, se esperaba 1",
-          "linea": 2,
+          "codigo": "ROL_INVALIDO",
+          "contenido": "3 SOPORTE: Reinicie el router.",
+          "detalle": "rol 'SOPORTE': debe ser CLIENTE o AGENTE",
+          "linea": 4,
           "tipo": "FORMATO"
         },
         {
-          "codigo": "ROL_INVALIDO",
-          "contenido": "2 SOPORTE: Reinicie el router.",
-          "detalle": "rol 'SOPORTE': debe ser CLIENTE o AGENTE",
-          "linea": 4,
+          "codigo": "ORDEN_INCONSISTENTE",
+          "contenido": "6 CLIENTE: Se corta todos los días.",
+          "detalle": "turno 6, se esperaba 5; se descarta el resto de la sesión",
+          "linea": 6,
+          "tipo": "FORMATO"
+        },
+        {
+          "codigo": "TURNO_DESCARTADO",
+          "contenido": "5 CLIENTE: Gracias.",
+          "detalle": "turno 5 posterior a un orden inconsistente",
+          "linea": 7,
           "tipo": "FORMATO"
         },
         {
@@ -76,19 +88,19 @@
           "desp": 18,
           "detalle": "«TK-12» no es un lexema válido",
           "tipo": "LEXICO",
-          "turno": 1
+          "turno": 2
         },
         {
           "codigo": "SINTAXIS",
           "desp": 24,
           "detalle": "token NEG inesperado al analizar <tk_op>",
           "tipo": "SINTAXIS",
-          "turno": 1
+          "turno": 2
         }
       ],
       "estado": {
         "evidencias": [
-          "C3.1"
+          "C4.1"
         ],
         "regla": "R-EST-RES",
         "valor": "RESUELTO"
@@ -98,12 +110,33 @@
           "actor": "CLIENTE",
           "aspecto": "SERVICIO",
           "conector": null,
+          "declaracion": null,
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "El servicio está lento",
+          "hasta": 33,
+          "id": "C1.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-SUJ",
+            "R-COP"
+          ],
+          "temporal": null,
+          "tipo": "VALORACION",
+          "turno": 1,
+          "valoracion": "NEGATIVA"
+        },
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
           "declaracion": "OK",
           "desde": 11,
           "entidades": [],
           "fragmento": "Ahora funciona bien",
           "hasta": 30,
-          "id": "C3.1",
+          "id": "C4.1",
           "intensidad": null,
           "negada": false,
           "reglas": [
@@ -112,7 +145,7 @@
           ],
           "temporal": "AHORA",
           "tipo": "FUNCIONAMIENTO",
-          "turno": 3,
+          "turno": 4,
           "valoracion": "POSITIVA"
         }
       ],
@@ -122,25 +155,25 @@
           "desp": 11,
           "lexema": "Ticket",
           "motivo": "FUERA_DE_GRAMATICA",
-          "turno": 1
+          "turno": 2
         },
         {
           "desp": 18,
           "lexema": "TK-12",
           "motivo": "TICKET_MAL_FORMADO",
-          "turno": 1
+          "turno": 2
         },
         {
           "desp": 24,
           "lexema": "sin",
           "motivo": "FUERA_DE_GRAMATICA",
-          "turno": 1
+          "turno": 2
         },
         {
           "desp": 28,
           "lexema": "respuesta",
           "motivo": "PALABRA_DESCONOCIDA",
-          "turno": 1
+          "turno": 2
         }
       ],
       "resumen_aspectos": {
@@ -156,13 +189,87 @@
         },
         "SERVICIO": {
           "evidencias": [
-            "C3.1"
+            "C1.1",
+            "C4.1"
           ],
           "opiniones_agente": [],
-          "valoracion": "POSITIVA"
+          "valoracion": "MIXTA"
         }
       },
       "turnos": [
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": null,
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "El servicio está lento",
+              "hasta": 33,
+              "id": "C1.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SUJ",
+                "R-COP"
+              ],
+              "temporal": null,
+              "tipo": "VALORACION",
+              "turno": 1,
+              "valoracion": "NEGATIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[ASP_SERV«servicio»] pred_s[V_COPULA«está» modif[adj[ADJ_NEG«lento»]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 2,
+          "no_interpretado": [],
+          "numero": 1,
+          "rol": "CLIENTE",
+          "texto": "El servicio está lento.",
+          "tokens": [
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 11,
+              "lexema": "El",
+              "normalizado": "el"
+            },
+            {
+              "canonico": "SERVICIO",
+              "categoria": "ASP_SERV",
+              "desp": 14,
+              "lexema": "servicio",
+              "normalizado": "servicio"
+            },
+            {
+              "canonico": "SER_ESTAR",
+              "categoria": "V_COPULA",
+              "desp": 23,
+              "lexema": "está",
+              "normalizado": "esta"
+            },
+            {
+              "canonico": "LENTO",
+              "categoria": "ADJ_NEG",
+              "desp": 28,
+              "lexema": "lento",
+              "normalizado": "lento"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 33,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "NEGATIVA"
+          }
+        },
         {
           "clausulas": [],
           "estructura": "texto[oracion[clausula[nucleo[TICKET_PAL«Ticket»]]] texto_r[PUNTO«.»]]",
@@ -172,28 +279,28 @@
               "desp": 11,
               "lexema": "Ticket",
               "motivo": "FUERA_DE_GRAMATICA",
-              "turno": 1
+              "turno": 2
             },
             {
               "desp": 18,
               "lexema": "TK-12",
               "motivo": "TICKET_MAL_FORMADO",
-              "turno": 1
+              "turno": 2
             },
             {
               "desp": 24,
               "lexema": "sin",
               "motivo": "FUERA_DE_GRAMATICA",
-              "turno": 1
+              "turno": 2
             },
             {
               "desp": 28,
               "lexema": "respuesta",
               "motivo": "PALABRA_DESCONOCIDA",
-              "turno": 1
+              "turno": 2
             }
           ],
-          "numero": 1,
+          "numero": 2,
           "rol": "CLIENTE",
           "texto": "Ticket TK-12 sin respuesta.",
           "tokens": [
@@ -250,7 +357,7 @@
               "entidades": [],
               "fragmento": "Ahora funciona bien",
               "hasta": 30,
-              "id": "C3.1",
+              "id": "C4.1",
               "intensidad": null,
               "negada": false,
               "reglas": [
@@ -259,14 +366,14 @@
               ],
               "temporal": "AHORA",
               "tipo": "FUNCIONAMIENTO",
-              "turno": 3,
+              "turno": 4,
               "valoracion": "POSITIVA"
             }
           ],
           "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
           "linea": 5,
           "no_interpretado": [],
-          "numero": 3,
+          "numero": 4,
           "rol": "CLIENTE",
           "texto": "Ahora funciona bien.",
           "tokens": [
@@ -403,7 +510,7 @@
             }
           ],
           "estructura": "texto[oracion[clausula[nucleo[pred_l[V_SEGUIR«Sigo» seg[NEG«sin» ASP_SERV«internet»]]]]] texto_r[PUNTO«.»]]",
-          "linea": 8,
+          "linea": 10,
           "no_interpretado": [],
           "numero": 1,
           "rol": "CLIENTE",

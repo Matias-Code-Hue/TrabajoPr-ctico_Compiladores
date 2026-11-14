@@ -1,14 +1,14 @@
-"""Pipeline del TP1:  lector -> léxico -> corrector -> parser LL(1) -> semántica -> tabla de símbolos -> resultado.
+"""Pipeline del TP1:  lector -> léxico -> corrector -> parser LL(1) -> semántica -> tabla de entidades -> resultado.
 
 analizar_lote(lineas, vocab) devuelve (resultado, trazas):
   · resultado: estructura serializable a JSON (un objeto por lote, con las sesiones adentro)
-  · trazas[sid]: lista por turno con cada etapa (texto original → tokens → estructura → tabla de símbolos
+  · trazas[sid]: lista por turno con cada etapa (texto original → tokens → estructura → tabla de entidades
                  → acción semántica → resultado) para la vista de consola.
 """
 from lexico import Token, construir_afd
 from lector import leer_lote
 from corrector import indice_vocabulario, corregir_tokens
-from simbolos import TablaSimbolos, Aparicion
+from entidades import TablaEntidades, Aparicion
 from sintaxis import AnalizadorSintactico, TERMINALES_TEXTO, arbol
 import semantica as sem
 
@@ -31,23 +31,24 @@ def _fragmento(linea, completos, pos, hojas):
     return linea[desde:hasta], desde, hasta
 
 
-def _analizar_turno(sid, t, idx, ts, num_clausula_ini=0):
+def _analizar_turno(sid, t, idx, ts, decidir=None):
     tr = {'turno': t.numero, 'rol': t.rol, 'linea': t.linea, 'original': t.linea_txt}
     mark = len(ts.bitacora)
 
-    # --- tabla de símbolos: participante
+    # --- tabla de entidades: participante
     rol_lex = t.linea_txt[t.rol_desp:t.rol_desp + len(t.rol)]
     ts.buscar(sid, 'PARTICIPANTE', t.rol)
     ts.insertar(sid, 'PARTICIPANTE', t.rol, Aparicion(t.numero, t.rol_desp, rol_lex))
 
-    # --- corrector ortográfico (solo PALABRA)
-    toks, regs = corregir_tokens(t.tokens, idx)
+    # --- corrector ortográfico (solo PALABRA); con `decidir`, consulta al usuario por cada palabra desconocida
+    toks, regs = corregir_tokens(t.tokens, idx, decidir=(lambda tk, c: decidir(tk, c, sid, t)) if decidir else None)
     por_desp = {tk.desp: c for tk, c in regs}
     correcciones, errores, no_interp, notas_corr = [], [], [], []
     for tk, c in regs:
-        if c.accion in ('CORREGIDA', 'EMPATE'):
+        if c.accion in ('CORREGIDA', 'EMPATE', 'CORREGIDA_USUARIO', 'INSERTADA'):
             correcciones.append({'turno': t.numero, 'desp': tk.desp, 'original': tk.lexema, 'normalizado': c.original,
-                                 'resultado': c.resultado, 'accion': c.accion, 'candidatos': c.candidatos})
+                                 'resultado': c.resultado, 'accion': c.accion, 'candidatos': c.candidatos,
+                                 **({'categoria': c.categoria, 'canonico': c.canonico} if c.accion == 'INSERTADA' else {})})
         notas_corr.append(f'«{tk.lexema}» → {c.accion}' + (f' candidatos={c.candidatos}' if c.candidatos else ''))
 
     # --- clasificación de tokens para el parser
@@ -67,7 +68,7 @@ def _analizar_turno(sid, t, idx, ts, num_clausula_ini=0):
             errores.append({'tipo': 'LEXICO', 'turno': t.numero, 'codigo': MOTIVO[tk.categoria], 'desp': tk.desp,
                             'detalle': f'«{tk.lexema}» no es un lexema válido'})
 
-    # --- tabla de símbolos: tickets (todas las referencias válidas)
+    # --- tabla de entidades: tickets (todas las referencias válidas)
     for tk in toks:
         if tk.categoria == 'TICKET':
             ts.buscar(sid, 'TICKET', tk.norm)
@@ -103,7 +104,7 @@ def _analizar_turno(sid, t, idx, ts, num_clausula_ini=0):
                  'conector': conector, **h}
             if conector == 'PERO' and cls:
                 c['en_contraste_con'] = cls[-1]['id']
-            # actualización de la tabla de símbolos desde la acción semántica
+            # actualización de la tabla de entidades desde la acción semántica
             if c['tipo'] == 'COMPROMISO':
                 for tk_norm in c['entidades']:
                     ts.actualizar(sid, 'TICKET', tk_norm, seguimiento='COMPROMISO_FUTURO',
@@ -131,7 +132,7 @@ def _analizar_turno(sid, t, idx, ts, num_clausula_ini=0):
                  'tokens': [_tok(tk) for tk in toks], 'estructura': arbol(raiz) if raiz is not None else None,
                  'clausulas': cls, 'valoraciones': val, 'no_interpretado': ni}
     tr.update({'tokens': toks, 'corrector': notas_corr, 'estructura': turno_out['estructura'], 'pasos': ps.pasos,
-               'tabla_simbolos': ts.bitacora[mark:], 'acciones': acciones, 'valoraciones': val, 'no_interpretado': ni,
+               'tabla_entidades': ts.bitacora[mark:], 'acciones': acciones, 'valoraciones': val, 'no_interpretado': ni,
                'sin_contenido': raiz is None})
     return turno_out, cls, correcciones, errores, ni, tr
 
@@ -140,14 +141,14 @@ def _err_formato(e):
     return {'tipo': 'FORMATO', 'linea': e.linea, 'codigo': e.codigo, 'detalle': e.detalle, 'contenido': e.contenido}
 
 
-def _analizar_sesion(s, idx, ts):
+def _analizar_sesion(s, idx, ts, decidir=None):
     sid = s.id
     ts.buscar(sid, 'SESION', sid)
     ts.insertar(sid, 'SESION', sid, Aparicion(None, None, sid), linea_inicio=s.linea_ini)
     turnos, cls_all, corr_all, ni_all, trazas = [], [], [], [], []
     errores = [_err_formato(e) for e in s.errores]
     for t in s.turnos:
-        turno_out, cls, corr, errs, ni, tr = _analizar_turno(sid, t, idx, ts)
+        turno_out, cls, corr, errs, ni, tr = _analizar_turno(sid, t, idx, ts, decidir)
         turnos.append(turno_out)
         cls_all += cls
         corr_all += corr
@@ -166,14 +167,18 @@ def _analizar_sesion(s, idx, ts):
     return out, trazas
 
 
-def analizar_lote(lineas, vocab, archivo=''):
+def analizar_lote(lineas, vocab, archivo='', decidir=None):
+    """vocab: tabla de símbolos léxica vigente (formato de vocabulario.json).
+    decidir(token, correccion, sesion, turno) -> Correccion | None : consulta al usuario por una palabra desconocida
+    (main.py la conecta a la terminal). Sin ella (pruebas.py) se aplica la regla del enunciado, sin preguntas.
+    La tabla de entidades se crea vacía en cada llamada: no persiste entre ejecuciones."""
     afd = construir_afd(vocab)
     idx = indice_vocabulario(vocab)
     sesiones, globales = leer_lote(lineas, afd)
-    ts = TablaSimbolos()
+    ts = TablaEntidades()
     out, trazas = [], {}
     for s in sesiones:
-        o, tr = _analizar_sesion(s, idx, ts)
+        o, tr = _analizar_sesion(s, idx, ts, decidir)
         out.append(o)
         trazas[s.id] = tr
     resultado = {'lote': {'archivo': archivo, 'sesiones': len(out),

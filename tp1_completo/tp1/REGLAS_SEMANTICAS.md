@@ -3,7 +3,7 @@
 Definición dirigida por la sintaxis del analizador: qué atributo calcula cada producción de la gramática
 (`GRAMATICA.md`) y cómo se llega desde ellos a la valoración por aspecto y al estado de la sesión.
 Implementación: `semantica.py` (reglas por producción y estado) y `analizador.py` (atributos de contexto y
-tabla de símbolos).
+tabla de entidades).
 
 ## 1. Notación
 
@@ -235,7 +235,8 @@ Sobre la lista `L` de todas las cláusulas interpretadas de la sesión, en orden
 
 | Condición | Estado | Regla |
 |---|---|---|
-| `D ≠ ∅` | el que resulta de recorrer `D` (cuadro siguiente) | R-EST-RES, R-EST-NORES o R-EST-TEMP |
+| `D ≠ ∅` y hay una promesa en `K` **posterior** a la última declaración de `D` | `PENDIENTE` | R-EST-PEND (por R-EST-PREC) |
+| `D ≠ ∅` en otro caso | el que resulta de recorrer `D` (cuadro siguiente) | R-EST-RES, R-EST-NORES o R-EST-TEMP |
 | `D = ∅` y `K ≠ ∅` | `PENDIENTE` | R-EST-PEND |
 | `D = ∅` y `K = ∅` | `NO_CONFIRMADO` | R-EST-NC |
 
@@ -249,9 +250,17 @@ aplica la primera fila que se cumpla; `e` es el estado que dejó el turno anteri
 | 3 | `dₙ = RECUR` y `e ∈ {RESUELTO, TEMPORAL}` | `TEMPORAL` | R-EST-TEMP |
 | 4 | en otro caso (`dₙ = FALLA`, o `RECUR` sin recuperación previa) | `NO_RESUELTO` | R-EST-NORES |
 
-El estado de la sesión es el `e` que deja el **último** turno con declaraciones: la última declaración explícita del
-cliente prevalece. Las promesas del agente (`K`) no lo modifican, sean anteriores o posteriores (**R-EST-PREC**); si
-existen, se deja una nota en la salida.
+El estado de la sesión es el `e` que deja el **último** turno con declaraciones, salvo que después haya una promesa
+del agente.
+
+**Precedencia (R-EST-PREC): prevalece lo último.** Es la respuesta del profesor a la consulta («se tiene en cuenta lo
+último nomás, o sea lo que dijo el agente») y coincide con la definición de PENDIENTE del enunciado: «existe un
+compromiso o seguimiento futuro, sin confirmación posterior del CLIENTE».
+
+- Promesa del agente **posterior** a la última declaración del cliente → `PENDIENTE`, sea esa declaración una falla
+  o una confirmación. La nota de la salida indica qué estado daba la declaración.
+- Declaración del cliente **posterior** a la promesa → prevalece la declaración; la nota lo registra.
+- Las cortesías («Gracias») y las solicitudes no son declaraciones: no cambian quién habló último.
 
 | Caso | Declaraciones del cliente | Estado |
 |---|---|---|
@@ -260,16 +269,21 @@ existen, se deja una nota en la salida.
 | 03 | T1: `OK`, `RECUR` («Ahora funciona, pero se corta todos los días») | `TEMPORAL` (fila 1) |
 | 04 | ninguna, sin compromiso | `NO_CONFIRMADO` |
 | 06 | ninguna; compromiso del agente («Mañana revisaremos TK-205») | `PENDIENTE` |
-| 10 | T3: `OK`; el agente promete antes y después | `RESUELTO` (R-EST-PREC) |
+| 10 | T3: `OK`; el agente promete antes (T2) y **después** (T4) | `PENDIENTE` (R-EST-PREC: lo último es T4) |
 | 13 | T1: `FALLA`; T3: `OK`, `RECUR` | `TEMPORAL` (fila 1 en T3) |
+| 15 S01 | T1: `FALLA`; promesa en T2; «Gracias» en T3 | `PENDIENTE` (la cortesía no es declaración) |
+| 15 S02 | promesa en T1; T2: `FALLA` | `NO_RESUELTO` (la declaración es posterior) |
+| 15 S03 | T1: `OK`; promesa en T2 | `PENDIENTE` |
 
-**Interruptor de política.** Con `PROMESA_POSTERIOR_A_FALLA_ES_PENDIENTE = True` (en `semantica.py`), si el
-resultado es `NO_RESUELTO` y hay un compromiso del agente posterior a la última declaración, el estado pasa a
-`PENDIENTE`. Por defecto está en `False`: lectura literal de la regla de precedencia del enunciado.
+**Interruptor de política.** `LO_ULTIMO_PREVALECE` (en `semantica.py`) está en `True`. En `False` vuelve a la lectura
+literal del enunciado (§5): la última declaración del cliente prevalece siempre sobre las promesas del agente, y los
+casos 10 y 15 cambian de resultado.
 
-## 9. Acciones sobre la tabla de símbolos
+## 9. Acciones sobre la tabla de entidades
 
-Ámbito = sesión. Toda operación queda en la bitácora que muestra la traza.
+La tabla de entidades (`entidades.py`) es la tabla de símbolos de sesión, participante y ticket del enunciado.
+Ámbito = sesión; se crea vacía en cada ejecución y no persiste (la que persiste es la tabla de símbolos léxica,
+`INFORME_lexico.md` §1.5). Toda operación queda en la bitácora que muestra la traza.
 
 | Momento | Acción |
 |---|---|

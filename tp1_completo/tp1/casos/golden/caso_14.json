@@ -8,8 +8,8 @@
     "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
     "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
     "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
-    "R-EST-PEND": "sin declaración del CLIENTE y con compromiso futuro del agente ⇒ PENDIENTE",
-    "R-EST-PREC": "precedencia: la declaración explícita del CLIENTE prevalece sobre las promesas del agente",
+    "R-EST-PEND": "compromiso futuro del agente sin declaración posterior del CLIENTE ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: prevalece lo último entre la última declaración del CLIENTE y la última promesa del agente",
     "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
     "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
     "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
@@ -50,11 +50,6 @@
                 "desp": 2,
                 "lexema": "CLIENTE",
                 "turno": 1
-              },
-              {
-                "desp": 2,
-                "lexema": "CLIENTE",
-                "turno": 4
               }
             ],
             "atributos": {},
@@ -68,17 +63,24 @@
         {
           "codigo": "ORDEN_INCONSISTENTE",
           "contenido": "3 AGENTE: Mañana revisaremos TK-400.",
-          "detalle": "turno 3, se esperaba 2",
+          "detalle": "turno 3, se esperaba 2; se descarta el resto de la sesión",
           "linea": 3,
+          "tipo": "FORMATO"
+        },
+        {
+          "codigo": "TURNO_DESCARTADO",
+          "contenido": "4 CLIENTE: Ahora funciona bien.",
+          "detalle": "turno 4 posterior a un orden inconsistente",
+          "linea": 4,
           "tipo": "FORMATO"
         }
       ],
       "estado": {
         "evidencias": [
-          "C4.1"
+          "C1.1"
         ],
-        "regla": "R-EST-RES",
-        "valor": "RESUELTO"
+        "regla": "R-EST-NORES",
+        "valor": "NO_RESUELTO"
       },
       "evidencias": [
         {
@@ -101,27 +103,6 @@
           "tipo": "FUNCIONAMIENTO",
           "turno": 1,
           "valoracion": "NEGATIVA"
-        },
-        {
-          "actor": "CLIENTE",
-          "aspecto": "SERVICIO",
-          "conector": null,
-          "declaracion": "OK",
-          "desde": 11,
-          "entidades": [],
-          "fragmento": "Ahora funciona bien",
-          "hasta": 30,
-          "id": "C4.1",
-          "intensidad": null,
-          "negada": false,
-          "reglas": [
-            "R-FUNC",
-            "R-AHORA"
-          ],
-          "temporal": "AHORA",
-          "tipo": "FUNCIONAMIENTO",
-          "turno": 4,
-          "valoracion": "POSITIVA"
         }
       ],
       "id": "S01",
@@ -139,11 +120,10 @@
         },
         "SERVICIO": {
           "evidencias": [
-            "C1.1",
-            "C4.1"
+            "C1.1"
           ],
           "opiniones_agente": [],
-          "valoracion": "MIXTA"
+          "valoracion": "NEGATIVA"
         }
       },
       "turnos": [
@@ -204,72 +184,6 @@
             "ATENCION": "SIN_EVIDENCIA",
             "CLARIDAD": "SIN_EVIDENCIA",
             "SERVICIO": "NEGATIVA"
-          }
-        },
-        {
-          "clausulas": [
-            {
-              "actor": "CLIENTE",
-              "aspecto": "SERVICIO",
-              "conector": null,
-              "declaracion": "OK",
-              "desde": 11,
-              "entidades": [],
-              "fragmento": "Ahora funciona bien",
-              "hasta": 30,
-              "id": "C4.1",
-              "intensidad": null,
-              "negada": false,
-              "reglas": [
-                "R-FUNC",
-                "R-AHORA"
-              ],
-              "temporal": "AHORA",
-              "tipo": "FUNCIONAMIENTO",
-              "turno": 4,
-              "valoracion": "POSITIVA"
-            }
-          ],
-          "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
-          "linea": 4,
-          "no_interpretado": [],
-          "numero": 4,
-          "rol": "CLIENTE",
-          "texto": "Ahora funciona bien.",
-          "tokens": [
-            {
-              "canonico": "AHORA",
-              "categoria": "T_AHORA",
-              "desp": 11,
-              "lexema": "Ahora",
-              "normalizado": "ahora"
-            },
-            {
-              "canonico": "FUNCIONAR",
-              "categoria": "V_FUNC",
-              "desp": 17,
-              "lexema": "funciona",
-              "normalizado": "funciona"
-            },
-            {
-              "canonico": "BUENO",
-              "categoria": "ADJ_POS",
-              "desp": 26,
-              "lexema": "bien",
-              "normalizado": "bien"
-            },
-            {
-              "canonico": null,
-              "categoria": "PUNTO",
-              "desp": 30,
-              "lexema": ".",
-              "normalizado": "."
-            }
-          ],
-          "valoraciones": {
-            "ATENCION": "SIN_EVIDENCIA",
-            "CLARIDAD": "SIN_EVIDENCIA",
-            "SERVICIO": "POSITIVA"
           }
         }
       ]

@@ -66,7 +66,7 @@ def comparar(caso, res):
 def probar_tabla_lexica():
     """Inserción, persistencia, auditoría, corrección de una sola aparición y control de duplicados.
     Devuelve [(nombre, ok, detalle)]."""
-    from consulta import categorias_insertables, crear_consulta
+    from consulta import categorias_insertables, crear_consulta, opciones_canonico
     from sintaxis import TERMINALES_TEXTO
     from tabla_lexica import TablaSimbolosLexica, rutas_por_defecto
     base = os.path.dirname(DIR)
@@ -83,7 +83,9 @@ def probar_tabla_lexica():
             tabla = TablaSimbolosLexica(pre, ap, aud)
             vocab = tabla.vocabulario()
             cats = categorias_insertables(vocab, TERMINALES_TEXTO)
-            resp = [str(cats.index(r[1:]) + 1) if r.startswith('#') else r for r in respuestas]
+            resp = [str(cats.index(r[1:]) + 1) if r.startswith('#') else
+                    str(opciones_canonico(tabla, r[1:].split('/')[0]).index(r[1:].split('/')[1]) + 1) if r.startswith('@') else r
+                    for r in respuestas]
             dec = crear_consulta(tabla, 'prueba.txt', cats, io.StringIO(''.join(x + '\n' for x in resp)), io.StringIO())
             r, _ = analizar_lote(lote, vocab, 'prueba.txt', dec)
             return tabla, r['sesiones'][0]
@@ -91,14 +93,14 @@ def probar_tabla_lexica():
         def lineas_auditoria():
             return [json.loads(x) for x in open(aud, encoding='utf-8')] if os.path.exists(aud) else []
 
-        # ejecución 1: «fatal» -> insertar como ADJ_NEG/FATAL; «lentto» -> elegir el candidato 1 (solo esa aparición)
-        tabla, s = correr(['n', '#ADJ_NEG', 'FATAL', '1'])
+        # ejecución 1: «fatal» -> insertar como variante de ADJ/MALO; «lentto» -> elegir el candidato 1 (solo esa aparición)
+        tabla, s = correr(['n', '#ADJ', '@ADJ/MALO', '1'])
         acc = {c['original']: c['accion'] for c in s['correcciones']}
         out.append(('inserción interactiva', acc.get('fatal') == 'INSERTADA' and s['estado']['valor'] == 'NO_RESUELTO',
                     f'acciones={acc} estado={s["estado"]["valor"]}'))
         aprendido = json.load(open(ap, encoding='utf-8'))
         out.append(('persistencia en vocabulario_aprendido.json',
-                    set(aprendido) == {'fatal'} and aprendido['fatal']['categoria'] == 'ADJ_NEG', f'{sorted(aprendido)}'))
+                    set(aprendido) == {'fatal'} and aprendido['fatal']['categoria'] == 'ADJ' and aprendido['fatal']['canonico'] == 'MALO', f'{sorted(aprendido)}'))
         aud1 = lineas_auditoria()
         out.append(('auditoría: una línea INSERTAR con origen', len(aud1) == 1 and aud1[0]['operacion'] == 'INSERTAR'
                     and aud1[0]['origen'].get('turno') == 1, f'{[(a["operacion"], a["forma"]) for a in aud1]}'))
@@ -107,14 +109,14 @@ def probar_tabla_lexica():
         # ejecución 2: sin respuestas -> «fatal» ya está en la tabla; no hay cambios ni líneas nuevas de auditoría
         tabla, s = correr([])
         cat = next(t['categoria'] for t in s['turnos'][0]['tokens'] if t['normalizado'] == 'fatal')
-        out.append(('segunda ejecución reconoce lo aprendido', cat == 'ADJ_NEG' and s['estado']['valor'] == 'NO_RESUELTO'
+        out.append(('segunda ejecución reconoce lo aprendido', cat == 'ADJ' and s['estado']['valor'] == 'NO_RESUELTO'
                     and len(lineas_auditoria()) == 1, f'categoría={cat} estado={s["estado"]["valor"]}'))
-        out.append(('control de duplicados', not tabla.insertar('fatal', 'ADJ_POS', 'X') and not tabla.insertar('lento', 'ADJ_POS', 'X'),
+        out.append(('control de duplicados', not tabla.insertar('fatal', 'ADJ', 'BUENO') and not tabla.insertar('lento', 'ADJ', 'BUENO'),
                     'insertar(fatal) e insertar(lento) rechazados'))
         out.append(('la precarga no se modifica', hashlib.sha256(open(pre, 'rb').read()).hexdigest() == huella, 'sha256 igual'))
         # conciliación: la forma pasa a la precarga -> la entrada aprendida se da de baja y se audita
         v = json.load(open(pre, encoding='utf-8'))
-        v['ADJ_NEG']['FATAL'] = ['fatal']
+        v['ADJ']['MALO'].append('fatal')
         json.dump(v, open(pre, 'w', encoding='utf-8'), ensure_ascii=False)
         tabla = TablaSimbolosLexica(pre, ap, aud)
         out.append(('baja por precarga auditada', 'fatal' not in tabla.aprendido

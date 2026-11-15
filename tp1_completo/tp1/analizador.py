@@ -97,6 +97,12 @@ def _analizar_turno(sid, t, idx, ts, decidir=None):
                                 + ' '.join(f'«{tk.lexema}»' for tk in err_toks))
                 continue
             h = sem.ev(cn)
+            if h['tipo'] == 'INCOMPATIBLE':                  # R-COMPAT: se abstiene, igual que una cláusula con error
+                for tk in cn.hojas():
+                    no_interp.append((tk, 'SUJETO_PREDICADO_INCOMPATIBLE'))
+                acciones.append(f'{cid} «' + ' '.join(tk.lexema for tk in cn.hojas())
+                                + '» → sujeto y predicado incompatibles: NO_INTERPRETADO  [R-COMPAT]')
+                continue
             frag, desde, hasta = _fragmento(t.linea_txt, toks, pos, list(cn.hojas()))
             if conector == 'PERO':
                 h['reglas'].append('R-PERO')
@@ -172,6 +178,9 @@ def analizar_lote(lineas, vocab, archivo='', decidir=None):
     decidir(token, correccion, sesion, turno) -> Correccion | None : consulta al usuario por una palabra desconocida
     (main.py la conecta a la terminal). Sin ella (pruebas.py) se aplica la regla del enunciado, sin preguntas.
     La tabla de entidades se crea vacía en cada llamada: no persiste entre ejecuciones."""
+    faltan = sem.canonicos_sin_significado(vocab)
+    if faltan:                                           # una forma canónica sin línea en semantica.SIGNIFICADO
+        raise ValueError('formas canónicas sin significado definido en semantica.SIGNIFICADO: ' + ', '.join(faltan))
     afd = construir_afd(vocab)
     idx = indice_vocabulario(vocab)
     sesiones, globales = leer_lote(lineas, afd)

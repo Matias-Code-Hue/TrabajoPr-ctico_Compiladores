@@ -28,31 +28,43 @@ La tabla léxica se mantiene **separada de la tabla de entidades**, como exige e
 
 Cada entrada tiene la forma `categoría → forma canónica → [formas superficiales]`. Se guardan **formas superficiales** (`lenta` y `lento` por separado, sin lematizar) para que el empate de `lent` en el caso 08 sea detectable. Si una forma aparece dos veces con categorías o canónicos distintos, la carga falla (control de duplicados).
 
-| Categoría | Canónico → formas |
-|---|---|
-| `ASP_SERV` | SERVICIO → servicio, internet, conexion, red, wifi |
-| `ASP_ATEN` | ATENCION → atencion, atendiste, atendio, atendieron, trato |
-| `ASP_CLAR` | CLARIDAD → explicacion, explicaciones, explico, explicaste, indicaciones, instrucciones |
-| `ADJ_POS` | BUENO → bien, bueno, buena, buen, excelente, perfecto, perfecta · RAPIDO → rapido, rapida · ESTABLE → estable · AMABLE → amable · CLARO → claro, clara |
-| `ADJ_NEG` | MALO → mal, malo, mala, pesimo, pesima · LENTO → lento, lenta · INESTABLE → inestable · CONFUSO → confuso, confusa |
-| `V_FUNC` | FUNCIONAR → funciona, anda |
-| `V_CORTA` | CORTAR → corta, cortan, corte, cortes |
-| `V_SEGUIR` | SEGUIR → sigue, sigo, siguen |
-| `V_COPULA` | SER_ESTAR → es, esta, estan, fue, estuvo, era |
-| `V_ENTENDER` | ENTENDER → entendi, entendio, entiendo |
-| `V_SOLICITUD` | REINICIAR → reinicie, reinicia, reiniciar, reinicien |
-| `V_COMPROMISO` | REVISAR → revisaremos, revisare · LLAMAR → llamaremos, contactaremos · ESCALAR → escalaremos |
-| `T_FUTURO` | MAÑANA → mañana, luego |
-| `T_AHORA` | AHORA → ahora, ya |
-| `NEG` | NO → no, nunca, tampoco · SIN → sin |
-| `INT` | MUY → muy, bastante |
-| `PERO` | PERO → pero |
-| `FREC` | TODOS → todos, todas · DIA → dia, dias · SIEMPRE → siempre, seguido |
-| `SE` | SE → se |
-| `ROUTER` | ROUTER → router, modem |
-| `TICKET_PAL` | TICKET → ticket, caso |
-| `CORTESIA` | GRACIAS → gracias · SALUDO → hola, adios |
-| `RELLENO` | ART, CLITICO, PREP (el, la, me, de, en, que, y, …) |
+| Categoría | Grupo en la gramática | Qué es | Canónico → formas |
+|---|---|---|---|
+| `SUST_SERV` | `sust` | sustantivo: el servicio | SERVICIO → servicio, internet, conexion, red, wifi |
+| `SUST_ATEN` | `sust` | sustantivo: la atención | ATENCION → atencion, trato |
+| `SUST_CLAR` | `sust` | sustantivo: la explicación | CLARIDAD → explicacion, explicaciones, indicaciones, instrucciones |
+| `SUST_EQUIPO` | `sust` | sustantivo: un equipo | ROUTER → router, modem |
+| `SUST_TICKET` | `sust` | sustantivo: ticket o caso | TICKET → ticket, caso |
+| `SUST_PROB` | `sust` | sustantivo: un problema del servicio | CORTE → corte, cortes |
+| `ADJ_POS` | `adj` | cualidad positiva | BUENO → bien, bueno, buena, buen, excelente, perfecto, perfecta · RAPIDO → rapido, rapida · ESTABLE → estable · AMABLE → amable · CLARO → claro, clara |
+| `ADJ_NEG` | `adj` | cualidad negativa | MALO → mal, malo, mala, pesimo, pesima · LENTO → lento, lenta · INESTABLE → inestable · CONFUSO → confuso, confusa |
+| `V_COP` | — | ser / estar | SER_ESTAR → es, esta, estan, fue, estuvo, era |
+| `V_EST_OK` | `v_est` | verbo de estado: anda bien | FUNCIONAR → funciona, anda |
+| `V_EST_FALLA` | `v_est` | verbo de estado: anda mal | FALLAR → falla, fallan |
+| `V_EST_RECUR` | — | verbo pronominal: falla que se repite («se corta») | CORTAR → corta, cortan |
+| `V_CONT` | — | seguir | SEGUIR → sigue, sigo, siguen |
+| `V_ENTENDER` | `v_acc` | verbo de acción: entender | ENTENDER → entendi, entendio, entiendo |
+| `V_SOLICITUD` | `v_acc` | verbo de acción: pedido | REINICIAR → reinicie, reinicia, reiniciar, reinicien |
+| `V_COMPROMISO` | `v_acc` | verbo de acción: promesa a futuro | REVISAR → revisaremos, revisare · LLAMAR → llamaremos, contactaremos · ESCALAR → escalaremos |
+| `V_VAL_ATEN` | `v_acc` | verbo de acción: atender | ATENDER → atendiste, atendio, atendieron |
+| `V_VAL_CLAR` | `v_acc` | verbo de acción: explicar | EXPLICAR → explico, explicaste |
+| `T_AHORA` | `adv_t` | momento: ahora | AHORA → ahora, ya |
+| `T_FUTURO` | `adv_t` | momento: más adelante | MAÑANA → mañana, luego |
+| `NEG` | — | negación de un predicado | NO → no, nunca, tampoco |
+| `SIN` | — | «sin» + sustantivo | SIN → sin |
+| `INT` | — | intensificador | MUY → muy, bastante |
+| `PERO` | — | contraste | PERO → pero |
+| `Y` | — | unión de cláusulas | Y → y |
+| `SE` | — | marca pronominal | SE → se |
+| `FREC` | — | frecuencia | TODOS → todos, todas · DIA → dia, dias · SIEMPRE → siempre, seguido |
+| `CORTESIA` | — | cortesía | GRACIAS → gracias · SALUDO → hola, adios |
+| `RELLENO` | — | artículos, clíticos y preposiciones (sin semántica) | ART → el, la, los, las, un, una, mi, su, tu · CLITICO → me, te, lo, le · PREP → de, del, en, a, al, con, por, para, que |
+
+Las categorías son **subcategorías léxicas**: el nombre dice qué clase de palabra es y qué significa (`SUST_SERV` es un
+sustantivo que habla del servicio; `ADJ_NEG`, una cualidad negativa). La gramática las agrupa con cinco no terminales
+(`sust`, `adj`, `v_est`, `v_acc`, `adv_t`) y trata igual a todas las de un grupo; el significado de cada una lo fija
+la regla semántica de su producción (`REGLAS_SEMANTICAS.md` §3). Así la tabla solo necesita guardar `forma →
+categoría`, y una palabra nueva se incorpora eligiendo su subcategoría, sin tocar la gramática.
 
 ### 1.3 Política de normalización
 
@@ -66,7 +78,11 @@ Cada entrada tiene la forma `categoría → forma canónica → [formas superfic
 | Decisión | Justificación |
 |---|---|
 | **Un lexema, una categoría** | `agente` es rol (`2 AGENTE:`) y sustantivo (`el agente fue amable`, caso 04). El lexer no ve contexto: siempre emite `AGENTE`, y el **parser** decide según la posición. |
-| `sin` en `NEG` | Caso 02 («sigo sin internet»): es una negación con alcance sobre el sustantivo siguiente. |
+| `SIN` separado de `NEG` | «sin» precede a un sustantivo («sigo sin internet», caso 02) y «no» a un predicado. Con una sola categoría la gramática aceptaba «sigo no internet». |
+| `Y` como categoría propia | «y» une cláusulas («está lento y se corta»); como `RELLENO` desaparecía y la segunda cláusula se perdía. |
+| Verbos por construcción, no por palabra | `V_COP`, `V_EST_*`, `V_CONT` y los de acción (`V_ENTENDER`, `V_SOLICITUD`, `V_COMPROMISO`, `V_VAL_*`): un verbo nuevo («falla») entra en la subcategoría de su construcción. |
+| `V_EST_RECUR` aparte de `V_EST_OK`/`V_EST_FALLA` | «corta» solo se acepta con «se» (`SE V_EST_RECUR`): sin «se» es la lectura transitiva («el agente corta la llamada»). |
+| Formas verbales de «atender» y «explicar» como verbos | «atendiste» y «explicó» son `V_VAL_ATEN` / `V_VAL_CLAR`; los sustantivos «atención» y «explicación» son `SUST_ATEN` / `SUST_CLAR`. Permite «no me atendieron bien». |
 | `gracias` en `CORTESIA` | No es valoración; así el caso 06 da `SIN_EVIDENCIA`. |
 | `RELLENO` | Pertenece al lenguaje (no es `NO_INTERPRETADO`) pero no aporta semántica; el parser lo saltea. |
 | El corrector actúa solo sobre `PALABRA` | `no`, números y `TK-xxx` quedan intactos sin reglas especiales. |
@@ -104,7 +120,7 @@ Palabra desconocida «lentto» · sesión S01, turno 3: «El internet está lent
 | Respuesta | Efecto | ¿Cambia la tabla? | Acción registrada |
 |---|---|---|---|
 | `1..k` | se toma ese candidato **solo en esta aparición** | no | `CORREGIDA_USUARIO` |
-| `n` | se elige categoría (terminales de la gramática, `RELLENO` o `FUERA_DE_GRAMATICA`) y canónico; la forma se incorpora | sí, con auditoría | `INSERTADA` |
+| `n` | se elige la subcategoría en un menú agrupado por tipo de palabra (cualidad, cosa, acción, momento, palabra gramatical, `RELLENO` o `FUERA_DE_GRAMATICA`) y el canónico; la forma se incorpora | sí, con auditoría | `INSERTADA` |
 | Enter | regla del enunciado: candidato único → se corrige; empate o ninguno → se conserva | no | `CORREGIDA`, `EMPATE`, `SIN_CANDIDATO` |
 
 - Los errores de tipeo no se guardan: elegir «lento» para «lentto» no agrega «lentto» a la tabla.
@@ -132,7 +148,7 @@ La **prioridad** es el orden de declaración (índice menor = más prioridad).
 | 4 | `DOSPUNTOS`, `PUNTO`, `COMA`, `SIGNO` | `:` · `.` · `,` · `[¿?¡!]` | puntuación |
 | 5 | `TICKET` | `tk- D{3,6}` | ver sección 3 |
 | 6 | `TICKET_MAL` | `tk- D*` | error léxico específico |
-| 7 | categorías del vocabulario | unión de formas (`ADJ_NEG`, `NEG`, `PERO`, …) | ver sección 1 |
+| 7 | las 29 subcategorías del vocabulario (`SUST_*`, `ADJ_*`, `V_*`, `T_*`, `NEG`, `SIN`, `Y`, …) | unión de las formas que tiene la tabla de símbolos léxica (precarga ∪ aprendido) | ver sección 1; la ER cambia cuando el usuario inserta una palabra |
 | 8 | `PALABRA` | `letra+` | palabra desconocida; entrada del corrector |
 | — | `DESCONOCIDO` | ningún patrón acepta | un carácter; error léxico |
 
@@ -147,7 +163,7 @@ Siguiendo la Clase 5 (§5.3), hay dos situaciones y dos reglas distintas:
 | Lexemas de **distinta longitud** | `TK-204` (6 caracteres) vs `PALABRA` `tk` (2) | **lexema más largo**: gana `TICKET` |
 | **Mismo lexema** aceptado por dos patrones | `no` ∈ `NEG` y `no` ∈ `PALABRA` | **prioridad**: gana `NEG` (índice menor) |
 
-En el AFD combinado, un estado final puede reunir finales de varios tokens (como `F = {6, 8}` en el ejemplo `abb` de la Clase 5). La implementación elige el de menor índice y registra esos estados en `afd.ambiguos` (122 en el AFD completo), que sirven como evidencia para el informe.
+En el AFD combinado, un estado final puede reunir finales de varios tokens (como `F = {6, 8}` en el ejemplo `abb` de la Clase 5). La implementación elige el de menor índice y registra esos estados en `afd.ambiguos` (124 en el AFD completo, de 409 estados), que sirven como evidencia para el informe.
 
 ### 2.3 Tratamiento de errores léxicos
 
@@ -170,15 +186,15 @@ Entrada: `2 CLIENTE: El internet está lentto. Ver TK-204, TK-12 y TK-1234567 ¡
 | 2 | CLIENTE | `CLIENTE` | `cliente` | CLIENTE |
 | 9 | DOSPUNTOS | `:` | `:` | – |
 | 11 | RELLENO | `El` | `el` | ART |
-| 14 | ASP_SERV | `internet` | `internet` | SERVICIO |
-| 23 | V_COPULA | `está` | `esta` | SER_ESTAR |
+| 14 | SUST_SERV | `internet` | `internet` | SERVICIO |
+| 23 | V_COP | `está` | `esta` | SER_ESTAR |
 | 28 | PALABRA | `lentto` | `lentto` | – |
 | 34 | PUNTO | `.` | `.` | – |
 | 36 | PALABRA | `Ver` | `ver` | – |
 | 40 | TICKET | `TK-204` | `TK-204` | – |
 | 46 | COMA | `,` | `,` | – |
 | 48 | TICKET_MAL | `TK-12` | `tk-12` | – |
-| 54 | RELLENO | `y` | `y` | PREP |
+| 54 | Y | `y` | `y` | Y |
 | 56 | TICKET_MAL | `TK-1234567` | `tk-1234567` | – |
 | 67 | SIGNO | `¡` | `¡` | – |
 | 68 | CORTESIA | `Gracias` | `gracias` | GRACIAS |
@@ -270,6 +286,8 @@ devolver ultimo       # si es nulo → error léxico
 - El id de sesión es `S` seguido de exactamente 2 dígitos.
 - Los tickets se aceptan en cualquier combinación de mayúsculas y minúsculas, porque el texto se pliega antes de analizar.
 - No hay palabras compuestas: «todos los días» son tres tokens (`FREC`, `RELLENO`, `FREC`) y la gramática los compone.
+- Una forma tiene una sola entrada en la tabla: los homógrafos obligan a elegir una lectura («falla» y «corta» son verbos; «corte» y «cortes», sustantivos; «esta» es la cópula «está»).
+- Los tiempos verbales no se distinguen: quedan fuera del alcance.
 - Está pendiente la minimización del AFD completo (Clase 5, §5.4); el AFD de `TICKET` ya es mínimo.
 
 ## 5. Etapas siguientes del pipeline

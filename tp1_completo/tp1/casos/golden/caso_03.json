@@ -1,27 +1,31 @@
 {
   "catalogo_reglas": {
     "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
-    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|T_FUTURO] ⇒ compromiso futuro",
-    "R-COP": "sujeto [V_COPULA] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-COMPAT": "sujeto y predicado incompatibles (tabla COMPAT), dos sujetos o V_CONT sin complemento ⇒ la cláusula no se interpreta",
+    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|plazo] ⇒ compromiso futuro",
+    "R-COP": "sujeto [V_COP] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
     "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
-    "R-CORTE": "[sujeto] SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin expresión de frecuencia)",
-    "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-CORTE": "[sujeto] SE V_EST_RECUR [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin expresión de frecuencia)",
+    "R-ENT": "[NEG] V_ENTENDER [sust] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-EST": "v_est [compl] ⇒ SERVICIO; V_EST_OK toma la polaridad del complemento (POSITIVA si no hay), V_EST_FALLA es NEGATIVA; declaración OK/FALLA",
     "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
     "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
     "R-EST-PEND": "compromiso futuro del agente sin declaración posterior del CLIENTE ⇒ PENDIENTE",
     "R-EST-PREC": "precedencia: prevalece lo último entre la última declaración del CLIENTE y la última promesa del agente",
     "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
     "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
-    "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
-    "R-MEN": "sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-MEN": "sujeto o verbo valorativo sin cualidad ⇒ mención NEUTRA del aspecto (sin polaridad)",
     "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
-    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg y no cruza PERO, COMA ni Y",
     "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
-    "R-SEG-ADJ": "[sujeto] V_SEGUIR modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK",
-    "R-SEG-SIN": "V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA",
-    "R-SOLIC": "V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
-    "R-SUJ": "sujeto ⇒ aspecto: ASP_SERV→SERVICIO, ASP_ATEN→ATENCION, ASP_CLAR→CLARIDAD, AGENTE→ATENCION",
-    "R-TICKET": "TICKET_PAL [V_COPULA] TICKET | TICKET ⇒ referencia a un ticket (entidad)"
+    "R-POSP": "sujeto después del verbo («no funciona el internet») ⇒ aporta el aspecto como un sujeto explícito",
+    "R-SEG-ADJ": "[sujeto] V_CONT modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK",
+    "R-SEG-SIN": "V_CONT SIN sust («sigo sin internet») ⇒ aspecto del sustantivo, polaridad de R-SIN; en SERVICIO declara FALLA u OK",
+    "R-SIN": "SIN sust ⇒ NEGATIVA si falta algo (sin internet); POSITIVA si lo que falta es un problema (SUST_PROB: sin cortes)",
+    "R-SOLIC": "V_SOLICITUD [equipo] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-SUJ": "sujeto ⇒ aspecto según la subcategoría: SUST_SERV/SUST_EQUIPO/SUST_PROB→SERVICIO, SUST_ATEN/AGENTE→ATENCION, SUST_CLAR→CLARIDAD",
+    "R-TICKET": "SUST_TICKET [V_COP] TICKET | TICKET ⇒ referencia a un ticket (entidad)",
+    "R-VAL": "V_VAL_ATEN / V_VAL_CLAR modif («me atendiste muy bien») ⇒ valoración de ATENCION / CLARIDAD con la polaridad del adjetivo"
   },
   "errores_globales": [],
   "lote": {
@@ -74,7 +78,7 @@
           "intensidad": null,
           "negada": false,
           "reglas": [
-            "R-FUNC",
+            "R-EST",
             "R-AHORA"
           ],
           "temporal": "AHORA",
@@ -143,7 +147,7 @@
               "intensidad": null,
               "negada": false,
               "reglas": [
-                "R-FUNC",
+                "R-EST",
                 "R-AHORA"
               ],
               "temporal": "AHORA",
@@ -174,7 +178,7 @@
               "valoracion": "NEGATIVA"
             }
           ],
-          "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona»]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[pred_l[SE«se» V_CORTA«corta» frec[FREC«todos» frec[FREC«días»]]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[adv_t_op[adv_t[T_AHORA«Ahora»]] nucleo[pred_l[v_est[V_EST_OK«funciona»]]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[pred_l[SE«se» V_EST_RECUR«corta»]] frec[FREC«todos» frec[FREC«días»]]]]]] texto_r[PUNTO«.»]]",
           "linea": 2,
           "no_interpretado": [],
           "numero": 1,
@@ -190,7 +194,7 @@
             },
             {
               "canonico": "FUNCIONAR",
-              "categoria": "V_FUNC",
+              "categoria": "V_EST_OK",
               "desp": 17,
               "lexema": "funciona",
               "normalizado": "funciona"
@@ -218,7 +222,7 @@
             },
             {
               "canonico": "CORTAR",
-              "categoria": "V_CORTA",
+              "categoria": "V_EST_RECUR",
               "desp": 35,
               "lexema": "corta",
               "normalizado": "corta"

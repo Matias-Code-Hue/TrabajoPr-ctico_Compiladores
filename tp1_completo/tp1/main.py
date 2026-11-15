@@ -89,7 +89,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description='Speech Analytics (TP1 Diseño de Compiladores)')
     ap.add_argument('entrada')
     ap.add_argument('--vocab', default=VOCAB_POR_DEFECTO)
-    ap.add_argument('--dic', help='diccionario reducido «forma1,forma2,…» (todas bajo ADJ_NEG/LENTO); para el caso 08')
+    ap.add_argument('--dic', help='diccionario reducido «forma1,forma2,…» (todas bajo ADJ/LENTO); para el caso 08')
     ap.add_argument('--json', default='salida.json')
     ap.add_argument('--traza', metavar='SID|todas')
     ap.add_argument('--detalle', action='store_true')
@@ -98,7 +98,7 @@ def main(argv=None):
 
     try:
         if a.dic:                                              # diccionario reducido (caso 08): solo en memoria
-            tabla = TablaSimbolosLexica({'ADJ_NEG': {'LENTO': [x.strip() for x in a.dic.split(',')]}})
+            tabla = TablaSimbolosLexica({'ADJ': {'LENTO': [x.strip() for x in a.dic.split(',')]}})
         else:
             tabla = TablaSimbolosLexica(a.vocab, *rutas_por_defecto(a.vocab))
         vocab = tabla.vocabulario()                            # precarga + formas aprendidas en ejecuciones anteriores

@@ -40,15 +40,18 @@ L0 = gram("""
 texto -> lista | lista PUNTO
 lista -> lista PUNTO oracion | oracion
 oracion -> oracion sep clausula | clausula
-sep -> PERO | COMA | COMA PERO
-clausula -> T_AHORA nucleo | nucleo
-nucleo -> sujeto | sujeto V_COPULA modif | sujeto modif | sujeto V_FUNC | sujeto V_FUNC modif | sujeto V_SEGUIR seg | sujeto SE V_CORTA | sujeto SE V_CORTA frec | sujeto NEG pred_neg | pred_l | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
-sujeto -> ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
-pred_l -> NEG pred_neg | V_FUNC | V_FUNC modif | V_SEGUIR seg | SE V_CORTA | SE V_CORTA frec | V_ENTENDER | V_ENTENDER ASP_CLAR | V_SOLICITUD | V_SOLICITUD ROUTER | T_FUTURO V_COMPROMISO | T_FUTURO V_COMPROMISO TICKET | T_FUTURO V_COMPROMISO T_FUTURO | V_COMPROMISO | V_COMPROMISO TICKET | V_COMPROMISO T_FUTURO
-pred_neg -> V_FUNC | V_FUNC modif | V_COPULA modif | V_ENTENDER | V_ENTENDER ASP_CLAR
-seg -> modif | NEG ASP_SERV
-modif -> INT adj | adj
-adj -> ADJ_POS | ADJ_NEG
+sep -> PERO | COMA | COMA PERO | Y
+clausula -> nucleo | ADV_T nucleo | nucleo frec | ADV_T nucleo frec
+nucleo -> sujeto | sujeto V_COP atrib | sujeto modif | sujeto TICKET | sujeto est | sujeto SE est | sujeto V_CONT | sujeto V_CONT compl | sujeto acc | sujeto NEG pred_neg | pred_l | TICKET | CORTESIA
+pred_l -> NEG pred_neg | V_COP atrib | est | est SUST | SE est | SE est SUST | V_CONT | V_CONT compl | acc
+pred_neg -> V_COP atrib | est | est SUST | SE est | SE est SUST | V_CONT | V_CONT compl | acc
+est -> V_EST | V_EST compl
+acc -> V_ACC | V_ACC obj | V_ACC modif | V_ACC obj modif
+compl -> modif | SIN SUST
+obj -> SUST | TICKET | ADV_T
+sujeto -> SUST | AGENTE
+atrib -> modif | TICKET
+modif -> INT ADJ | ADJ
 frec -> frec FREC | FREC
 """)
 
@@ -59,15 +62,18 @@ lista -> oracion lista_r
 lista_r -> PUNTO oracion lista_r | ε
 oracion -> clausula oracion_r
 oracion_r -> sep clausula oracion_r | ε
-sep -> PERO | COMA | COMA PERO
-clausula -> T_AHORA nucleo | nucleo
-nucleo -> sujeto | sujeto V_COPULA modif | sujeto modif | sujeto V_FUNC | sujeto V_FUNC modif | sujeto V_SEGUIR seg | sujeto SE V_CORTA | sujeto SE V_CORTA frec | sujeto NEG pred_neg | pred_l | TICKET_PAL | TICKET_PAL TICKET | TICKET_PAL V_COPULA TICKET | TICKET | CORTESIA
-sujeto -> ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
-pred_l -> NEG pred_neg | V_FUNC | V_FUNC modif | V_SEGUIR seg | SE V_CORTA | SE V_CORTA frec | V_ENTENDER | V_ENTENDER ASP_CLAR | V_SOLICITUD | V_SOLICITUD ROUTER | T_FUTURO V_COMPROMISO | T_FUTURO V_COMPROMISO TICKET | T_FUTURO V_COMPROMISO T_FUTURO | V_COMPROMISO | V_COMPROMISO TICKET | V_COMPROMISO T_FUTURO
-pred_neg -> V_FUNC | V_FUNC modif | V_COPULA modif | V_ENTENDER | V_ENTENDER ASP_CLAR
-seg -> modif | NEG ASP_SERV
-modif -> INT adj | adj
-adj -> ADJ_POS | ADJ_NEG
+sep -> PERO | COMA | COMA PERO | Y
+clausula -> nucleo | ADV_T nucleo | nucleo frec | ADV_T nucleo frec
+nucleo -> sujeto | sujeto V_COP atrib | sujeto modif | sujeto TICKET | sujeto est | sujeto SE est | sujeto V_CONT | sujeto V_CONT compl | sujeto acc | sujeto NEG pred_neg | pred_l | TICKET | CORTESIA
+pred_l -> NEG pred_neg | V_COP atrib | est | est SUST | SE est | SE est SUST | V_CONT | V_CONT compl | acc
+pred_neg -> V_COP atrib | est | est SUST | SE est | SE est SUST | V_CONT | V_CONT compl | acc
+est -> V_EST | V_EST compl
+acc -> V_ACC | V_ACC obj | V_ACC modif | V_ACC obj modif
+compl -> modif | SIN SUST
+obj -> SUST | TICKET | ADV_T
+sujeto -> SUST | AGENTE
+atrib -> modif | TICKET
+modif -> INT ADJ | ADJ
 frec -> FREC frec_r
 frec_r -> FREC frec_r | ε
 """)
@@ -80,30 +86,27 @@ lista -> oracion lista_r
 lista_r -> PUNTO oracion lista_r | ε
 oracion -> clausula oracion_r
 oracion_r -> sep clausula oracion_r | ε
-sep -> PERO | COMA sep_c
+sep -> PERO | COMA sep_c | Y
 sep_c -> PERO | ε
-clausula -> T_AHORA nucleo | nucleo
-nucleo -> sujeto pred_s | pred_l | TICKET_PAL tk_op | TICKET | CORTESIA
-sujeto -> ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
-pred_s -> NEG pred_neg | V_COPULA modif | V_FUNC modif_op | V_SEGUIR seg | SE V_CORTA frec_op | modif | ε
-pred_l -> NEG pred_neg | V_FUNC modif_op | V_SEGUIR seg | SE V_CORTA frec_op | V_ENTENDER obj_clar | V_SOLICITUD obj_router | T_FUTURO V_COMPROMISO ref_op | V_COMPROMISO ref_op
-pred_neg -> V_FUNC modif_op | V_COPULA modif | V_ENTENDER obj_clar
-seg -> modif | NEG ASP_SERV
-modif -> INT adj | adj
-modif_op -> modif | ε
-adj -> ADJ_POS | ADJ_NEG
+clausula -> ADV_T nucleo frec_op | nucleo frec_op
 frec_op -> FREC frec_r | ε
 frec_r -> FREC frec_r | ε
-obj_clar -> ASP_CLAR | ε
-obj_router -> ROUTER | ε
-ref_op -> TICKET | T_FUTURO | ε
-tk_op -> V_COPULA TICKET | TICKET | ε
+nucleo -> sujeto pred_s | pred_l | TICKET | CORTESIA
+pred_s -> NEG pred_neg | V_COP atrib | V_EST compl | SE V_EST compl | V_CONT compl | V_ACC obj modif_op | modif | TICKET | ε
+pred_l -> NEG pred_neg | V_COP atrib | V_EST compl sujp | SE V_EST compl sujp | V_CONT compl | V_ACC obj modif_op
+pred_neg -> V_COP atrib | V_EST compl sujp | SE V_EST compl sujp | V_CONT compl | V_ACC obj modif_op
+compl -> modif | SIN SUST | ε
+sujp -> SUST | ε
+obj -> SUST | TICKET | ADV_T | ε
+modif_op -> modif | ε
+sujeto -> SUST | AGENTE
+atrib -> modif | TICKET
+modif -> INT ADJ | ADJ
 """)
 
 # L3: PASO 3 — resolución del conflicto PRIM/SGTE en lista_r y simplificación por sustitución = gramática final
-LING = ['texto', 'texto_r', 'texto_rr', 'oracion', 'cola', 'cola_c', 'clausula', 'ahora_op', 'nucleo', 'sujeto',
-        'pred_s', 'pred_l', 'pred_neg', 'seg', 'modif', 'modif_op', 'adj', 'frec', 'obj_clar', 'obj_router',
-        'ref_op', 'tk_op']
+LING = ['texto', 'texto_r', 'texto_rr', 'oracion', 'cola', 'cola_c', 'clausula', 'adv_t_op', 'nucleo', 'sujeto',
+        'pred_s', 'pred_l', 'pred_neg', 'atrib', 'compl', 'sujp', 'obj', 'modif', 'modif_op', 'frec']
 FORM = ['lote', 'lote_r', 'sesion', 'turnos', 'turnos_r', 'turno', 'rol']
 L3 = {a: gr.G[a] for a in LING}
 F2 = {a: gr.G[a] for a in FORM if a != 'texto'}

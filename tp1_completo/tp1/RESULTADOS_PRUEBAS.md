@@ -16,7 +16,7 @@ Generado por `python3 pruebas.py --informe`. Para cada caso: situación, salida 
 | ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 
-Reglas activadas: `R-AHORA` (C3.1); `R-COP` (C1.1); `R-EST-RES` (C3.1); `R-FUNC` (C3.1); `R-SUJ` (C1.1)
+Reglas activadas: `R-AHORA` (C3.1); `R-COP` (C1.1); `R-EST` (C3.1); `R-EST-RES` (C3.1); `R-SUJ` (C1.1)
 
 - C1.1 (CLIENTE) «El servicio está lento» → SERVICIO NEGATIVA
 - C3.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
@@ -36,7 +36,7 @@ Reglas activadas: `R-AHORA` (C3.1); `R-COP` (C1.1); `R-EST-RES` (C3.1); `R-FUNC`
 | ATENCION | POSITIVA | POSITIVA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 
-Reglas activadas: `R-COP` (C1.1); `R-EST-NORES` (C1.2); `R-MUY` (C1.1); `R-PERO` (C1.2); `R-SEG-SIN` (C1.2); `R-SUJ` (C1.1)
+Reglas activadas: `R-EST-NORES` (C1.2); `R-MUY` (C1.1); `R-PERO` (C1.2); `R-SEG-SIN` (C1.2); `R-SIN` (C1.2); `R-VAL` (C1.1)
 
 - C1.1 (CLIENTE) «Me atendiste muy bien» → ATENCION POSITIVA
 - C1.2 (CLIENTE) «sigo sin internet» → SERVICIO NEGATIVA, declaración FALLA
@@ -56,7 +56,7 @@ Reglas activadas: `R-COP` (C1.1); `R-EST-NORES` (C1.2); `R-MUY` (C1.1); `R-PERO`
 | ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 
-Reglas activadas: `R-AHORA` (C1.1); `R-CORTE` (C1.2); `R-EST-TEMP` (C1.1, C1.2); `R-FUNC` (C1.1); `R-PERO` (C1.2)
+Reglas activadas: `R-AHORA` (C1.1); `R-CORTE` (C1.2); `R-EST` (C1.1); `R-EST-TEMP` (C1.1, C1.2); `R-PERO` (C1.2)
 
 - C1.1 (CLIENTE) «Ahora funciona» → SERVICIO POSITIVA, declaración OK
 - C1.2 (CLIENTE) «se corta todos los días» → SERVICIO NEGATIVA, declaración RECUR
@@ -138,7 +138,7 @@ Reglas activadas: `R-COMPR` (C1.1); `R-EST-PEND` (C1.1)
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | errores | ['ROL_INVALIDO'] | ['ROL_INVALIDO'] |
 
-Reglas activadas: `R-AHORA` (C3.1); `R-COP` (C1.1); `R-EST-RES` (C3.1); `R-FUNC` (C3.1); `R-SUJ` (C1.1)
+Reglas activadas: `R-AHORA` (C3.1); `R-COP` (C1.1); `R-EST` (C3.1); `R-EST-RES` (C3.1); `R-SUJ` (C1.1)
 
 - C1.1 (CLIENTE) «El servicio está lento» → SERVICIO NEGATIVA
 - C3.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
@@ -154,7 +154,7 @@ Reglas activadas: `R-AHORA` (C3.1); `R-COP` (C1.1); `R-EST-RES` (C3.1); `R-FUNC`
 | ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 
-Reglas activadas: `R-EST-NORES` (C1.1); `R-SEG-SIN` (C1.1)
+Reglas activadas: `R-EST-NORES` (C1.1); `R-SEG-SIN` (C1.1); `R-SIN` (C1.1)
 
 - C1.1 (CLIENTE) «Sigo sin internet» → SERVICIO NEGATIVA, declaración FALLA
 - Estado: **NO_RESUELTO** por `R-EST-NORES`
@@ -193,7 +193,7 @@ Reglas activadas: `R-EST-NC` (—)
 | ATENCION | POSITIVA | POSITIVA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 
-Reglas activadas: `R-COP` (C1.2); `R-EST-NORES` (C3.1); `R-FUNC` (C1.1); `R-NEG` (C1.1); `R-PERO` (C1.2); `R-SEG-SIN` (C3.1); `R-SUJ` (C1.1, C1.2)
+Reglas activadas: `R-COP` (C1.2); `R-EST` (C1.1); `R-EST-NORES` (C3.1); `R-NEG` (C1.1); `R-PERO` (C1.2); `R-SEG-SIN` (C3.1); `R-SIN` (C3.1); `R-SUJ` (C1.1, C1.2)
 
 - C1.1 (CLIENTE) «El servicio no funciona» → SERVICIO NEGATIVA, declaración FALLA
 - C1.2 (CLIENTE) «la atención fue excelente» → ATENCION POSITIVA
@@ -216,7 +216,7 @@ Reglas activadas: `R-COP` (C1.2); `R-EST-NORES` (C3.1); `R-FUNC` (C1.1); `R-NEG`
 | correcciones | [['inestabl', 'inestable', 'CORREGIDA']] | [['inestabl', 'inestable', 'CORREGIDA']] |
 | tickets | ['TK-310'] | ['TK-310'] |
 
-Reglas activadas: `R-AHORA` (C3.1); `R-COMPR` (C2.1, C4.1); `R-COP` (C1.1); `R-EST-PEND` (C4.1); `R-FUNC` (C3.1); `R-SUJ` (C1.1)
+Reglas activadas: `R-AHORA` (C3.1); `R-COMPR` (C2.1, C4.1); `R-COP` (C1.1); `R-EST` (C3.1); `R-EST-PEND` (C4.1); `R-SUJ` (C1.1)
 
 - C1.1 (CLIENTE) «La conexion esta inestabl» → SERVICIO NEGATIVA
 - C2.1 (AGENTE) «Mañana revisaremos TK-310» → COMPROMISO
@@ -224,7 +224,7 @@ Reglas activadas: `R-AHORA` (C3.1); `R-COMPR` (C2.1, C4.1); `R-COP` (C1.1); `R-E
 - C4.1 (AGENTE) «Revisaremos TK-310» → COMPROMISO
 - Estado: **PENDIENTE** por `R-EST-PEND` — R-EST-PREC: la promesa del agente (C4.1) es posterior a la última declaración del cliente (C3.1, que daba RESUELTO); prevalece lo último
 
-## Caso 11 — Palabras y fragmentos fuera de la gramática: no se inventa valoración.
+## Caso 11 — Palabras desconocidas: no se inventa valoración. «Mi router hace ruidos raros» queda como mención NEUTRA del servicio.
 
 - Origen: propio (abstención) · archivo `casos/caso_11.txt`
 
@@ -234,14 +234,14 @@ Reglas activadas: `R-AHORA` (C3.1); `R-COMPR` (C2.1, C4.1); `R-COP` (C1.1); `R-E
 |---|---|---|
 | analisis | COMPLETO | COMPLETO |
 | estado | NO_CONFIRMADO | NO_CONFIRMADO |
-| SERVICIO | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| SERVICIO | NEUTRA | NEUTRA |
 | ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
-| errores | ['SINTAXIS'] | ['SINTAXIS'] |
-| no_interpretado | ['Muchas', 'hace', 'raros', 'router', 'ruidos'] | ['Muchas', 'hace', 'raros', 'router', 'ruidos'] |
+| no_interpretado | ['Muchas', 'hace', 'raros', 'ruidos'] | ['Muchas', 'hace', 'raros', 'ruidos'] |
 
-Reglas activadas: `R-EST-NC` (—)
+Reglas activadas: `R-EST-NC` (—); `R-MEN` (C1.1); `R-SUJ` (C1.1)
 
+- C1.1 (CLIENTE) «Mi router» → SERVICIO NEUTRA
 - Estado: **NO_CONFIRMADO** por `R-EST-NC`
 
 ## Caso 12 — Rol inválido (SOPORTE), ticket mal formado con error sintáctico y orden inconsistente (6 antes de 5): se descarta todo lo posterior; la sesión siguiente se analiza.
@@ -260,7 +260,7 @@ Reglas activadas: `R-EST-NC` (—)
 | errores | ['ORDEN_INCONSISTENTE', 'ROL_INVALIDO', 'SINTAXIS', 'TICKET_MAL_FORMADO', 'TURNO_DESCARTADO'] | ['ORDEN_INCONSISTENTE', 'ROL_INVALIDO', 'SINTAXIS', 'TICKET_MAL_FORMADO', 'TURNO_DESCARTADO'] |
 | no_interpretado | ['TK-12', 'Ticket', 'respuesta', 'sin'] | ['TK-12', 'Ticket', 'respuesta', 'sin'] |
 
-Reglas activadas: `R-AHORA` (C4.1); `R-COP` (C1.1); `R-EST-RES` (C4.1); `R-FUNC` (C4.1); `R-SUJ` (C1.1)
+Reglas activadas: `R-AHORA` (C4.1); `R-COP` (C1.1); `R-EST` (C4.1); `R-EST-RES` (C4.1); `R-SUJ` (C1.1)
 
 - C1.1 (CLIENTE) «El servicio está lento» → SERVICIO NEGATIVA
 - C4.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
@@ -276,7 +276,7 @@ Reglas activadas: `R-AHORA` (C4.1); `R-COP` (C1.1); `R-EST-RES` (C4.1); `R-FUNC`
 | ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 
-Reglas activadas: `R-EST-NORES` (C1.1); `R-SEG-SIN` (C1.1)
+Reglas activadas: `R-EST-NORES` (C1.1); `R-SEG-SIN` (C1.1); `R-SIN` (C1.1)
 
 - C1.1 (CLIENTE) «Sigo sin internet» → SERVICIO NEGATIVA, declaración FALLA
 - Estado: **NO_RESUELTO** por `R-EST-NORES`
@@ -295,7 +295,7 @@ Reglas activadas: `R-EST-NORES` (C1.1); `R-SEG-SIN` (C1.1)
 | ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 
-Reglas activadas: `R-AHORA` (C3.1); `R-CORTE` (C3.2); `R-EST-TEMP` (C3.1, C3.2); `R-FUNC` (C3.1); `R-PERO` (C3.2); `R-SEG-ADJ` (C1.1); `R-SUJ` (C1.1, C3.2)
+Reglas activadas: `R-AHORA` (C3.1); `R-CORTE` (C3.2); `R-EST` (C3.1); `R-EST-TEMP` (C3.1, C3.2); `R-PERO` (C3.2); `R-SEG-ADJ` (C1.1); `R-SUJ` (C1.1, C3.2)
 
 - C1.1 (CLIENTE) «El internet sigue lento» → SERVICIO NEGATIVA, declaración FALLA
 - C3.1 (CLIENTE) «Ahora funciona» → SERVICIO POSITIVA, declaración OK
@@ -317,7 +317,7 @@ Reglas activadas: `R-AHORA` (C3.1); `R-CORTE` (C3.2); `R-EST-TEMP` (C3.1, C3.2);
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | errores | ['ORDEN_INCONSISTENTE', 'TURNO_DESCARTADO'] | ['ORDEN_INCONSISTENTE', 'TURNO_DESCARTADO'] |
 
-Reglas activadas: `R-EST-NORES` (C1.1); `R-FUNC` (C1.1); `R-NEG` (C1.1)
+Reglas activadas: `R-EST` (C1.1); `R-EST-NORES` (C1.1); `R-NEG` (C1.1)
 
 - C1.1 (CLIENTE) «No funciona» → SERVICIO NEGATIVA, declaración FALLA
 - Estado: **NO_RESUELTO** por `R-EST-NORES`
@@ -352,7 +352,7 @@ Reglas activadas: `R-EST-RES` (C1.1); `R-SEG-ADJ` (C1.1); `R-SUJ` (C1.1)
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | tickets | ['TK-205'] | ['TK-205'] |
 
-Reglas activadas: `R-COMPR` (C2.1); `R-EST-PEND` (C2.1); `R-SEG-SIN` (C1.1)
+Reglas activadas: `R-COMPR` (C2.1); `R-EST-PEND` (C2.1); `R-SEG-SIN` (C1.1); `R-SIN` (C1.1)
 
 - C1.1 (CLIENTE) «Sigo sin internet» → SERVICIO NEGATIVA, declaración FALLA
 - C2.1 (AGENTE) «Mañana revisaremos TK-205» → COMPROMISO
@@ -369,7 +369,7 @@ Reglas activadas: `R-COMPR` (C2.1); `R-EST-PEND` (C2.1); `R-SEG-SIN` (C1.1)
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | tickets | ['TK-206'] | ['TK-206'] |
 
-Reglas activadas: `R-COMPR` (C1.1); `R-EST-NORES` (C2.1); `R-SEG-SIN` (C2.1)
+Reglas activadas: `R-COMPR` (C1.1); `R-EST-NORES` (C2.1); `R-SEG-SIN` (C2.1); `R-SIN` (C2.1)
 
 - C1.1 (AGENTE) «Mañana revisaremos TK-206» → COMPROMISO
 - C2.1 (CLIENTE) «Sigo sin internet» → SERVICIO NEGATIVA, declaración FALLA
@@ -386,8 +386,45 @@ Reglas activadas: `R-COMPR` (C1.1); `R-EST-NORES` (C2.1); `R-SEG-SIN` (C2.1)
 | CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
 | tickets | ['TK-207'] | ['TK-207'] |
 
-Reglas activadas: `R-AHORA` (C1.1); `R-COMPR` (C2.1); `R-EST-PEND` (C2.1); `R-FUNC` (C1.1)
+Reglas activadas: `R-AHORA` (C1.1); `R-COMPR` (C2.1); `R-EST` (C1.1); `R-EST-PEND` (C2.1)
 
 - C1.1 (CLIENTE) «Ahora funciona bien» → SERVICIO POSITIVA, declaración OK
 - C2.1 (AGENTE) «Revisaremos TK-207» → COMPROMISO
 - Estado: **PENDIENTE** por `R-EST-PEND` — R-EST-PREC: la promesa del agente (C2.1) es posterior a la última declaración del cliente (C1.1, que daba RESUELTO); prevalece lo último
+
+## Caso 16 — Sujeto pospuesto, conector «y», router como sujeto, verbo de falla, negación de un verbo valorativo y «sin cortes»; en S02, sujeto y predicado incompatibles → abstención.
+
+- Origen: propio (gramática por subcategorías) · archivo `casos/caso_16.txt`
+
+**Sesión S01: OK**
+
+| | Esperado | Obtenido |
+|---|---|---|
+| analisis | COMPLETO | COMPLETO |
+| estado | RESUELTO | RESUELTO |
+| SERVICIO | MIXTA | MIXTA |
+| ATENCION | NEGATIVA | NEGATIVA |
+| CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
+
+Reglas activadas: `R-AHORA` (C3.2); `R-EST` (C1.1, C1.2, C3.2); `R-EST-RES` (C3.2); `R-NEG` (C1.1, C3.1); `R-PERO` (C3.2); `R-POSP` (C1.1); `R-SIN` (C3.2); `R-SUJ` (C1.2); `R-VAL` (C3.1)
+
+- C1.1 (CLIENTE) «No funciona el internet» → SERVICIO NEGATIVA, declaración FALLA
+- C1.2 (CLIENTE) «el router falla seguido» → SERVICIO NEGATIVA, declaración FALLA
+- C3.1 (CLIENTE) «No me atendieron bien» → ATENCION NEGATIVA
+- C3.2 (CLIENTE) «ahora funciona sin cortes» → SERVICIO POSITIVA, declaración OK
+- Estado: **RESUELTO** por `R-EST-RES`
+
+**Sesión S02: OK**
+
+| | Esperado | Obtenido |
+|---|---|---|
+| analisis | COMPLETO | COMPLETO |
+| estado | NO_CONFIRMADO | NO_CONFIRMADO |
+| SERVICIO | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| ATENCION | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| CLARIDAD | SIN_EVIDENCIA | SIN_EVIDENCIA |
+| no_interpretado | ['agente', 'bien', 'corta', 'explicación', 'funciona', 'se'] | ['agente', 'bien', 'corta', 'explicación', 'funciona', 'se'] |
+
+Reglas activadas: `R-EST-NC` (—)
+
+- Estado: **NO_CONFIRMADO** por `R-EST-NC`

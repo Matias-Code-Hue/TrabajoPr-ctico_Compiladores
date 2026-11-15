@@ -4,7 +4,8 @@ Por cada palabra desconocida (token PALABRA de al menos MIN_LONG letras) se mues
 distancia 1 y la propuesta de la regla del enunciado, y el usuario elige:
 
   1..k   tomar ese candidato SOLO para esta aparición (la tabla de símbolos léxica no cambia)
-  n      insertar la palabra como forma nueva en la tabla de símbolos léxica (categoría y canónico) -> se audita
+  n      insertar la palabra en la tabla de símbolos léxica: categoría y forma canónica de la que es variante
+         (hereda su significado) -> se audita
   Enter  aplicar la regla del enunciado (candidato único -> se corrige; empate o ninguno -> se conserva)
 
 La decisión se toma una vez por palabra y por ejecución. Si la entrada se termina (Ctrl-D, o stdin redirigido sin
@@ -15,6 +16,7 @@ import re
 import sys
 
 from corrector import Correccion
+from semantica import SIGNIFICADO
 from tabla_lexica import FUERA_DE_GRAMATICA
 
 PROPUESTA = {
@@ -24,10 +26,47 @@ PROPUESTA = {
 }
 
 
+# Menú de inserción: las categorías agrupadas por tipo de palabra, con una descripción para el usuario.
+# Después de la categoría se elige la FORMA CANÓNICA de la que la palabra es variante. En las categorías con significado
+# (semantica.SIGNIFICADO) la forma canónica debe existir: la palabra hereda su significado. En las demás se puede crear.
+MENU = [
+    ('Cosa, cualidad o momento', [
+        ('SUST', 'sustantivo: internet, atención, explicación, router, ticket, corte'),
+        ('ADJ', 'cualidad: bien, lento, amable, confuso'),
+        ('ADV_T', 'momento: ahora, mañana')]),
+    ('Acción o estado (verbo)', [
+        ('V_EST', 'estado del servicio: funciona, falla, se corta'),
+        ('V_ACC', 'acción: entender, reiniciar, revisar, atender, explicar'),
+        ('V_COP', 'ser o estar: es, está, fue'),
+        ('V_CONT', 'seguir: sigue, sigo')]),
+    ('Palabra gramatical', [
+        ('NEG', 'negación: no, nunca'),
+        ('SIN', 'sin'),
+        ('INT', 'intensificador: muy, bastante'),
+        ('PERO', 'contraste: pero'),
+        ('Y', 'unión de cláusulas: y'),
+        ('SE', 'se'),
+        ('FREC', 'frecuencia: siempre, todos los días'),
+        ('CORTESIA', 'cortesía: gracias, hola')]),
+    ('Sin efecto en el análisis', [
+        ('RELLENO', 'sin significado: artículo, preposición…'),
+        (FUERA_DE_GRAMATICA, 'conocida, sin función en la gramática: no se vuelve a preguntar')]),
+]
+GRUPO = {cat: titulo for titulo, cats in MENU for cat, _ in cats}
+DESCRIPCION = {cat: d for _, cats in MENU for cat, d in cats}
+
+
 def categorias_insertables(vocab, terminales):
-    """Categorías que puede recibir una forma nueva: los terminales de la gramática que vienen del vocabulario,
-    RELLENO (sin significado) y FUERA_DE_GRAMATICA (conocida, pero sin función: no se vuelve a preguntar)."""
-    return sorted(c for c in vocab if c in terminales) + ['RELLENO', FUERA_DE_GRAMATICA]
+    """Categorías que puede recibir una forma nueva, en el orden del menú: las categorías léxicas que son terminales
+    de la gramática, RELLENO y FUERA_DE_GRAMATICA. (vocab se conserva por compatibilidad; no se usa.)"""
+    return [cat for _, cats in MENU for cat, _ in cats if cat in terminales or cat in ('RELLENO', FUERA_DE_GRAMATICA)]
+
+
+def opciones_canonico(tabla, categoria):
+    """Formas canónicas que se ofrecen para una categoría, en orden. Con significado: las de semantica.SIGNIFICADO."""
+    if categoria in SIGNIFICADO:
+        return list(SIGNIFICADO[categoria])
+    return tabla.canonicos(categoria)
 
 
 def crear_consulta(tabla, archivo, categorias, entrada=None, salida=None):
@@ -54,14 +93,25 @@ def crear_consulta(tabla, archivo, categorias, entrada=None, salida=None):
         return r.strip()
 
     def elegir_canonico(categoria, forma):
-        existentes = tabla.canonicos(categoria)
+        existentes = opciones_canonico(tabla, categoria)
+        if categoria in SIGNIFICADO:                 # la palabra hereda el significado de una forma canónica existente
+            escribir(f'  ¿De qué forma canónica de {categoria} es variante «{forma}»?')
+            for i, c in enumerate(existentes, 1):
+                escribir(f'    {i:>2}) {c:<11} {SIGNIFICADO[categoria][c]["desc"]}')
+            while True:
+                r = leer(f'  Forma canónica [1-{len(existentes)}, Enter = cancelar]: ')
+                if not r:
+                    return None
+                if r.isdigit() and 1 <= int(r) <= len(existentes):
+                    return existentes[int(r) - 1]
+                escribir('  opción inválida (una forma canónica nueva con significado se agrega en semantica.SIGNIFICADO)')
         sugerido = forma.upper()
         if existentes:
             escribir('  Formas canónicas de ' + categoria + ':')
             for i, c in enumerate(existentes, 1):
                 escribir(f'    {i:>2}) {c}')
         while True:
-            r = leer(f'  Canónico [número, nombre nuevo o Enter = {sugerido}]: ')
+            r = leer(f'  Forma canónica [número, nombre nuevo o Enter = {sugerido}]: ')
             if r is None:
                 return None
             if not r:
@@ -74,11 +124,13 @@ def crear_consulta(tabla, archivo, categorias, entrada=None, salida=None):
             escribir('  nombre inválido (letras, dígitos y _)')
 
     def insertar(tk, c, sid, turno):
-        escribir('  Categoría (token) de «' + tk.norm + '»:')
+        escribir('  ¿Qué tipo de palabra es «' + tk.norm + '»? (categoría léxica)')
+        grupo = None
         for i, cat in enumerate(categorias, 1):
-            extra = (' (sin significado: artículo, preposición…)' if cat == 'RELLENO' else
-                     ' (conocida, sin función en la gramática)' if cat == FUERA_DE_GRAMATICA else '')
-            escribir(f'    {i:>2}) {cat}{extra}')
+            if GRUPO.get(cat) != grupo:
+                grupo = GRUPO.get(cat)
+                escribir(f'    {grupo}:')
+            escribir(f'      {i:>2}) {cat:<9} {DESCRIPCION.get(cat, "")}')
         while True:
             r = leer(f'  Categoría [1-{len(categorias)}, Enter = cancelar]: ')
             if not r:

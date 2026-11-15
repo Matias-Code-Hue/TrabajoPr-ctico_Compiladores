@@ -24,7 +24,7 @@
               "desp": 11
             },
             {
-              "categoria": "SUST_SERV",
+              "categoria": "SUST",
               "lexema": "servicio",
               "normalizado": "servicio",
               "canonico": "SERVICIO",
@@ -38,7 +38,7 @@
               "desp": 23
             },
             {
-              "categoria": "ADJ_NEG",
+              "categoria": "ADJ",
               "lexema": "lento",
               "normalizado": "lento",
               "canonico": "LENTO",
@@ -52,7 +52,7 @@
               "desp": 33
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[sujeto[sust[SUST_SERV«servicio»]] pred_s[V_COP«está» atrib[modif[adj[ADJ_NEG«lento»]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«servicio»] pred_s[V_COP«está» atrib[modif[ADJ«lento»]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C1.1",
@@ -90,7 +90,7 @@
           "texto": "Reinicie el router.",
           "tokens": [
             {
-              "categoria": "V_SOLICITUD",
+              "categoria": "V_ACC",
               "lexema": "Reinicie",
               "normalizado": "reinicie",
               "canonico": "REINICIAR",
@@ -104,7 +104,7 @@
               "desp": 19
             },
             {
-              "categoria": "SUST_EQUIPO",
+              "categoria": "SUST",
               "lexema": "router",
               "normalizado": "router",
               "canonico": "ROUTER",
@@ -118,7 +118,7 @@
               "desp": 28
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[pred_l[v_acc[V_SOLICITUD«Reinicie»] obj[sust[SUST_EQUIPO«router»]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_ACC«Reinicie» obj[SUST«router»]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C2.1",
@@ -157,21 +157,21 @@
           "texto": "Ahora funciona bien.",
           "tokens": [
             {
-              "categoria": "T_AHORA",
+              "categoria": "ADV_T",
               "lexema": "Ahora",
               "normalizado": "ahora",
               "canonico": "AHORA",
               "desp": 11
             },
             {
-              "categoria": "V_EST_OK",
+              "categoria": "V_EST",
               "lexema": "funciona",
               "normalizado": "funciona",
               "canonico": "FUNCIONAR",
               "desp": 17
             },
             {
-              "categoria": "ADJ_POS",
+              "categoria": "ADJ",
               "lexema": "bien",
               "normalizado": "bien",
               "canonico": "BUENO",
@@ -185,7 +185,7 @@
               "desp": 30
             }
           ],
-          "estructura": "texto[oracion[clausula[adv_t_op[adv_t[T_AHORA«Ahora»]] nucleo[pred_l[v_est[V_EST_OK«funciona»] compl[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«funciona» compl[modif[ADJ«bien»]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C3.1",
@@ -344,7 +344,7 @@
               "desp": 11
             },
             {
-              "categoria": "V_VAL_ATEN",
+              "categoria": "V_ACC",
               "lexema": "atendiste",
               "normalizado": "atendiste",
               "canonico": "ATENDER",
@@ -358,7 +358,7 @@
               "desp": 24
             },
             {
-              "categoria": "ADJ_POS",
+              "categoria": "ADJ",
               "lexema": "bien",
               "normalizado": "bien",
               "canonico": "BUENO",
@@ -393,7 +393,7 @@
               "desp": 44
             },
             {
-              "categoria": "SUST_SERV",
+              "categoria": "SUST",
               "lexema": "internet",
               "normalizado": "internet",
               "canonico": "SERVICIO",
@@ -407,7 +407,7 @@
               "desp": 56
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[pred_l[v_acc[V_VAL_ATEN«atendiste»] modif_op[modif[INT«muy» adj[ADJ_POS«bien»]]]]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[pred_l[V_CONT«sigo» compl[SIN«sin» sust[SUST_SERV«internet»]]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_ACC«atendiste» modif_op[modif[INT«muy» ADJ«bien»]]]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[pred_l[V_CONT«sigo» compl[SIN«sin» SUST«internet»]]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C1.1",
@@ -568,14 +568,14 @@
           "texto": "Ahora funciona, pero se corta todos los días.",
           "tokens": [
             {
-              "categoria": "T_AHORA",
+              "categoria": "ADV_T",
               "lexema": "Ahora",
               "normalizado": "ahora",
               "canonico": "AHORA",
               "desp": 11
             },
             {
-              "categoria": "V_EST_OK",
+              "categoria": "V_EST",
               "lexema": "funciona",
               "normalizado": "funciona",
               "canonico": "FUNCIONAR",
@@ -603,7 +603,7 @@
               "desp": 32
             },
             {
-              "categoria": "V_EST_RECUR",
+              "categoria": "V_EST",
               "lexema": "corta",
               "normalizado": "corta",
               "canonico": "CORTAR",
@@ -638,7 +638,7 @@
               "desp": 55
             }
           ],
-          "estructura": "texto[oracion[clausula[adv_t_op[adv_t[T_AHORA«Ahora»]] nucleo[pred_l[v_est[V_EST_OK«funciona»]]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[pred_l[SE«se» V_EST_RECUR«corta»]] frec[FREC«todos» frec[FREC«días»]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«funciona»]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[pred_l[SE«se» V_EST«corta»]] frec[FREC«todos» frec[FREC«días»]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C1.1",
@@ -804,7 +804,7 @@
               "desp": 11
             },
             {
-              "categoria": "V_ENTENDER",
+              "categoria": "V_ACC",
               "lexema": "entendí",
               "normalizado": "entendi",
               "canonico": "ENTENDER",
@@ -818,7 +818,7 @@
               "desp": 22
             },
             {
-              "categoria": "SUST_CLAR",
+              "categoria": "SUST",
               "lexema": "explicación",
               "normalizado": "explicacion",
               "canonico": "CLARIDAD",
@@ -860,7 +860,7 @@
               "desp": 53
             },
             {
-              "categoria": "ADJ_POS",
+              "categoria": "ADJ",
               "lexema": "amable",
               "normalizado": "amable",
               "canonico": "AMABLE",
@@ -874,7 +874,7 @@
               "desp": 63
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[pred_l[NEG«No» pred_neg[v_acc[V_ENTENDER«entendí»] obj[sust[SUST_CLAR«explicación»]]]]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[sujeto[AGENTE«agente»] pred_s[V_COP«fue» atrib[modif[adj[ADJ_POS«amable»]]]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[NEG«No» pred_neg[V_ACC«entendí» obj[SUST«explicación»]]]]] cola[COMA«,» cola_c[PERO«pero» clausula[nucleo[sujeto[AGENTE«agente»] pred_s[V_COP«fue» atrib[modif[ADJ«amable»]]]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C1.1",
@@ -1040,7 +1040,7 @@
               "desp": 11
             },
             {
-              "categoria": "SUST_SERV",
+              "categoria": "SUST",
               "lexema": "internet",
               "normalizado": "internet",
               "canonico": "SERVICIO",
@@ -1054,7 +1054,7 @@
               "desp": 23
             },
             {
-              "categoria": "ADJ_NEG",
+              "categoria": "ADJ",
               "lexema": "lentto",
               "normalizado": "lento",
               "canonico": "LENTO",
@@ -1069,7 +1069,7 @@
               "desp": 34
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[sujeto[sust[SUST_SERV«internet»]] pred_s[V_COP«está» atrib[modif[adj[ADJ_NEG«lentto»]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«internet»] pred_s[V_COP«está» atrib[modif[ADJ«lentto»]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C1.1",
@@ -1114,7 +1114,7 @@
               "desp": 10
             },
             {
-              "categoria": "SUST_TICKET",
+              "categoria": "SUST",
               "lexema": "ticket",
               "normalizado": "ticket",
               "canonico": "TICKET",
@@ -1142,7 +1142,7 @@
               "desp": 29
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[sujeto[sust[SUST_TICKET«ticket»]] pred_s[V_COP«es» atrib[TICKET«TK-204»]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«ticket»] pred_s[V_COP«es» atrib[TICKET«TK-204»]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C2.1",
@@ -1293,14 +1293,14 @@
           "texto": "Mañana revisaremos TK-205.",
           "tokens": [
             {
-              "categoria": "T_FUTURO",
+              "categoria": "ADV_T",
               "lexema": "Mañana",
               "normalizado": "mañana",
               "canonico": "MAÑANA",
               "desp": 10
             },
             {
-              "categoria": "V_COMPROMISO",
+              "categoria": "V_ACC",
               "lexema": "revisaremos",
               "normalizado": "revisaremos",
               "canonico": "REVISAR",
@@ -1321,7 +1321,7 @@
               "desp": 35
             }
           ],
-          "estructura": "texto[oracion[clausula[adv_t_op[adv_t[T_FUTURO«Mañana»]] nucleo[pred_l[v_acc[V_COMPROMISO«revisaremos»] obj[TICKET«TK-205»]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Mañana»] nucleo[pred_l[V_ACC«revisaremos» obj[TICKET«TK-205»]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C1.1",
@@ -1522,7 +1522,7 @@
               "desp": 11
             },
             {
-              "categoria": "SUST_SERV",
+              "categoria": "SUST",
               "lexema": "servicio",
               "normalizado": "servicio",
               "canonico": "SERVICIO",
@@ -1536,7 +1536,7 @@
               "desp": 23
             },
             {
-              "categoria": "ADJ_NEG",
+              "categoria": "ADJ",
               "lexema": "lento",
               "normalizado": "lento",
               "canonico": "LENTO",
@@ -1550,7 +1550,7 @@
               "desp": 33
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[sujeto[sust[SUST_SERV«servicio»]] pred_s[V_COP«está» atrib[modif[adj[ADJ_NEG«lento»]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«servicio»] pred_s[V_COP«está» atrib[modif[ADJ«lento»]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C1.1",
@@ -1588,21 +1588,21 @@
           "texto": "Ahora funciona bien.",
           "tokens": [
             {
-              "categoria": "T_AHORA",
+              "categoria": "ADV_T",
               "lexema": "Ahora",
               "normalizado": "ahora",
               "canonico": "AHORA",
               "desp": 11
             },
             {
-              "categoria": "V_EST_OK",
+              "categoria": "V_EST",
               "lexema": "funciona",
               "normalizado": "funciona",
               "canonico": "FUNCIONAR",
               "desp": 17
             },
             {
-              "categoria": "ADJ_POS",
+              "categoria": "ADJ",
               "lexema": "bien",
               "normalizado": "bien",
               "canonico": "BUENO",
@@ -1616,7 +1616,7 @@
               "desp": 30
             }
           ],
-          "estructura": "texto[oracion[clausula[adv_t_op[adv_t[T_AHORA«Ahora»]] nucleo[pred_l[v_est[V_EST_OK«funciona»] compl[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«funciona» compl[modif[ADJ«bien»]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C3.1",
@@ -1764,21 +1764,21 @@
           "texto": "Ahora funciona bien.",
           "tokens": [
             {
-              "categoria": "T_AHORA",
+              "categoria": "ADV_T",
               "lexema": "Ahora",
               "normalizado": "ahora",
               "canonico": "AHORA",
               "desp": 11
             },
             {
-              "categoria": "V_EST_OK",
+              "categoria": "V_EST",
               "lexema": "funciona",
               "normalizado": "funciona",
               "canonico": "FUNCIONAR",
               "desp": 17
             },
             {
-              "categoria": "ADJ_POS",
+              "categoria": "ADJ",
               "lexema": "bien",
               "normalizado": "bien",
               "canonico": "BUENO",
@@ -1792,7 +1792,7 @@
               "desp": 30
             }
           ],
-          "estructura": "texto[oracion[clausula[adv_t_op[adv_t[T_AHORA«Ahora»]] nucleo[pred_l[v_est[V_EST_OK«funciona»] compl[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«funciona» compl[modif[ADJ«bien»]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C1.1",
@@ -1996,25 +1996,26 @@
   ],
   "errores_globales": [],
   "catalogo_reglas": {
-    "R-SUJ": "sujeto ⇒ aspecto según la subcategoría: SUST_SERV/SUST_EQUIPO/SUST_PROB→SERVICIO, SUST_ATEN/AGENTE→ATENCION, SUST_CLAR→CLARIDAD",
+    "R-SUJ": "SUST ⇒ aspecto = rasgo «aspecto» de su forma canónica (perfiles SERVICIO, EQUIPO, PROBLEMA→SERVICIO; ATENCION; CLARIDAD); AGENTE→ATENCION",
     "R-COP": "sujeto [V_COP] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
-    "R-EST": "v_est [compl] ⇒ SERVICIO; V_EST_OK toma la polaridad del complemento (POSITIVA si no hay), V_EST_FALLA es NEGATIVA; declaración OK/FALLA",
+    "R-EST": "V_EST [compl] ⇒ SERVICIO; con pol +1 (perfil OK) toma la polaridad del complemento (POSITIVA si no hay), con pol −1 (perfil FALLA) es NEGATIVA; declaración OK/FALLA",
     "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg y no cruza PERO, COMA ni Y",
     "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
-    "R-SIN": "SIN sust ⇒ NEGATIVA si falta algo (sin internet); POSITIVA si lo que falta es un problema (SUST_PROB: sin cortes)",
+    "R-SIN": "SIN SUST ⇒ NEGATIVA si falta algo (sin internet); POSITIVA si lo que falta es un problema (sin cortes)",
     "R-SEG-ADJ": "[sujeto] V_CONT modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK",
-    "R-SEG-SIN": "V_CONT SIN sust («sigo sin internet») ⇒ aspecto del sustantivo, polaridad de R-SIN; en SERVICIO declara FALLA u OK",
-    "R-CORTE": "[sujeto] SE V_EST_RECUR [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin expresión de frecuencia)",
-    "R-ENT": "[NEG] V_ENTENDER [sust] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
-    "R-VAL": "V_VAL_ATEN / V_VAL_CLAR modif («me atendiste muy bien») ⇒ valoración de ATENCION / CLARIDAD con la polaridad del adjetivo",
+    "R-SEG-SIN": "V_CONT SIN SUST («sigo sin internet») ⇒ aspecto del sustantivo, polaridad de R-SIN; en SERVICIO declara FALLA u OK",
+    "R-CORTE": "[sujeto] SE V_EST pronominal (perfil RECUR, «se corta») [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin frecuencia)",
+    "R-ENT": "[NEG] V_ACC de clase COMPRENSION [SUST] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-VAL": "V_ACC de clase VALORABLE + modif («me atendiste muy bien») ⇒ valoración del rasgo «aspecto» del verbo (ATENCION / CLARIDAD)",
     "R-MEN": "sujeto o verbo valorativo sin cualidad ⇒ mención NEUTRA del aspecto (sin polaridad)",
-    "R-SOLIC": "V_SOLICITUD [equipo] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
-    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|plazo] ⇒ compromiso futuro",
-    "R-TICKET": "SUST_TICKET [V_COP] TICKET | TICKET ⇒ referencia a un ticket (entidad)",
+    "R-SOLIC": "V_ACC de clase SOLICITUD [SUST] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-COMPR": "[ADV_T] V_ACC de clase COMPROMISO [TICKET|plazo] ⇒ compromiso futuro",
+    "R-TICKET": "SUST con entidad TICKET [V_COP] TICKET | TICKET ⇒ referencia a un ticket (entidad)",
     "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
-    "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-AHORA": "ADV_T con tiempo AHORA ⇒ la cláusula se refiere al momento actual",
     "R-POSP": "sujeto después del verbo («no funciona el internet») ⇒ aporta el aspecto como un sujeto explícito",
-    "R-COMPAT": "sujeto y predicado incompatibles (tabla COMPAT), dos sujetos o V_CONT sin complemento ⇒ la cláusula no se interpreta",
+    "R-COMPAT": "sujeto y predicado incompatibles (tabla COMPAT), verbo pronominal sin «se» o no pronominal con «se», dos sujetos o V_CONT sin complemento ⇒ la cláusula no se interpreta",
+    "R-SINDOM": "la cláusula contiene una palabra con el rasgo sin_dominio ⇒ se reconoce pero no se interpreta (abstención)",
     "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
     "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
     "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",

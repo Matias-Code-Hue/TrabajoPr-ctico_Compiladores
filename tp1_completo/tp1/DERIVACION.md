@@ -8,7 +8,9 @@ predictiva final de `GRAMATICA.md`, siguiendo la metodología de clase:
 
 Cada gramática intermedia se **diagnostica con el código** (`derivacion.py`: PRIM, SGTE y condiciones LL(1)) y se
 comprueba por enumeración que todas generan **el mismo lenguaje**. Para repetirlo: `python3 derivacion.py` (N=4, ~3 s) o
-`python3 derivacion.py 5` (~3 min).
+`python3 derivacion.py 5` (~3 min). La gramática final (L3 y F1) es exactamente la de `gramatica.py`: `derivacion.py`
+la toma de allí (`L3 = {a: gr.G[a] for a in LING}`), así que el documento y el parser no pueden desincronizarse; las
+gramáticas del apéndice A se verificaron contra el código, producción por producción.
 
 ## 0. Resumen de la derivación
 
@@ -37,13 +39,29 @@ comprueba por enumeración que todas generan **el mismo lenguaje**. Para repetir
 Se enumeran todas las cadenas que genera cada gramática hasta una longitud acotada y se comparan con las de la
 gramática original:
 
-| Parte | Longitud máx. | Cadenas generadas | Original = L1 = L2 = final |
-|---|---|---|---|
-| Formato | 21 tokens | 18 | sí |
-| Lingüística | 5 tokens | 23 220 | sí |
+| Parte | Longitud máx. | Cadenas generadas | Original = L1 = L2 = final | Comando |
+|---|---|---|---|---|
+| Formato | 21 tokens | 18 | sí | `python3 derivacion.py` |
+| Lingüística | 4 tokens | 3 033 | sí | `python3 derivacion.py` |
+| Lingüística | 5 tokens | 23 220 | sí | `python3 derivacion.py 5` |
 
 Es una verificación **acotada**, no una demostración; las transformaciones de clase preservan el lenguaje por
 construcción, y la enumeración protege contra errores de aplicación (exactamente el caso de `VIV` en el ejercicio de números romanos).
+
+### Terminales y tabla de símbolos léxica
+
+El texto de un turno usa **19 terminales**: 15 son categorías de la tabla de símbolos léxica (`SUST`, `ADJ`, `V_COP`,
+`V_EST`, `V_CONT`, `V_ACC`, `ADV_T`, `NEG`, `SIN`, `INT`, `PERO`, `Y`, `SE`, `FREC`, `CORTESIA`) y 4 salen de patrones
+fijos del léxico (`AGENTE`, `TICKET`, `COMA`, `PUNTO`). `RELLENO` y `FUERA_DE_GRAMATICA` se filtran antes del parser y
+no son terminales.
+
+La gramática solo ve **categorías**. Los rasgos de cada forma canónica (`pol`, `aspecto`, `pronominal`…, guardados en
+`vocabulario.json`) son atributos semánticos y no aparecen en ninguna producción. Por eso insertar una palabra o crear
+una forma canónica desde el menú **no cambia la gramática ni la tabla LL(1)**: solo agrega una forma a una categoría
+que ya es terminal. Algunas restricciones quedan a propósito fuera de la gramática, que acepta de más: que «se» vaya
+solo con un verbo pronominal o que el sujeto sea compatible con el predicado («el agente se corta») se controlan en la
+semántica (R-COMPAT, `REGLAS_SEMANTICAS.md`). Esto no afecta la equivalencia: L0 ya aceptaba esas cadenas, y las
+transformaciones conservan el lenguaje sintáctico.
 
 ---
 
@@ -74,7 +92,8 @@ a `lote()` sin consumir ningún token y no terminaría.
 
 **Verificación de predictividad (F1).** PRIM(`lote_r`) = {SESION, ε} y SGTE(`lote_r`) = {$}: disjuntos.
 PRIM(`turnos_r`) = {NUM, ε} y SGTE(`turnos_r`) = {FIN}: disjuntos. No hay factores comunes
-(`rol` se decide por `CLIENTE`/`AGENTE`). **F1 es LL(1)** y es la gramática de formato final.
+(`rol` se decide por `CLIENTE`/`AGENTE`). **F1 es LL(1)** y es la gramática de formato final (apéndice A.1b).
+Pasa de 5 a 7 variables por las dos nuevas `lote_r` y `turnos_r`.
 
 ---
 
@@ -153,7 +172,9 @@ Observaciones de método (como en el ejercicio de romanos):
 - Al factorizar aparecen cuatro variables anulables nuevas (`compl`, `sujp`, `obj`, `modif_op`) además de `pred_s → ε`.
   Para cada una hubo que comprobar que su SGTE no se superpone con los PRIM de sus otras alternativas:
   `compl` ({INT, ADJ, SIN} frente a un SGTE con `SUST`, `FREC` y separadores), `sujp` (`SUST` frente a
-  `FREC` y separadores), `obj` (`SUST`, `TICKET`, `ADV_T` frente a {INT, ADJ}, `FREC` y separadores). **No se superponen.**
+  `FREC` y separadores), `obj` (`SUST`, `TICKET`, `ADV_T` frente a {INT, ADJ}, `FREC` y separadores), `modif_op`
+  ({INT, ADJ} frente a `FREC` y separadores) y `pred_s` (sus 9 terminales iniciales frente a `FREC` y separadores).
+  **No se superponen** (conjuntos completos en 3.4).
 - `est` y `acc` desaparecen: eran solo agrupaciones de la gramática descriptiva.
 
 **Diagnóstico L2** (calculado): **PRIM∩PRIM = ∅** en todas las variables. Solo persiste el conflicto
@@ -222,6 +243,25 @@ Además se fusionan `frec_op` y `frec_r` en una sola variable (`frec → FREC fr
 | PRIM∩SGTE en alternativas anulables | **vacío** |
 | Lenguaje igual a L0 (≤ 5 tokens, 23 220 cadenas) | **sí** |
 
+Variables anulables de L3, calculadas con `gramatica.primero()` y `gramatica.siguiente()` (`EOL` es el fin del
+texto del turno). En cada una, PRIM sin ε y SGTE son disjuntos, que es la condición LL(1) para la alternativa ε:
+
+| Variable | PRIM (sin ε) | SGTE |
+|---|---|---|
+| `texto_r` | PUNTO | EOL |
+| `texto_rr` | ADV_T, AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST | EOL |
+| `cola` | COMA, PERO, Y | PUNTO, EOL |
+| `adv_t_op` | ADV_T | AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST |
+| `pred_s` | ADJ, INT, NEG, SE, TICKET, V_ACC, V_CONT, V_COP, V_EST | COMA, FREC, PERO, PUNTO, Y, EOL |
+| `compl` | ADJ, INT, SIN | COMA, FREC, PERO, PUNTO, SUST, Y, EOL |
+| `sujp` | SUST | COMA, FREC, PERO, PUNTO, Y, EOL |
+| `obj` | ADV_T, SUST, TICKET | ADJ, COMA, FREC, INT, PERO, PUNTO, Y, EOL |
+| `modif_op` | ADJ, INT | COMA, FREC, PERO, PUNTO, Y, EOL |
+| `frec` | FREC | COMA, PERO, PUNTO, Y, EOL |
+
+`compl` es el caso más ajustado: su SGTE incluye `SUST` (el sujeto pospuesto, «no funciona **el internet**»), que
+no está en PRIM(`compl`) porque «sin» + sustantivo empieza con `SIN`.
+
 **L3 es LL(1)** y es la gramática de `GRAMATICA.md`, con su tabla de PRIM/SGTE y su tabla predictiva (170 celdas, sin colisiones).
 
 ---
@@ -244,6 +284,18 @@ Además se fusionan `frec_op` y `frec_r` en una sola variable (`frec → FREC fr
 <lote> ::= <lote> <sesion> | <sesion>
 <sesion> ::= SESION ID_SESION EOL <turnos> FIN EOL
 <turnos> ::= <turnos> <turno> | <turno>
+<turno> ::= NUM <rol> DOSPUNTOS texto EOL
+<rol> ::= CLIENTE | AGENTE
+```
+
+### A.1b Formato F1 (final, LL(1))
+
+```
+<lote> ::= <sesion> <lote_r>
+<lote_r> ::= <sesion> <lote_r> | ε
+<sesion> ::= SESION ID_SESION EOL <turnos> FIN EOL
+<turnos> ::= <turno> <turnos_r>
+<turnos_r> ::= <turno> <turnos_r> | ε
 <turno> ::= NUM <rol> DOSPUNTOS texto EOL
 <rol> ::= CLIENTE | AGENTE
 ```

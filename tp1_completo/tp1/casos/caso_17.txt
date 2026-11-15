@@ -1,0 +1,10 @@
+SESION S01
+1 CLIENTE: La red esta muy lenta.
+2 AGENTE: Reinicie el router.
+3 CLIENTE: No funciona, la conexion sigue lenta.
+FIN
+SESION S02
+1 CLIENTE: El modem anda lento.
+2 AGENTE: Reinicie el modem.
+3 CLIENTE: Ahora anda rapido.
+FIN

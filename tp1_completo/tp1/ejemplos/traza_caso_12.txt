@@ -36,23 +36,8 @@ Lote: 2 sesiones (1 completas, 1 parciales) → ejemplos/salida_caso_12.json
 ┌── TRAZA DE LA SESIÓN S01 ────────────────────────────────────────
 │ Turno 1 · CLIENTE · línea 2
 │  [1] Texto original : 1 CLIENTE: El servicio está lento.
-│  [2] Tokens         : RELLENO«El»@11=ART  SUST_SERV«servicio»@14=SERVICIO  V_COP«está»@23=SER_ESTAR  ADJ_NEG«lento»@28=LENTO  PUNTO«.»@33
-│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[sust[SUST_SERV«servicio»]] pred_s[V_COP«está» atrib[modif[adj[ADJ_NEG«lento»]]]]]]] texto_r[PUNTO«.»]]
-│        · M[texto, SUST_SERV] = texto → oracion texto_r
-│        · M[oracion, SUST_SERV] = oracion → clausula cola
-│        · M[clausula, SUST_SERV] = clausula → adv_t_op nucleo frec
-│        · M[adv_t_op, SUST_SERV] = adv_t_op → ε
-│        · M[nucleo, SUST_SERV] = nucleo → sujeto pred_s
-│        · M[sujeto, SUST_SERV] = sujeto → sust
-│        · M[sust, SUST_SERV] = sust → SUST_SERV
-│        · M[pred_s, V_COP] = pred_s → V_COP atrib
-│        · M[atrib, ADJ_NEG] = atrib → modif
-│        · M[modif, ADJ_NEG] = modif → adj
-│        · M[adj, ADJ_NEG] = adj → ADJ_NEG
-│        · M[frec, PUNTO] = frec → ε
-│        · M[cola, PUNTO] = cola → ε
-│        · M[texto_r, PUNTO] = texto_r → PUNTO texto_rr
-│        · M[texto_rr, EOL] = texto_rr → ε
+│  [2] Tokens         : RELLENO«El»@11=ART  SUST«servicio»@14=SERVICIO  V_COP«está»@23=SER_ESTAR  ADJ«lento»@28=LENTO  PUNTO«.»@33
+│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[SUST«servicio»] pred_s[V_COP«está» atrib[modif[ADJ«lento»]]]]]] texto_r[PUNTO«.»]]
 │  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> NO_EXISTE
 │        INSERTAR PARTICIPANTE CLIENTE @S01 (apariciones=1)
@@ -62,22 +47,9 @@ Lote: 2 sesiones (1 completas, 1 parciales) → ejemplos/salida_caso_12.json
 │
 │ Turno 2 · CLIENTE · línea 3
 │  [1] Texto original : 2 CLIENTE: Ticket TK-12 sin respuesta.
-│  [2] Tokens         : SUST_TICKET«Ticket»@11=TICKET  TICKET_MAL«TK-12»@18  SIN«sin»@24=SIN  PALABRA«respuesta»@28  PUNTO«.»@37
+│  [2] Tokens         : SUST«Ticket»@11=TICKET  TICKET_MAL«TK-12»@18  SIN«sin»@24=SIN  PALABRA«respuesta»@28  PUNTO«.»@37
 │      corrector      : «respuesta» → SIN_CANDIDATO
-│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[sust[SUST_TICKET«Ticket»]]]]] texto_r[PUNTO«.»]]
-│        · M[texto, SUST_TICKET] = texto → oracion texto_r
-│        · M[oracion, SUST_TICKET] = oracion → clausula cola
-│        · M[clausula, SUST_TICKET] = clausula → adv_t_op nucleo frec
-│        · M[adv_t_op, SUST_TICKET] = adv_t_op → ε
-│        · M[nucleo, SUST_TICKET] = nucleo → sujeto pred_s
-│        · M[sujeto, SUST_TICKET] = sujeto → sust
-│        · M[sust, SUST_TICKET] = sust → SUST_TICKET
-│        · ERROR M[pred_s, SIN] vacía → se descartan tokens hasta {ADJ_NEG, ADJ_POS, COMA, EOL, FREC, INT, NEG, PERO, PUNTO, SE, TICKET, V_COMPROMISO, V_CONT, V_COP, V_ENTENDER, V_EST_FALLA, V_EST_OK, V_SOLICITUD, V_VAL_ATEN, V_VAL_CLAR, Y}
-│        · M[pred_s, PUNTO] = pred_s → ε
-│        · M[frec, PUNTO] = frec → ε
-│        · M[cola, PUNTO] = cola → ε
-│        · M[texto_r, PUNTO] = texto_r → PUNTO texto_rr
-│        · M[texto_rr, EOL] = texto_rr → ε
+│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[SUST«Ticket»]]]] texto_r[PUNTO«.»]]
 │  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> ENCONTRADO
 │        DUPLICADO->ENLAZAR PARTICIPANTE CLIENTE @S01 (apariciones=2)
@@ -91,24 +63,8 @@ Lote: 2 sesiones (1 completas, 1 parciales) → ejemplos/salida_caso_12.json
 │
 │ Turno 4 · CLIENTE · línea 5
 │  [1] Texto original : 4 CLIENTE: Ahora funciona bien.
-│  [2] Tokens         : T_AHORA«Ahora»@11=AHORA  V_EST_OK«funciona»@17=FUNCIONAR  ADJ_POS«bien»@26=BUENO  PUNTO«.»@30
-│  [3] Estructura     : texto[oracion[clausula[adv_t_op[adv_t[T_AHORA«Ahora»]] nucleo[pred_l[v_est[V_EST_OK«funciona»] compl[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]
-│        · M[texto, T_AHORA] = texto → oracion texto_r
-│        · M[oracion, T_AHORA] = oracion → clausula cola
-│        · M[clausula, T_AHORA] = clausula → adv_t_op nucleo frec
-│        · M[adv_t_op, T_AHORA] = adv_t_op → adv_t
-│        · M[adv_t, T_AHORA] = adv_t → T_AHORA
-│        · M[nucleo, V_EST_OK] = nucleo → pred_l
-│        · M[pred_l, V_EST_OK] = pred_l → v_est compl sujp
-│        · M[v_est, V_EST_OK] = v_est → V_EST_OK
-│        · M[compl, ADJ_POS] = compl → modif
-│        · M[modif, ADJ_POS] = modif → adj
-│        · M[adj, ADJ_POS] = adj → ADJ_POS
-│        · M[sujp, PUNTO] = sujp → ε
-│        · M[frec, PUNTO] = frec → ε
-│        · M[cola, PUNTO] = cola → ε
-│        · M[texto_r, PUNTO] = texto_r → PUNTO texto_rr
-│        · M[texto_rr, EOL] = texto_rr → ε
+│  [2] Tokens         : ADV_T«Ahora»@11=AHORA  V_EST«funciona»@17=FUNCIONAR  ADJ«bien»@26=BUENO  PUNTO«.»@30
+│  [3] Estructura     : texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«funciona» compl[modif[ADJ«bien»]]]]]] texto_r[PUNTO«.»]]
 │  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> ENCONTRADO
 │        DUPLICADO->ENLAZAR PARTICIPANTE CLIENTE @S01 (apariciones=3)

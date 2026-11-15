@@ -4,11 +4,12 @@ Regla del enunciado: se corrige automáticamente SOLO si existe un único candid
   · ≥2 candidatos -> EMPATE (se conserva la palabra y se registra el empate)
 Solo se evalúan tokens PALABRA (no `no`, ni números, ni TK-xxx, que ya tienen otra categoría).
 
-Con una función `decidir` (main.py la conecta a la terminal), antes de aplicar la regla se consulta al usuario por
-cada palabra desconocida (salvo las de menos de MIN_LONG letras):
-  · CORREGIDA_USUARIO -> se toma el candidato elegido, SOLO para esa aparición (la tabla no cambia)
-  · INSERTADA         -> la palabra se incorpora a la tabla de símbolos léxica con la categoría elegida
-  · None              -> regla del enunciado (la respuesta por defecto)
+Con una función `decidir` (main.py la conecta a la terminal) se consulta al usuario DESPUÉS del corrector, solo
+cuando la regla no resuelve la palabra: SIN_CANDIDATO y EMPATE. Con un candidato único se corrige sin preguntar; las
+palabras de menos de MIN_LONG letras no se consultan.
+  · CORREGIDA_USUARIO -> se toma uno de los candidatos del EMPATE, SOLO para esa aparición (la tabla no cambia)
+  · INSERTADA         -> la palabra se incorpora a la tabla de símbolos léxica (categoría y forma canónica)
+  · None              -> se mantiene la regla del enunciado (la respuesta por defecto)
 """
 from dataclasses import dataclass, replace
 from lexico import plegar
@@ -31,7 +32,7 @@ def levenshtein(a, b):
 def indice_vocabulario(vocab):
     """forma plegada -> (categoría, canónico). Las formas superficiales se conservan sin lematizar."""
     return {''.join(plegar(c) for c in f): (cat, canon)
-            for cat, canons in vocab.items() for canon, formas in canons.items() for f in formas}
+            for cat, canons in vocab.items() for canon, e in canons.items() for f in e['formas']}
 
 
 @dataclass
@@ -71,7 +72,7 @@ def corregir_tokens(tokens, indice, min_long=MIN_LONG, decidir=None):
             salida.append(replace(t, categoria=cat, canon=canon))
             continue
         c = evaluar(t.norm, indice, min_long)
-        if decidir is not None and c.accion != 'OMITIDA_CORTA':
+        if decidir is not None and c.accion in ('SIN_CANDIDATO', 'EMPATE'):
             c = decidir(t, c) or c
         regs.append((t, c))
         if c.accion in ('CORREGIDA', 'CORREGIDA_USUARIO'):
@@ -93,5 +94,5 @@ if __name__ == '__main__':
         _, regs = corregir_tokens(escanear(frase, afd), idx)
         print(frase, '->', [(t.lexema, c.accion, c.resultado, c.candidatos) for t, c in regs])
     # caso 08: diccionario reducido {lenta, lento}
-    red = {'ADJ_NEG': {'LENTO': ['lenta', 'lento']}}
+    red = {'ADJ': {'LENTO': {'rasgos': {'pol': -1}, 'formas': ['lenta', 'lento']}}}
     print('caso 08:', evaluar('lent', indice_vocabulario(red)))

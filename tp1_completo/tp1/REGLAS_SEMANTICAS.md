@@ -2,8 +2,9 @@
 
 Definición dirigida por la sintaxis del analizador: qué atributo calcula cada producción de la gramática
 (`GRAMATICA.md`) y cómo se llega desde ellos a la valoración por aspecto y al estado de la sesión.
-Implementación: `semantica.py` (reglas por producción y estado) y `analizador.py` (atributos de contexto y
-tabla de entidades).
+Implementación: `semantica.py` (perfiles, reglas por producción y estado) y `analizador.py` (atributos de contexto y
+tabla de entidades). La tabla de símbolos léxica vigente, con los rasgos de cada forma canónica, la mantiene
+`tabla_lexica.py`.
 
 ## 1. Notación
 
@@ -15,19 +16,20 @@ del símbolo `X` y un subíndice (`frec₁`) distingue dos apariciones del mismo
 - **Atributo heredado**: su valor lo entrega el padre o un hermano. Es un **parámetro**. En los cuadros se marca
   con el sufijo `.i`, como en la transformación `A → βR` de la Clase 3.
 - Los terminales traen los atributos que les puso el analizador léxico: `tok.cat` (categoría), `tok.lex` (lexema
-  original) y `tok.norm` (normalizado).
+  original), `tok.norm` (normalizado) y `tok.canon` (forma canónica). Para las categorías con significado,
+  **`tok.p`** son los atributos que salen de los **rasgos** de su forma canónica (sección 3), guardados en la tabla de
+  símbolos léxica: `tok.p.pol`, `tok.p.asp`, …
 - `‖` concatena listas; `nulo` significa «sin valor».
 
 **Cómo se evalúan.** El parser LL(1) (`sintaxis.py`) devuelve el árbol de derivación del turno. Después,
 `semantica.ev(nodo)` busca la regla de la producción del nodo y la ejecuta; cada regla llama a `ev()` sobre sus
 hijos y **retorna** sus atributos sintetizados. Cada fila de los cuadros de las secciones 3 a 6 es una función
-registrada con `@acc(variable, producción)` (las de la sección 3, con `_constante(...)`, que registra una regla de
-atributos fijos):
+registrada con `@acc(variable, producción)`:
 
 ```python
-@acc('modif', 'INT adj')                              # BNF:    modif → INT adj
-def _modif_int(n):                                    # Regla:  modif.pol = adj.pol ; modif.int = ALTA
-    return {'pol': ev(n.hijos[1])['pol'], 'int': 'ALTA'}   #   evalúa el hijo adj y retorna los atributos de modif
+@acc('modif', 'INT ADJ')                              # BNF:    modif → INT ADJ
+def _modif_int(n):                                    # Regla:  modif.pol = ADJ.p.pol ; modif.int = ALTA
+    return {'pol': sig(n.hijos[1])['pol'], 'int': 'ALTA'}   #   sig(): atributos de los rasgos del token ADJ
 ```
 
 Si una producción de la gramática no tiene regla registrada, `@acc` falla al cargar el módulo (verifica que la
@@ -37,22 +39,20 @@ producción exista en `gramatica.py`), de modo que el cuadro y la gramática no 
 
 | Símbolo | Atributo | Tipo | Valores | Significado |
 |---|---|---|---|---|
-| `sust`, `sujeto`, `sujp` | `cat` | sintetizado | subcategoría (`SUST_SERV`…, `AGENTE`) | para la tabla de compatibilidad |
+| `SUST`, `ADJ`, `V_EST`, `V_ACC`, `ADV_T` (terminales) | `p` | del léxico (rasgos de la forma canónica) | los de un perfil de su categoría (sección 3) | qué significa la palabra |
+| `sujeto`, `sujp` | `clase` | sintetizado | `SERVICIO`, `EQUIPO`, `ATENCION`, `CLARIDAD`, `TICKET`, `PROBLEMA`, `AGENTE` | para la tabla de compatibilidad |
 | ídem | `asp` | sintetizado | `SERVICIO`, `ATENCION`, `CLARIDAD`, `nulo` | aspecto del que se habla |
 | ídem | `pol` | sintetizado | `0`, `−1` | `−1` si el sustantivo es un problema («corte») |
 | ídem | `ent` | sintetizado | `EQUIPO`, `TICKET`, `nulo` | tipo de entidad |
-| `adj`, `modif`, `modif_op`, `atrib`, `compl` | `pol` | sintetizado | `+1`, `−1` | polaridad de la cualidad o del complemento |
+| `modif`, `modif_op`, `atrib`, `compl` | `pol` | sintetizado | `+1`, `−1` | polaridad de la cualidad o del complemento |
 | `modif`, `modif_op`, `atrib`, `compl` | `int` | sintetizado | `ALTA`, `nulo` | intensidad («muy», «bastante») |
-| `v_est` | `pol` | sintetizado | `+1`, `−1` | el servicio anda bien / anda mal |
-| `v_acc` | `clase` | sintetizado | `ENT`, `SOLIC`, `COMPR`, `VAL` | entender, pedir, prometer, valorar |
-| `v_acc` | `asp` | sintetizado | `ATENCION`, `CLARIDAD`, `nulo` | aspecto que valora el verbo |
-| `adv_t`, `adv_t_op` | `t` | sintetizado | `AHORA`, `FUTURO`, `nulo` | marca temporal |
+| `adv_t_op` | `t` | sintetizado | `AHORA`, `FUTURO`, `nulo` | marca temporal |
 | `atrib` | `ticket` | sintetizado | token, `nulo` | ticket después de la cópula |
 | `compl` | `t` | sintetizado | `CUAL`, `SIN`, `nulo` | tipo de complemento |
 | `compl` | `asp` | sintetizado | aspecto del sustantivo de «sin» | — |
 | `obj` | `s`, `ticket`, `plazo` | sintetizado | sustantivo, token, tiempo, `nulo` | objeto del verbo de acción |
 | `frec` | `n` | sintetizado | entero ≥ 0 | cantidad de tokens de frecuencia |
-| `pred_s`, `pred_l`, `pred_neg` | `k` | sintetizado | `COP`, `EST`, `CORTE`, `SEG_ADJ`, `SEG_SIN`, `ENT`, `VAL`, `SOLIC`, `COMPR`, `REF`, `MENCION`, `INCOMPLETO` | tipo de predicado |
+| `pred_s`, `pred_l`, `pred_neg` | `k` | sintetizado | `COP`, `EST`, `CORTE`, `SEG_ADJ`, `SEG_SIN`, `ENT`, `VAL`, `SOLIC`, `COMPR`, `REF`, `MENCION`, `INCOMPLETO`, `SE_INCOMPATIBLE` | tipo de predicado |
 | ídem | `pol`, `int`, `asp` | sintetizado | como arriba | polaridad **antes** de negar, intensidad, aspecto propio |
 | ídem | `pos` | sintetizado | sustantivo, `nulo` | sujeto pospuesto |
 | `pred_s`, `pred_l` | `neg` | sintetizado | verdadero, falso | el predicado está negado |
@@ -77,60 +77,102 @@ producción exista en `gramatica.py`), de modo que el cuadro y la gramática no 
 | `temporal` | `AHORA`, `nulo` |
 | `reglas` | identificadores `R-…` aplicados (trazabilidad, sección 10) |
 
-## 3. Grupos de subcategorías: qué significa cada categoría léxica
+Las cláusulas que no se interpretan (error sintáctico, R-COMPAT o R-SINDOM) no producen hecho: sus palabras pasan a
+`NO_INTERPRETADO` con el motivo correspondiente.
 
-La tabla de símbolos léxica solo guarda `forma → categoría`. El significado de cada categoría lo fija la regla de su
-producción unitaria, igual que `dig → 0 : dig.x = '0'` en los apuntes. Por eso insertar una palabra nueva no requiere
-tocar ninguna regla: basta con elegir su subcategoría.
+## 3. Rasgos y perfiles: qué significa cada palabra
 
-| BNF | Reglas semánticas |
-|---|---|
-| `sust → SUST_SERV` | `sust.asp = SERVICIO; sust.pol = 0; sust.ent = nulo` |
-| `sust → SUST_ATEN` | `sust.asp = ATENCION; sust.pol = 0; sust.ent = nulo` |
-| `sust → SUST_CLAR` | `sust.asp = CLARIDAD; sust.pol = 0; sust.ent = nulo` |
-| `sust → SUST_EQUIPO` | `sust.asp = SERVICIO; sust.pol = 0; sust.ent = EQUIPO` |
-| `sust → SUST_TICKET` | `sust.asp = nulo; sust.pol = 0; sust.ent = TICKET` |
-| `sust → SUST_PROB` | `sust.asp = SERVICIO; sust.pol = −1; sust.ent = nulo` |
-| `adj → ADJ_POS` | `adj.pol = +1` |
-| `adj → ADJ_NEG` | `adj.pol = −1` |
-| `v_est → V_EST_OK` | `v_est.pol = +1` |
-| `v_est → V_EST_FALLA` | `v_est.pol = −1` |
-| `v_acc → V_ENTENDER` | `v_acc.clase = ENT; v_acc.asp = CLARIDAD` |
-| `v_acc → V_SOLICITUD` | `v_acc.clase = SOLIC; v_acc.asp = nulo` |
-| `v_acc → V_COMPROMISO` | `v_acc.clase = COMPR; v_acc.asp = nulo` |
-| `v_acc → V_VAL_ATEN` | `v_acc.clase = VAL; v_acc.asp = ATENCION` |
-| `v_acc → V_VAL_CLAR` | `v_acc.clase = VAL; v_acc.asp = CLARIDAD` |
-| `adv_t → T_AHORA` | `adv_t.t = AHORA` |
-| `adv_t → T_FUTURO` | `adv_t.t = FUTURO` |
+El significado de una palabra está en la **misma entrada** de la tabla de símbolos léxica que sus formas:
 
-Todas agregan además `cat` (la subcategoría) y `tok` (el token). `V_EST_RECUR` («corta») no pertenece a ningún grupo:
-solo aparece en la producción `SE V_EST_RECUR`.
+```
+forma superficial ──(tabla de símbolos léxica)──► categoría + forma canónica + rasgos ──(sig)──► atributos
+«lentas»                                          ADJ / LENTO / {"pol": -1}                     pol = −1
+```
+
+- **Tabla de símbolos léxica** (`vocabulario.json` + `vocabulario_aprendido.json`): categoría → forma canónica →
+  `{"rasgos": {...}, "formas": [...]}`. Los rasgos son los datos que leen las reglas: `aspecto`, `entidad`, `pol`,
+  `decl`, `pronominal`, `clase`, `tiempo` y `sin_dominio`.
+- **Perfiles** (`semantica.PERFILES`, en el código): catálogo **cerrado** de combinaciones de rasgos válidas por
+  categoría. Es el modelo semántico. Al cargar la tabla se valida que los rasgos de cada forma canónica coincidan
+  exactamente con un perfil de su categoría (`errores_de_rasgos`), así que en las reglas «el perfil de una forma
+  canónica» y «sus rasgos» son lo mismo. Un perfil nuevo es un cambio de las reglas y se hace en el código.
+- **`semantica.sig(tok)`** traduce los rasgos a los atributos que usan los cuadros (`tok.p`): `asp` ← `aspecto`,
+  `ent` ← `entidad`, `pol` ← `pol` (0 si no está), `pron` ← `pronominal`, `t` ← `tiempo`; `clase` es, en `SUST`, el
+  nombre del perfil (lo usa `COMPAT`) y, en `V_ACC`, el tipo de predicado (COMPRENSION → ENT, SOLICITUD → SOLIC,
+  COMPROMISO → COMPR, VALORABLE → VAL). Con `sin_dominio`, `clase = SIN_DOMINIO`. El rasgo `decl` documenta la
+  declaración del verbo; las reglas la deducen de `pol` y `pron`.
+
+Una palabra nueva entra como variante de una forma canónica existente (hereda sus rasgos), o como forma canónica nueva
+con los rasgos de un perfil existente (el menú los copia del catálogo). En los dos casos no se toca la gramática ni las
+reglas.
+
+| Categoría | Perfil | Rasgos (en `vocabulario.json`) | Atributos (`sig`) | Qué significa | Formas canónicas de la precarga |
+|---|---|---|---|---|---|
+| `SUST` | `SERVICIO` | `{"aspecto": "SERVICIO"}` | clase = SERVICIO; asp = SERVICIO; pol = 0; ent = nulo | habla del servicio (internet, conexión) | SERVICIO |
+| `SUST` | `ATENCION` | `{"aspecto": "ATENCION"}` | clase = ATENCION; asp = ATENCION; pol = 0; ent = nulo | habla de la atención (trato) | ATENCION |
+| `SUST` | `CLARIDAD` | `{"aspecto": "CLARIDAD"}` | clase = CLARIDAD; asp = CLARIDAD; pol = 0; ent = nulo | habla de la explicación (indicaciones) | CLARIDAD |
+| `SUST` | `EQUIPO` | `{"aspecto": "SERVICIO", "entidad": "EQUIPO"}` | clase = EQUIPO; asp = SERVICIO; pol = 0; ent = EQUIPO | un equipo; valora el servicio (router, módem) | ROUTER |
+| `SUST` | `TICKET` | `{"entidad": "TICKET"}` | clase = TICKET; asp = nulo; pol = 0; ent = TICKET | un ticket o caso | TICKET |
+| `SUST` | `PROBLEMA` | `{"aspecto": "SERVICIO", "pol": -1}` | clase = PROBLEMA; asp = SERVICIO; pol = -1; ent = nulo | un problema del servicio (corte) | CORTE |
+| `SUST` | `SIN_DOMINIO` | `{"sin_dominio": true}` | clase = SIN_DOMINIO; asp = nulo; pol = 0; ent = nulo | sin significado para el dominio (ruido, técnico) | — |
+| `ADJ` | `POSITIVO` | `{"pol": 1}` | pol = +1 | cualidad buena (bien, rápido, amable) | BUENO, RAPIDO, ESTABLE, AMABLE, CLARO |
+| `ADJ` | `NEGATIVO` | `{"pol": -1}` | pol = -1 | cualidad mala (mal, lento, confuso) | MALO, LENTO, INESTABLE, CONFUSO |
+| `ADJ` | `SIN_DOMINIO` | `{"sin_dominio": true}` | clase = SIN_DOMINIO; pol = 0 | cualidad sin valor para el dominio (raro) | — |
+| `V_EST` | `OK` | `{"pol": 1, "decl": "OK"}` | pol = +1; pron = falso | el servicio anda bien (funciona, anda) | FUNCIONAR |
+| `V_EST` | `FALLA` | `{"pol": -1, "decl": "FALLA"}` | pol = -1; pron = falso | el servicio anda mal (falla) | FALLAR |
+| `V_EST` | `RECUR` | `{"pol": -1, "decl": "RECUR", "pronominal": true}` | pol = -1; pron = verdadero | falla que se repite; va con «se» (se corta) | CORTAR |
+| `V_ACC` | `COMPRENSION` | `{"clase": "COMPRENSION", "aspecto": "CLARIDAD"}` | clase = ENT; asp = CLARIDAD | comprender (entendí) | ENTENDER |
+| `V_ACC` | `SOLICITUD` | `{"clase": "SOLICITUD"}` | clase = SOLIC; asp = nulo | pedido al cliente (reinicie) | REINICIAR |
+| `V_ACC` | `COMPROMISO` | `{"clase": "COMPROMISO"}` | clase = COMPR; asp = nulo | promesa a futuro (revisaremos) | REVISAR, LLAMAR, ESCALAR |
+| `V_ACC` | `VAL_ATEN` | `{"clase": "VALORABLE", "aspecto": "ATENCION"}` | clase = VAL; asp = ATENCION | valora la atención (atendiste) | ATENDER |
+| `V_ACC` | `VAL_CLAR` | `{"clase": "VALORABLE", "aspecto": "CLARIDAD"}` | clase = VAL; asp = CLARIDAD | valora la explicación (explicaste) | EXPLICAR |
+| `V_ACC` | `SIN_DOMINIO` | `{"sin_dominio": true}` | clase = SIN_DOMINIO; asp = nulo | acción sin significado para el dominio (hace, tiene) | — |
+| `ADV_T` | `AHORA` | `{"tiempo": "AHORA"}` | t = AHORA | el momento actual (ahora, ya) | AHORA |
+| `ADV_T` | `FUTURO` | `{"tiempo": "FUTURO"}` | t = FUTURO | más adelante (mañana, luego) | MAÑANA |
+| `V_COP` | `COPULA` | `{}` | — | ser o estar | SER_ESTAR |
+| `V_CONT` | `CONTINUIDAD` | `{}` | — | seguir | SEGUIR |
+| `NEG` | `NEGACION` | `{}` | — | niega el predicado que sigue | NO |
+| `SIN` | `PRIVACION` | `{}` | — | «sin» + sustantivo | SIN |
+| `INT` | `INTENSIFICADOR` | `{}` | — | intensifica el adjetivo (muy) | MUY |
+| `PERO` | `CONTRASTE` | `{}` | — | contraste entre cláusulas | PERO |
+| `Y` | `UNION` | `{}` | — | une cláusulas | Y |
+| `SE` | `PRONOMINAL` | `{}` | — | marca de verbo pronominal | SE |
+| `FREC` | `FRECUENCIA` | `{}` | — | frecuencia (siempre, todos los días) | TODOS, DIA, SIEMPRE |
+| `CORTESIA` | `CORTESIA` | `{}` | — | cortesía (gracias, hola) | GRACIAS, SALUDO |
+| `RELLENO` | `SIN_SIGNIFICADO` | `{}` | — | artículo, clítico o preposición; se filtra antes del parser | ART, CLITICO, PREP |
+| `FUERA_DE_GRAMATICA` | `FUERA` | `{}` | — | conocida, sin función en la gramática; queda NO_INTERPRETADO | FUERA |
+
+**`SIN_DOMINIO`** (en `SUST`, `ADJ` y `V_ACC`) es la forma correcta de registrar una palabra que la gramática debe
+reconocer en su lugar pero que no tiene significado para el dominio («hace», «ruido», «técnico», «raro»). La
+cláusula que la contiene se reconoce entera y no se interpreta (R-SINDOM, sección 5). Si en cambio la palabra se
+descartara antes del parser, el parser uniría lo que queda («el router … raros» → «el router está raro») e
+inventaría una valoración.
 
 ### 3.1 Modificadores y complementos
 
 | BNF | Reglas semánticas | Regla |
 |---|---|---|
-| `modif → adj` | `modif.pol = adj.pol; modif.int = nulo` | |
-| `modif → INT adj` | `modif.pol = adj.pol; modif.int = ALTA` | R-MUY |
+| `modif → ADJ` | `modif.pol = ADJ.p.pol; modif.int = nulo` | |
+| `modif → INT ADJ` | `modif.pol = ADJ.p.pol; modif.int = ALTA` | R-MUY |
 | `modif_op → modif` | `modif_op.pol = modif.pol; modif_op.int = modif.int` | |
 | `modif_op → ε` | `modif_op = nulo` | |
 | `atrib → modif` | `atrib.pol = modif.pol; atrib.int = modif.int; atrib.ticket = nulo` | |
 | `atrib → TICKET` | `atrib.ticket = TICKET` | |
 | `compl → modif` | `compl.t = CUAL; compl.pol = modif.pol; compl.int = modif.int` | |
-| `compl → SIN sust` | `compl.t = SIN; compl.asp = sust.asp; compl.pol = (sust.pol = −1) ? +1 : −1` | R-SIN |
+| `compl → SIN SUST` | `compl.t = SIN; compl.asp = SUST.p.asp; compl.pol = (SUST.p.pol = −1) ? +1 : −1` | R-SIN |
 | `compl → ε` | `compl = nulo` | |
-| `sujp → sust` | `sujp = sust` (todos sus atributos) | R-POSP |
+| `sujp → SUST` | `sujp = SUST.p` (clase, asp, pol, ent) | R-POSP |
 | `sujp → ε` | `sujp = nulo` | |
-| `obj → sust` | `obj.s = sust` | |
+| `obj → SUST` | `obj.s = SUST.p` | |
 | `obj → TICKET` | `obj.ticket = TICKET` | |
-| `obj → adv_t` | `obj.plazo = adv_t.t` | |
+| `obj → ADV_T` | `obj.plazo = ADV_T.p.t` | |
 | `obj → ε` | `obj.s = obj.ticket = obj.plazo = nulo` | |
 | `frec → FREC frec₁` | `frec.n = 1 + frec₁.n` | |
 | `frec → ε` | `frec.n = 0` | |
-| `adv_t_op → adv_t` | `adv_t_op.t = adv_t.t` | |
+| `adv_t_op → ADV_T` | `adv_t_op.t = ADV_T.p.t` | |
 | `adv_t_op → ε` | `adv_t_op = nulo` | |
 
-`compl → SIN sust` distingue lo que falta: «sin internet» es negativo porque falta algo bueno; «sin cortes» es
+`compl → SIN SUST` distingue lo que falta: «sin internet» es negativo porque falta algo bueno; «sin cortes» es
 positivo porque lo que falta es un problema. `frec → FREC frec₁` es el mismo esquema del robot de la Clase 6
 (`R → INSRT R₁`); `frec.n` se calcula pero no interviene en ninguna decisión.
 
@@ -138,8 +180,8 @@ positivo porque lo que falta es un problema. `frec → FREC frec₁` es el mismo
 
 | BNF | Reglas semánticas | Regla |
 |---|---|---|
-| `sujeto → sust` | `sujeto = sust` (todos sus atributos) | R-SUJ |
-| `sujeto → AGENTE` | `sujeto.cat = AGENTE; sujeto.asp = ATENCION; sujeto.pol = 0; sujeto.ent = nulo` | R-SUJ |
+| `sujeto → SUST` | `sujeto = SUST.p` (clase, asp, pol, ent) | R-SUJ |
+| `sujeto → AGENTE` | `sujeto.clase = AGENTE; sujeto.asp = ATENCION; sujeto.pol = 0; sujeto.ent = nulo` | R-SUJ |
 
 Las reglas de predicado valen igual para `pred_s`, `pred_l` y `pred_neg`. En `pred_l` y `pred_neg`, las
 alternativas con `sujp` agregan `pred.pos = sujp`; en `pred_s` no hay sujeto pospuesto.
@@ -150,26 +192,27 @@ alternativas con `sujp` agregan `pred.pos = sujp`; en `pred_s` no hay sujeto pos
 | `pred_s → modif` | `pred_s.k = COP; pred_s.pol = modif.pol; pred_s.int = modif.int` | R-COP |
 | `pred_s → TICKET` | `pred_s.k = REF; pred_s.ticket = TICKET` | R-TICKET |
 | `pred_s → ε` | `pred_s.k = MENCION` | R-MEN |
-| `pred → v_est compl [sujp]` | `pred.k = EST; pred.pol = (v_est.pol = −1) ? −1 : (compl ≠ nulo ? compl.pol : +1); pred.int = compl.int` | R-EST (y R-SIN si `compl.t = SIN`) |
-| `pred → SE V_EST_RECUR [sujp]` | `pred.k = CORTE; pred.pol = −1` | R-CORTE |
+| `pred → V_EST compl [sujp]` | si `V_EST.p.pron`: `pred.k = SE_INCOMPATIBLE`. Si no: `pred.k = EST; pred.pol = (V_EST.p.pol = −1) ? −1 : (compl ≠ nulo ? compl.pol : +1); pred.int = compl.int` | R-EST (y R-SIN si `compl.t = SIN`) |
+| `pred → SE V_EST compl [sujp]` | si `V_EST.p.pron`: `pred.k = CORTE; pred.pol = −1`. Si no: `pred.k = SE_INCOMPATIBLE` | R-CORTE |
 | `pred → V_CONT compl` | `compl.t = CUAL`: `pred.k = SEG_ADJ; pred.pol = compl.pol; pred.int = compl.int`. `compl.t = SIN`: `pred.k = SEG_SIN; pred.pol = compl.pol; pred.asp = compl.asp`. `compl = nulo`: `pred.k = INCOMPLETO` | R-SEG-ADJ / R-SEG-SIN |
-| `pred → v_acc obj modif_op` | según `v_acc.clase` (cuadro siguiente) | |
+| `pred → V_ACC obj modif_op` | según `V_ACC.p.clase` (cuadro siguiente) | |
 | `pred_s → NEG pred_neg`, `pred_l → NEG pred_neg` | copia todos los atributos de `pred_neg`; `pred.neg = verdadero` | R-NEG |
 
-Para `pred → v_acc obj modif_op`:
+Para `pred → V_ACC obj modif_op`:
 
-| `v_acc.clase` | Reglas semánticas | Regla |
+| `V_ACC.p.clase` | Reglas semánticas | Regla |
 |---|---|---|
-| `ENT` | `pred.k = ENT; pred.asp = CLARIDAD; pred.pol = (modif_op ≠ nulo) ? modif_op.pol : +1` | R-ENT |
-| `VAL`, con `modif_op` | `pred.k = VAL; pred.asp = v_acc.asp; pred.pol = modif_op.pol; pred.int = modif_op.int` | R-VAL |
-| `VAL`, sin `modif_op` | `pred.k = MENCION; pred.asp = v_acc.asp` | R-MEN |
-| `SOLIC` | `pred.k = SOLIC; pred.ent = obj.s` | R-SOLIC |
-| `COMPR` | `pred.k = COMPR; pred.ticket = obj.ticket; pred.plazo = obj.plazo` | R-COMPR |
+| `ENT` (perfil COMPRENSION) | `pred.k = ENT; pred.asp = CLARIDAD; pred.pol = (modif_op ≠ nulo) ? modif_op.pol : +1` | R-ENT |
+| `VAL` (VAL_ATEN, VAL_CLAR), con `modif_op` | `pred.k = VAL; pred.asp = V_ACC.p.asp; pred.pol = modif_op.pol; pred.int = modif_op.int` | R-VAL |
+| `VAL`, sin `modif_op` | `pred.k = MENCION; pred.asp = V_ACC.p.asp` | R-MEN |
+| `SOLIC` (SOLICITUD) | `pred.k = SOLIC; pred.ent = obj.s` | R-SOLIC |
+| `COMPR` (COMPROMISO) | `pred.k = COMPR; pred.ticket = obj.ticket; pred.plazo = obj.plazo` | R-COMPR |
 
 Donde no se indica, `neg = falso`. `pred_s → modif` es la cópula omitida («el servicio **muy lento**»).
 En `pred → NEG pred_neg` la polaridad **no** se invierte todavía: se retorna la del predicado y la marca `neg`; la
-inversión se hace una sola vez, en `construir()` (sección 5). En `pred → v_est compl`, un verbo de falla no se vuelve
-positivo por el complemento: «falla» es negativo aunque lo siga un adjetivo.
+inversión se hace una sola vez, en `construir()` (sección 5). En `pred → V_EST compl`, un verbo de perfil FALLA no se
+vuelve positivo por el complemento. «Se» lo exige solo el perfil RECUR: «el servicio corta» y «se funciona» dan
+`SE_INCOMPATIBLE` y se abstienen (R-COMPAT).
 
 ## 5. Núcleo y cláusula
 
@@ -179,7 +222,7 @@ positivo por el complemento: «falla» es negativo aunque lo siga un adjetivo.
 | `nucleo → pred_l` | `nucleo.h = construir(pred_l, nulo)` | la del predicado |
 | `nucleo → TICKET` | `nucleo.h = hecho(TICKET, entidades = [TICKET.norm])` | R-TICKET |
 | `nucleo → CORTESIA` | `nucleo.h = hecho(CORTESIA)` | R-CORT |
-| `clausula → adv_t_op nucleo frec` | `clausula.h = nucleo.h; si adv_t_op.t = AHORA: clausula.h.temporal = AHORA` | R-AHORA |
+| `clausula → adv_t_op nucleo frec` | si alguna hoja de la cláusula tiene el rasgo `sin_dominio` (perfil `SIN_DOMINIO`): la cláusula **no se interpreta** (no se evalúa `nucleo`). Si no: `clausula.h = nucleo.h`; si `adv_t_op.t = AHORA`: `clausula.h.temporal = AHORA` | R-SINDOM / R-AHORA |
 
 `hecho(tipo, …)` crea un registro con el resto de los campos en `nulo`. La función `construir(p, s)` convierte los
 atributos de un predicado `p` y el sujeto explícito `s` (`nulo` si la cláusula no tiene sujeto delante) en un hecho.
@@ -187,29 +230,29 @@ atributos de un predicado `p` y el sujeto explícito `s` (`nulo` si la cláusula
 
 | Paso | Regla de cálculo |
 |---|---|
-| 1 | **Compatibilidad (R-COMPAT).** Si la combinación no es válida (cuadro siguiente), la cláusula **no se interpreta**: sus tokens pasan a `NO_INTERPRETADO`. Fin. |
-| 2 | `p.k = MENCION`: `hecho(MENCION, aspecto = s.asp o p.asp, valoracion = NEUTRA)`; si el sujeto es un `SUST_TICKET`, `hecho(TICKET)`. `SOLIC`: `hecho(SOLICITUD, entidades = [equipo])`. `COMPR`: `hecho(COMPROMISO, entidades = [p.ticket])`. `REF`: `hecho(TICKET, entidades = [p.ticket])`. Fin. |
+| 1 | **Compatibilidad (R-COMPAT).** Si `p.k ∈ {INCOMPLETO, SE_INCOMPATIBLE}`, hay sujeto delante **y** detrás, o la combinación sujeto–predicado no está en `COMPAT` (cuadro siguiente), la cláusula **no se interpreta**: sus tokens pasan a `NO_INTERPRETADO`. Fin. |
+| 2 | `p.k = MENCION`: `hecho(MENCION, aspecto = s.asp o p.asp, valoracion = NEUTRA)`; si el sujeto es un ticket, `hecho(TICKET)`. `SOLIC`: `hecho(SOLICITUD, entidades = [equipo])`. `COMPR`: `hecho(COMPROMISO, entidades = [p.ticket])`. `REF`: `hecho(TICKET, entidades = [p.ticket])`. Fin. |
 | 3 | `aspecto = p.asp` si `p.k = SEG_SIN`; si no, `suj.asp` cuando hay sujeto; si no, `p.asp` (`ENT`, `VAL`); si no, `SERVICIO`. |
 | 4 | `pol' = −p.pol` si `p.neg` (R-NEG); si no, `pol' = p.pol`. |
 | 5 | `valoracion = POSITIVA` si `pol' = +1`; `NEGATIVA` si `pol' = −1`. |
 | 6 | `declaracion`, solo cuando `aspecto = SERVICIO`: `EST`, `SEG_ADJ` y `SEG_SIN` → `OK` si `pol' = +1`, `FALLA` si `pol' = −1`; `CORTE` sin negar → `RECUR`; `CORTE` negado, `COP`, `ENT` y `VAL` → `nulo`. |
 | 7 | `tipo = FUNCIONAMIENTO` si `declaracion ≠ nulo`; si no, `VALORACION`. |
-| 8 | `intensidad = p.int` (R-MUY si no es `nulo`); `negada = p.neg`; `entidades = [equipo]` si el sujeto es un `SUST_EQUIPO`. |
+| 8 | `intensidad = p.int` (R-MUY si no es `nulo`); `negada = p.neg`; `entidades = [equipo]` si el sujeto es de perfil EQUIPO. |
 
-**Compatibilidad sujeto–predicado** (tabla `COMPAT` en `semantica.py`). Es el chequeo de tipos del análisis
-semántico: la gramática acepta «el agente se corta», pero no tiene sentido interpretarlo.
+**Compatibilidad sujeto–predicado** (tabla `COMPAT` en `semantica.py`, indexada por `sujeto.clase`). Es el chequeo
+de tipos del análisis semántico: la gramática acepta «el agente se corta», pero no tiene sentido interpretarlo.
 
-| Sujeto (`cat`) | Predicados admitidos (`k`) |
+| Sujeto (`clase`) | Predicados admitidos (`k`) |
 |---|---|
-| `SUST_SERV`, `SUST_EQUIPO` | `COP`, `EST`, `SEG_ADJ`, `SEG_SIN`, `CORTE`, `MENCION` |
-| `SUST_ATEN`, `AGENTE` | `COP`, `SEG_ADJ`, `MENCION`; `VAL` si el verbo valora la ATENCION |
-| `SUST_CLAR` | `COP`, `SEG_ADJ`, `MENCION`; `VAL` si el verbo valora la CLARIDAD |
-| `SUST_TICKET` | `REF`, `MENCION` |
-| `SUST_PROB` | `COP`, `SEG_ADJ`, `MENCION` |
-| sin sujeto | todos, salvo `INCOMPLETO` |
+| `SERVICIO`, `EQUIPO` | `COP`, `EST`, `SEG_ADJ`, `SEG_SIN`, `CORTE`, `MENCION` |
+| `ATENCION`, `AGENTE` | `COP`, `SEG_ADJ`, `MENCION`; `VAL` si el verbo valora la ATENCION |
+| `CLARIDAD` | `COP`, `SEG_ADJ`, `MENCION`; `VAL` si el verbo valora la CLARIDAD |
+| `TICKET` | `REF`, `MENCION` |
+| `PROBLEMA` | `COP`, `SEG_ADJ`, `MENCION` |
+| sin sujeto | todos, salvo `INCOMPLETO` y `SE_INCOMPATIBLE` |
 
-También se rechaza una cláusula con sujeto delante **y** detrás del verbo («el servicio no funciona el internet») y
-un `V_CONT` sin complemento («sigue»). El sujeto pospuesto se comprueba con la misma tabla.
+El sujeto pospuesto se comprueba con la misma tabla. Un sujeto de perfil `SIN_DOMINIO` nunca llega a este paso: la
+cláusula ya se abstuvo por R-SINDOM.
 
 Consecuencias que conviene tener presentes:
 
@@ -218,6 +261,8 @@ Consecuencias que conviene tener presentes:
 - «La atención sigue mala» valora la ATENCION y no declara nada sobre el funcionamiento (paso 6).
 - «No se corta» valora el SERVICIO como POSITIVA, pero no declara que funcione (paso 6).
 - «El router no anda» valora y declara sobre el SERVICIO, y registra `ROUTER` como entidad.
+- Una cláusula sin sujeto con cópula toma el aspecto por defecto (paso 3): «está lento» → SERVICIO. Ver la limitación
+  de la sección 13.
 - Una solicitud, un compromiso, un ticket o una cortesía no tienen aspecto ni valoración: no aportan evidencia a
   ningún aspecto.
 
@@ -361,25 +406,26 @@ turno y el fragmento de texto.
 
 | Regla | Producción o condición | En `semantica.py` |
 |---|---|---|
-| R-SUJ | `sujeto → sust \| AGENTE` | `_sube`, `_sujeto_agente`; grupo `sust` |
+| R-SUJ | `sujeto → SUST \| AGENTE` | `_sig`, `_sujeto_agente` |
 | R-COP | `pred → V_COP atrib` (con cualidad); `pred_s → modif` | `_p_cop`, `_p_cop_dir` |
-| R-EST | `pred → v_est compl [sujp]` | `_p_est`; grupo `v_est` |
-| R-CORTE | `pred → SE V_EST_RECUR [sujp]` | `_p_corta` |
+| R-EST | `pred → V_EST compl [sujp]` (perfiles OK y FALLA) | `_p_est` |
+| R-CORTE | `pred → SE V_EST compl [sujp]` (perfil RECUR) | `_p_est` |
 | R-SEG-ADJ | `pred → V_CONT compl`, con `compl → modif` | `_p_seguir` |
-| R-SEG-SIN | `pred → V_CONT compl`, con `compl → SIN sust` | `_p_seguir` |
-| R-SIN | `compl → SIN sust` | `_compl_sin` |
-| R-ENT | `pred → v_acc obj modif_op`, con `V_ENTENDER` | `_p_acc` |
-| R-VAL | ídem, con `V_VAL_ATEN` o `V_VAL_CLAR` y cualidad | `_p_acc` |
+| R-SEG-SIN | `pred → V_CONT compl`, con `compl → SIN SUST` | `_p_seguir` |
+| R-SIN | `compl → SIN SUST` | `_compl_sin` |
+| R-ENT | `pred → V_ACC obj modif_op`, perfil COMPRENSION | `_p_acc` |
+| R-VAL | ídem, perfiles VAL_ATEN / VAL_CLAR con cualidad | `_p_acc` |
 | R-MEN | `pred_s → ε`; verbo valorativo sin cualidad | `_p_mencion`, `_p_acc` |
-| R-SOLIC | ídem, con `V_SOLICITUD` | `_p_acc` |
-| R-COMPR | ídem, con `V_COMPROMISO` | `_p_acc` |
+| R-SOLIC | ídem, perfil SOLICITUD | `_p_acc` |
+| R-COMPR | ídem, perfil COMPROMISO | `_p_acc` |
 | R-NEG | `pred_s → NEG pred_neg`; `pred_l → NEG pred_neg` | `_p_neg`; inversión en `_construir` |
-| R-MUY | `modif → INT adj` | `_modif_int` |
+| R-MUY | `modif → INT ADJ` | `_modif_int` |
 | R-TICKET | `pred → V_COP atrib` (con ticket); `pred_s → TICKET`; `nucleo → TICKET` | `_p_cop`, `_p_ref`, `_n_tk` |
 | R-CORT | `nucleo → CORTESIA` | `_n_cort` |
-| R-AHORA | `clausula → adv_t_op nucleo frec`, con `T_AHORA` | `_clausula` |
-| R-POSP | `sujp → sust` | `_sube`; `_construir` |
+| R-AHORA | `clausula → adv_t_op nucleo frec`, con perfil AHORA | `_clausula` |
+| R-POSP | `sujp → SUST` | `_sig`; `_construir` |
 | R-COMPAT | paso 1 de `construir()` | `COMPAT`, `_compatible` |
+| R-SINDOM | `clausula → adv_t_op nucleo frec` con una hoja de rasgo `sin_dominio` | `_clausula` |
 | R-PERO | `cola → PERO clausula cola`; `cola_c → PERO clausula cola` | `clausulas`; `analizador._analizar_turno` |
 | R-EST-RES, R-EST-NORES, R-EST-TEMP, R-EST-PEND, R-EST-NC, R-EST-PREC | sección 8 | `decidir_estado` |
 
@@ -389,11 +435,11 @@ El alcance lo fija la gramática, no una heurística sobre la distancia entre pa
 
 - `NEG` solo aparece en `pred → NEG pred_neg`. Niega **exactamente** el predicado `pred_neg` que lo sigue («no
   funciona», «no está lento», «no entendí la explicación», «no me atendieron bien»).
-- `SIN` solo aparece en `compl → SIN sust`: afecta al sustantivo inmediato, y su signo depende de ese sustantivo
-  (R-SIN).
+- `SIN` solo aparece en `compl → SIN SUST`: afecta al sustantivo inmediato, y su signo depende del perfil de ese
+  sustantivo (R-SIN).
 - Ninguno cruza `PERO`, `COMA`, `Y` ni `PUNTO`: después de un conector empieza otra derivación de `clausula`, con su
   propio `neg = falso`. En «No entendí la explicación, pero el agente fue amable», la segunda cláusula no queda negada.
-- `INT` solo aparece en `modif → INT adj`: intensifica el adjetivo inmediato y no cambia la polaridad.
+- `INT` solo aparece en `modif → INT ADJ`: intensifica el adjetivo inmediato y no cambia la polaridad.
   «No es muy bueno» produce `pol = +1`, `int = ALTA`, `neg = verdadero` → `NEGATIVA`.
 
 ## 12. Árboles anotados de prueba
@@ -403,7 +449,7 @@ Como en clase, se comprueba el cuadro sobre una cadena concreta anotando el árb
 ### 12.1 Caso 02: «Me atendiste muy bien, pero sigo sin internet.»
 
 Tokens que llegan al parser (`Me` es `RELLENO` y se filtra):
-`V_VAL_ATEN INT ADJ_POS COMA PERO V_CONT SIN SUST_SERV PUNTO`
+`V_ACC INT ADJ COMA PERO V_CONT SIN SUST PUNTO`
 
 ```
 texto  .L=[C1.1, C1.2]
@@ -411,11 +457,11 @@ texto  .L=[C1.1, C1.2]
 │  ├─ clausula  .con.i=nulo  .h=C1.1 {VALORACION, ATENCION, POSITIVA, int=ALTA}
 │  │  ├─ adv_t_op → ε
 │  │  ├─ nucleo  .h=construir(pred_l, nulo)
-│  │  │  └─ pred_l  .k=VAL  .asp=ATENCION  .pol=+1  .int=ALTA      ← pred_l → v_acc obj modif_op
-│  │  │     ├─ v_acc  .clase=VAL  .asp=ATENCION                    ← V_VAL_ATEN «atendiste»
+│  │  │  └─ pred_l  .k=VAL  .asp=ATENCION  .pol=+1  .int=ALTA      ← pred_l → V_ACC obj modif_op
+│  │  │     ├─ V_ACC «atendiste»  .p=VAL_ATEN (clase VAL, asp ATENCION)
 │  │  │     ├─ obj → ε
 │  │  │     └─ modif_op  .pol=+1  .int=ALTA
-│  │  │        └─ modif  ← INT «muy»  adj .pol=+1 (ADJ_POS «bien»)
+│  │  │        └─ modif  ← INT «muy»  ADJ «bien» .p=POSITIVO (pol +1)
 │  │  └─ frec → ε  .n=0
 │  └─ cola  .L=[C1.2]
 │     ├─ COMA
@@ -425,7 +471,7 @@ texto  .L=[C1.1, C1.2]
 │        │  └─ nucleo  .h=construir(pred_l, nulo)
 │        │     └─ pred_l  .k=SEG_SIN  .pol=−1  .asp=SERVICIO       ← pred_l → V_CONT compl
 │        │        ├─ V_CONT «sigo»
-│        │        └─ compl  .t=SIN  .asp=SERVICIO  .pol=−1         ← SIN «sin»  sust (SUST_SERV «internet», pol=0)
+│        │        └─ compl  .t=SIN  .asp=SERVICIO  .pol=−1         ← SIN «sin»  SUST «internet» .p=SERVICIO (pol 0)
 │        └─ cola → ε  .L=[ ]
 └─ texto_r → PUNTO texto_rr   (texto_rr → ε, .L=[ ])
 ```
@@ -446,9 +492,9 @@ clausula  .h=C1.1 {VALORACION, CLARIDAD, NEGATIVA, negada}
 └─ nucleo  .h=construir(pred_l, nulo)
    └─ pred_l  .k=ENT  .asp=CLARIDAD  .pol=+1  .neg=verdadero      ← pred_l → NEG pred_neg
       ├─ NEG «No»
-      └─ pred_neg  .k=ENT  .asp=CLARIDAD  .pol=+1                 ← pred_neg → v_acc obj modif_op
-         ├─ v_acc  .clase=ENT  .asp=CLARIDAD                      ← V_ENTENDER «entendí»
-         ├─ obj  .s=sust (SUST_CLAR «explicación»)
+      └─ pred_neg  .k=ENT  .asp=CLARIDAD  .pol=+1                 ← pred_neg → V_ACC obj modif_op
+         ├─ V_ACC «entendí»  .p=COMPRENSION (clase ENT, asp CLARIDAD)
+         ├─ obj  .s=SUST «explicación» .p=CLARIDAD
          └─ modif_op → ε
 ```
 
@@ -459,37 +505,47 @@ clausula  .h=C1.1 {VALORACION, CLARIDAD, NEGATIVA, negada}
 
 | Cláusula | Predicado | Hecho | Reglas |
 |---|---|---|---|
-| C1.1 «Ahora funciona» | `pred_l → v_est compl sujp`, `v_est → V_EST_OK`, `compl → ε`: `k=EST`, `pol=+1` | SERVICIO = POSITIVA, declaración `OK`, temporal `AHORA` | R-EST, R-AHORA |
-| C1.2 «se corta todos los días» | `pred_l → SE V_EST_RECUR sujp`: `k=CORTE`, `pol=−1`; `frec.n=2` | SERVICIO = NEGATIVA, declaración `RECUR` | R-CORTE, R-PERO |
+| C1.1 «Ahora funciona» | `pred_l → V_EST compl sujp`; «funciona» `.p = OK`; `compl → ε`: `k=EST`, `pol=+1` | SERVICIO = POSITIVA, declaración `OK`, temporal `AHORA` | R-EST, R-AHORA |
+| C1.2 «se corta todos los días» | `pred_l → SE V_EST compl sujp`; «corta» `.p = RECUR` (exige «se»): `k=CORTE`, `pol=−1`; `frec.n=2` | SERVICIO = NEGATIVA, declaración `RECUR` | R-CORTE, R-PERO |
 
 `combinar({POSITIVA, NEGATIVA}) = MIXTA`. Estado: el turno tiene `OK` y `RECUR` y termina en `RECUR` → fila 1 →
 **TEMPORAL** (R-EST-TEMP), no RESUELTO.
 
-### 12.4 Caso 16: sujeto pospuesto e incompatibilidad
+### 12.4 Caso 16 y abstenciones: sujeto pospuesto, incompatibilidad y SIN_DOMINIO
 
 | Cláusula | Derivación | Resultado |
 |---|---|---|
-| «No funciona el internet» | `pred_l → NEG pred_neg`, `pred_neg → v_est compl sujp`, `sujp → sust(SUST_SERV)` | compatible; aspecto del sujeto pospuesto; SERVICIO NEGATIVA, `FALLA` (R-EST, R-POSP, R-NEG) |
-| «el router falla seguido» | `sujeto → sust(SUST_EQUIPO)`, `pred_s → v_est(V_EST_FALLA) compl(ε)`, `frec` | SERVICIO NEGATIVA, `FALLA`, entidad `ROUTER` |
-| «ahora funciona sin cortes» | `pred_l → v_est compl`, `compl → SIN sust(SUST_PROB)` | `compl.pol = +1` → SERVICIO POSITIVA, `OK` (R-EST, R-SIN, R-AHORA) |
-| «El agente se corta» | `sujeto(AGENTE) pred_s → SE V_EST_RECUR` | `CORTE ∉ COMPAT[AGENTE]` → no se interpreta (R-COMPAT) |
+| «No funciona el internet» | `pred_l → NEG pred_neg`, `pred_neg → V_EST compl sujp`, `sujp → SUST` (perfil SERVICIO) | compatible; aspecto del sujeto pospuesto; SERVICIO NEGATIVA, `FALLA` (R-EST, R-POSP, R-NEG) |
+| «el router falla seguido» | `sujeto → SUST` (perfil EQUIPO), `pred_s → V_EST compl` con «falla» de perfil FALLA, `frec` | SERVICIO NEGATIVA, `FALLA`, entidad `ROUTER` |
+| «ahora funciona sin cortes» | `pred_l → V_EST compl`, `compl → SIN SUST` (perfil PROBLEMA) | `compl.pol = +1` → SERVICIO POSITIVA, `OK` (R-EST, R-SIN, R-AHORA) |
+| «El agente se corta» | `sujeto(AGENTE) pred_s → SE V_EST compl` | `CORTE ∉ COMPAT[AGENTE]` → no se interpreta (R-COMPAT) |
+| «El servicio corta todos los días» | `pred_s → V_EST compl` con «corta» de perfil RECUR, sin «se» | `SE_INCOMPATIBLE` → no se interpreta (R-COMPAT) |
+| «Mi router hace ruidos raros», con «hace», «ruidos» y «raros» de perfil SIN_DOMINIO | `sujeto(SUST) pred_s → V_ACC obj modif_op` | se reconoce entera; R-SINDOM → no se interpreta (no se inventa «el router está raro») |
 
 Para reproducir cualquiera de estos árboles: `python3 main.py casos/caso_02.txt --traza S01 --detalle`.
 
-## 13. Cómo modificar una regla
+## 13. Cómo modificar una regla, y límites
 
-| Cambio | Dónde | Fila de este documento |
+| Cambio | Dónde | Sección |
 |---|---|---|
-| Qué significa una subcategoría (p. ej. que «el router» no cuente como SERVICIO) | llamadas a `_constante(...)` | sección 3 |
-| Qué sujeto admite qué predicado (p. ej. que «el agente no entendió» valore la ATENCION) | tabla `COMPAT` | sección 5 |
-| Qué significa «sigue + adjetivo» | `_p_seguir` | sección 4 |
-| El signo de «sin» + sustantivo | `_compl_sin` | sección 3.1 |
-| Efecto de la negación | `_p_neg` y paso 4 de `_construir` | secciones 4 y 5 |
-| Qué predicados declaran funcionamiento (p. ej. que «no se corta» declare `OK`) | paso 6 de `_construir` | sección 5 |
-| Cómo se combinan las evidencias | `combinar` | sección 7 |
-| Criterio de estado | `decidir_estado` | sección 8 |
-| Una subcategoría nueva | terminal en el grupo de `gramatica.py` + `_constante(...)` + entrada en `consulta.MENU` | sección 3 |
-| Una construcción lingüística nueva | producción en `gramatica.py` + función `@acc` | secciones 3 a 5 |
+| Qué significa una forma canónica | sus `rasgos` en `vocabulario.json` (deben ser los de un perfil), o desde el menú al crearla | 3 |
+| Qué rasgos tiene un perfil (p. ej. que el perfil EQUIPO no valore el SERVICIO) | `semantica.PERFILES` y las entradas de `vocabulario.json` de ese perfil (la validación de carga las señala) | 3 |
+| Un perfil nuevo (un significado que el modelo no tiene) | `semantica.PERFILES` + reglas que lo usen + `REGLAS_SEMANTICAS.md` | 3 a 5 |
+| Qué sujeto admite qué predicado (p. ej. que «el agente no entendió» valore la ATENCION) | tabla `COMPAT` | 5 |
+| Qué significa «sigue + adjetivo» | `_p_seguir` | 4 |
+| El signo de «sin» + sustantivo | `_compl_sin` | 3.1 |
+| Efecto de la negación | `_p_neg` y paso 4 de `_construir` | 4 y 5 |
+| Qué predicados declaran funcionamiento (p. ej. que «no se corta» declare `OK`) | paso 6 de `_construir` | 5 |
+| Cómo se combinan las evidencias | `combinar` | 7 |
+| Criterio de estado | `decidir_estado`, interruptor `LO_ULTIMO_PREVALECE` | 8 |
+| Una construcción lingüística nueva | producción en `gramatica.py` + función `@acc` | 3 a 5 |
 
 Después de cualquier cambio: `python3 gramatica.py` (la gramática debe seguir sin conflictos LL(1)) y
 `python3 pruebas.py --regresion`.
+
+**Límite conocido.** Una palabra desconocida que el usuario no inserta se descarta antes del parser, y el parser une
+lo que queda. Si lo que se pierde es el sujeto, la cláusula queda sin sujeto y toma el aspecto por defecto:
+«El servicio no funciona, pero el técnico fue amable» → «fue amable» → **SERVICIO POSITIVA**. Registrar «técnico»
+con perfil `SIN_DOMINIO` (rasgo `sin_dominio`) lo evita (la cláusula se abstiene). Una regla general (abstenerse cuando en el tramo de la
+cláusula se descartó una palabra desconocida) se probó en una copia: corrige este caso y, cuando se midió, solo
+cambiaba el turno «Muchas gracias» del caso 11, que ya se eliminó de la batería. Queda propuesta, no aplicada.

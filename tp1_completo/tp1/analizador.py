@@ -5,6 +5,7 @@ analizar_lote(lineas, vocab) devuelve (resultado, trazas):
   · trazas[sid]: lista por turno con cada etapa (texto original → tokens → estructura → tabla de entidades
                  → acción semántica → resultado) para la vista de consola.
 """
+
 from lexico import Token, construir_afd
 from lector import leer_lote
 from corrector import indice_vocabulario, corregir_tokens
@@ -97,11 +98,13 @@ def _analizar_turno(sid, t, idx, ts, decidir=None):
                                 + ' '.join(f'«{tk.lexema}»' for tk in err_toks))
                 continue
             h = sem.ev(cn)
-            if h['tipo'] == 'INCOMPATIBLE':                  # R-COMPAT: se abstiene, igual que una cláusula con error
+            if h['tipo'] in ('INCOMPATIBLE', 'SIN_DOMINIO'):  # R-COMPAT / R-SINDOM: se abstiene como una cláusula con error
+                motivo, txt = (('SUJETO_PREDICADO_INCOMPATIBLE', 'sujeto y predicado incompatibles') if h['tipo'] == 'INCOMPATIBLE'
+                               else ('SIN_DOMINIO', 'contiene una palabra sin significado para el dominio'))
                 for tk in cn.hojas():
-                    no_interp.append((tk, 'SUJETO_PREDICADO_INCOMPATIBLE'))
+                    no_interp.append((tk, motivo))
                 acciones.append(f'{cid} «' + ' '.join(tk.lexema for tk in cn.hojas())
-                                + '» → sujeto y predicado incompatibles: NO_INTERPRETADO  [R-COMPAT]')
+                                + f'» → {txt}: NO_INTERPRETADO  [{h["reglas"][0]}]')
                 continue
             frag, desde, hasta = _fragmento(t.linea_txt, toks, pos, list(cn.hojas()))
             if conector == 'PERO':
@@ -174,13 +177,17 @@ def _analizar_sesion(s, idx, ts, decidir=None):
 
 
 def analizar_lote(lineas, vocab, archivo='', decidir=None):
-    """vocab: tabla de símbolos léxica vigente (formato de vocabulario.json).
+    """vocab: tabla de símbolos léxica vigente, con el formato de vocabulario.json
+    ({categoría: {forma canónica: {"rasgos": {...}, "formas": [...]}}}): el léxico usa las formas y la semántica los
+    rasgos. main.py pasa el objeto vivo de TablaSimbolosLexica, así lo aprendido durante la ejecución vale para el
+    resto de la entrada.
     decidir(token, correccion, sesion, turno) -> Correccion | None : consulta al usuario por una palabra desconocida
-    (main.py la conecta a la terminal). Sin ella (pruebas.py) se aplica la regla del enunciado, sin preguntas.
+    (main.py la conecta a la terminal). Sin ella (pruebas.py, golden) se aplica la regla del enunciado, sin preguntas.
     La tabla de entidades se crea vacía en cada llamada: no persiste entre ejecuciones."""
-    faltan = sem.canonicos_sin_significado(vocab)
-    if faltan:                                           # una forma canónica sin línea en semantica.SIGNIFICADO
-        raise ValueError('formas canónicas sin significado definido en semantica.SIGNIFICADO: ' + ', '.join(faltan))
+    errs = sem.errores_de_rasgos(vocab)
+    if errs:
+        raise ValueError('vocabulario inválido: ' + '; '.join(errs))
+    sem.usar_vocabulario(vocab)
     afd = construir_afd(vocab)
     idx = indice_vocabulario(vocab)
     sesiones, globales = leer_lote(lineas, afd)

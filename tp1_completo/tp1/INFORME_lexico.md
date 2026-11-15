@@ -18,53 +18,63 @@ Procedimiento aplicado (apuntes de clase, Clases 4 y 5): **ER → AFN (Thompson)
 
 | Componente | Contenido | Dónde vive |
 |---|---|---|
-| **Tabla de símbolos léxica** (diccionario de vocabulario) | Palabras del dominio con su categoría y forma canónica; persistente, se enriquece (§1.5) | `vocabulario.json` (precarga) + `vocabulario_aprendido.json`; `tabla_lexica.py` |
+| **Tabla de símbolos léxica** | categoría → forma canónica → {rasgos, formas superficiales}; persistente, se enriquece (§1.5) | `vocabulario.json` (precarga) + `vocabulario_aprendido.json` (mismo formato); `tabla_lexica.py` |
+| **Perfiles** | combinaciones de rasgos válidas por categoría; catálogo cerrado (el menú elige entre ellas y la carga las valida) | código (`semantica.PERFILES`) |
 | **Estructura fija** | `SESION`, `FIN`, `CLIENTE`, `AGENTE` | código (`ESTRUCTURA`) |
 | **Tabla de entidades** | Sesión, rol, tickets y apariciones (ámbito: sesión; efímera) | `entidades.py` |
 
-La tabla léxica se mantiene **separada de la tabla de entidades**, como exige el enunciado («mantener separado el diccionario de vocabulario»). El léxico la recibe por parámetro (`construir_afd(vocab)`), lo que permite probar el caso 08 con el diccionario reducido `{lenta, lento}`.
+La tabla léxica se mantiene **separada de la tabla de entidades**, como exige el enunciado («mantener separado el diccionario de vocabulario»). El léxico recibe el diccionario por parámetro (`construir_afd(vocab)`), lo que permite probar el caso 08 con el diccionario reducido `{lenta, lento}`.
 
 ### 1.2 Estructura del vocabulario
 
-Cada entrada tiene la forma `categoría → forma canónica → [formas superficiales]`. Se guardan **formas superficiales** (`lenta` y `lento` por separado, sin lematizar) para que el empate de `lent` en el caso 08 sea detectable. Si una forma aparece dos veces con categorías o canónicos distintos, la carga falla (control de duplicados).
+La tabla tiene tres niveles: **categoría léxica → forma canónica → formas superficiales**, y cada forma canónica guarda
+además sus **rasgos**:
 
-| Categoría | Grupo en la gramática | Qué es | Canónico → formas |
-|---|---|---|---|
-| `SUST_SERV` | `sust` | sustantivo: el servicio | SERVICIO → servicio, internet, conexion, red, wifi |
-| `SUST_ATEN` | `sust` | sustantivo: la atención | ATENCION → atencion, trato |
-| `SUST_CLAR` | `sust` | sustantivo: la explicación | CLARIDAD → explicacion, explicaciones, indicaciones, instrucciones |
-| `SUST_EQUIPO` | `sust` | sustantivo: un equipo | ROUTER → router, modem |
-| `SUST_TICKET` | `sust` | sustantivo: ticket o caso | TICKET → ticket, caso |
-| `SUST_PROB` | `sust` | sustantivo: un problema del servicio | CORTE → corte, cortes |
-| `ADJ_POS` | `adj` | cualidad positiva | BUENO → bien, bueno, buena, buen, excelente, perfecto, perfecta · RAPIDO → rapido, rapida · ESTABLE → estable · AMABLE → amable · CLARO → claro, clara |
-| `ADJ_NEG` | `adj` | cualidad negativa | MALO → mal, malo, mala, pesimo, pesima · LENTO → lento, lenta · INESTABLE → inestable · CONFUSO → confuso, confusa |
-| `V_COP` | — | ser / estar | SER_ESTAR → es, esta, estan, fue, estuvo, era |
-| `V_EST_OK` | `v_est` | verbo de estado: anda bien | FUNCIONAR → funciona, anda |
-| `V_EST_FALLA` | `v_est` | verbo de estado: anda mal | FALLAR → falla, fallan |
-| `V_EST_RECUR` | — | verbo pronominal: falla que se repite («se corta») | CORTAR → corta, cortan |
-| `V_CONT` | — | seguir | SEGUIR → sigue, sigo, siguen |
-| `V_ENTENDER` | `v_acc` | verbo de acción: entender | ENTENDER → entendi, entendio, entiendo |
-| `V_SOLICITUD` | `v_acc` | verbo de acción: pedido | REINICIAR → reinicie, reinicia, reiniciar, reinicien |
-| `V_COMPROMISO` | `v_acc` | verbo de acción: promesa a futuro | REVISAR → revisaremos, revisare · LLAMAR → llamaremos, contactaremos · ESCALAR → escalaremos |
-| `V_VAL_ATEN` | `v_acc` | verbo de acción: atender | ATENDER → atendiste, atendio, atendieron |
-| `V_VAL_CLAR` | `v_acc` | verbo de acción: explicar | EXPLICAR → explico, explicaste |
-| `T_AHORA` | `adv_t` | momento: ahora | AHORA → ahora, ya |
-| `T_FUTURO` | `adv_t` | momento: más adelante | MAÑANA → mañana, luego |
-| `NEG` | — | negación de un predicado | NO → no, nunca, tampoco |
-| `SIN` | — | «sin» + sustantivo | SIN → sin |
-| `INT` | — | intensificador | MUY → muy, bastante |
-| `PERO` | — | contraste | PERO → pero |
-| `Y` | — | unión de cláusulas | Y → y |
-| `SE` | — | marca pronominal | SE → se |
-| `FREC` | — | frecuencia | TODOS → todos, todas · DIA → dia, dias · SIEMPRE → siempre, seguido |
-| `CORTESIA` | — | cortesía | GRACIAS → gracias · SALUDO → hola, adios |
-| `RELLENO` | — | artículos, clíticos y preposiciones (sin semántica) | ART → el, la, los, las, un, una, mi, su, tu · CLITICO → me, te, lo, le · PREP → de, del, en, a, al, con, por, para, que |
+```json
+"ADJ":   {"LENTO":  {"rasgos": {"pol": -1},                                "formas": ["lento", "lenta"]}},
+"V_EST": {"CORTAR": {"rasgos": {"pol": -1, "decl": "RECUR", "pronominal": true}, "formas": ["corta", "cortan"]}}
+```
 
-Las categorías son **subcategorías léxicas**: el nombre dice qué clase de palabra es y qué significa (`SUST_SERV` es un
-sustantivo que habla del servicio; `ADJ_NEG`, una cualidad negativa). La gramática las agrupa con cinco no terminales
-(`sust`, `adj`, `v_est`, `v_acc`, `adv_t`) y trata igual a todas las de un grupo; el significado de cada una lo fija
-la regla semántica de su producción (`REGLAS_SEMANTICAS.md` §3). Así la tabla solo necesita guardar `forma →
-categoría`, y una palabra nueva se incorpora eligiendo su subcategoría, sin tocar la gramática.
+ Se guardan **formas superficiales** (`lenta` y `lento` por separado, sin lematizar) para que el empate de `lent` en el caso 08 sea detectable. Si una forma aparece dos veces con categorías o canónicos distintos, la carga falla (control de duplicados).
+
+El léxico solo usa las formas; los rasgos los leen las reglas semánticas (`REGLAS_SEMANTICAS.md` §3). Los rasgos de cada
+forma canónica tienen que ser exactamente los de un **perfil** de su categoría (catálogo cerrado `semantica.PERFILES`,
+abajo); la carga rechaza cualquier otra combinación. En la tabla, entre paréntesis, el perfil cuyos rasgos tiene cada
+forma canónica. Las categorías son generales y coinciden con los terminales de la gramática, que trata igual a todas
+las palabras de una categoría.
+
+| Categoría | Qué es | Forma canónica → formas superficiales (perfil) |
+|---|---|---|
+| `SUST` | sustantivo | SERVICIO → servicio, internet, conexion, red, wifi (SERVICIO) · ATENCION → atencion, trato (ATENCION) · CLARIDAD → explicacion, explicaciones, indicaciones, instrucciones (CLARIDAD) · ROUTER → router, modem (EQUIPO) · TICKET → ticket, caso (TICKET) · CORTE → corte, cortes (PROBLEMA) |
+| `ADJ` | cualidad (adjetivo o adverbio) | BUENO → bien, bueno, buena, buen, excelente, perfecto, perfecta (POSITIVO) · RAPIDO → rapido, rapida (POSITIVO) · ESTABLE → estable (POSITIVO) · AMABLE → amable (POSITIVO) · CLARO → claro, clara (POSITIVO) · MALO → mal, malo, mala, pesimo, pesima (NEGATIVO) · LENTO → lento, lenta (NEGATIVO) · INESTABLE → inestable (NEGATIVO) · CONFUSO → confuso, confusa (NEGATIVO) |
+| `V_COP` | ser / estar | SER_ESTAR → es, esta, estan, fue, estuvo, era (COPULA) |
+| `V_EST` | verbo de estado del servicio | FUNCIONAR → funciona, anda (OK) · FALLAR → falla, fallan (FALLA) · CORTAR → corta, cortan (RECUR) |
+| `V_CONT` | seguir | SEGUIR → sigue, sigo, siguen (CONTINUIDAD) |
+| `V_ACC` | verbo de acción (objeto opcional) | ENTENDER → entendi, entendio, entiendo (COMPRENSION) · REINICIAR → reinicie, reinicia, reiniciar, reinicien (SOLICITUD) · REVISAR → revisaremos, revisare (COMPROMISO) · LLAMAR → llamaremos, contactaremos (COMPROMISO) · ESCALAR → escalaremos (COMPROMISO) · ATENDER → atendiste, atendio, atendieron (VAL_ATEN) · EXPLICAR → explico, explicaste (VAL_CLAR) |
+| `ADV_T` | momento | AHORA → ahora, ya (AHORA) · MAÑANA → mañana, luego (FUTURO) |
+| `NEG` | negación de un predicado | NO → no, nunca, tampoco (NEGACION) |
+| `SIN` | «sin» + sustantivo | SIN → sin (PRIVACION) |
+| `INT` | intensificador | MUY → muy, bastante (INTENSIFICADOR) |
+| `PERO` | contraste | PERO → pero (CONTRASTE) |
+| `Y` | unión de cláusulas | Y → y (UNION) |
+| `SE` | marca pronominal | SE → se (PRONOMINAL) |
+| `FREC` | frecuencia | TODOS → todos, todas (FRECUENCIA) · DIA → dia, dias (FRECUENCIA) · SIEMPRE → siempre, seguido (FRECUENCIA) |
+| `CORTESIA` | cortesía | GRACIAS → gracias (CORTESIA) · SALUDO → hola, adios (CORTESIA) |
+| `RELLENO` | artículos, clíticos y preposiciones (sin semántica) | ART → el, la, los, las, un, una, mi, su, tu (SIN_SIGNIFICADO) · CLITICO → me, te, lo, le (SIN_SIGNIFICADO) · PREP → de, del, en, a, al, con, por, para, que (SIN_SIGNIFICADO) |
+
+16 categorías con formas, 43 formas canónicas y 116 formas superficiales en la precarga. Además, la categoría
+`FUERA_DE_GRAMATICA` tiene una sola forma canónica (`FUERA`, sin formas): recibe las palabras que el usuario marca como
+conocidas pero sin función en la gramática.
+
+Perfiles con rasgos (las demás categorías tienen un solo perfil, sin rasgos: su efecto lo da la producción):
+
+| Categoría | Perfil `rasgos` |
+|---|---|
+| `SUST` | SERVICIO `{"aspecto": "SERVICIO"}` · ATENCION `{"aspecto": "ATENCION"}` · CLARIDAD `{"aspecto": "CLARIDAD"}` · EQUIPO `{"aspecto": "SERVICIO", "entidad": "EQUIPO"}` · TICKET `{"entidad": "TICKET"}` · PROBLEMA `{"aspecto": "SERVICIO", "pol": -1}` · SIN_DOMINIO `{"sin_dominio": true}` |
+| `ADJ` | POSITIVO `{"pol": 1}` · NEGATIVO `{"pol": -1}` · SIN_DOMINIO `{"sin_dominio": true}` |
+| `V_EST` | OK `{"pol": 1, "decl": "OK"}` · FALLA `{"pol": -1, "decl": "FALLA"}` · RECUR `{"pol": -1, "decl": "RECUR", "pronominal": true}` |
+| `V_ACC` | COMPRENSION `{"clase": "COMPRENSION", "aspecto": "CLARIDAD"}` · SOLICITUD `{"clase": "SOLICITUD"}` · COMPROMISO `{"clase": "COMPROMISO"}` · VAL_ATEN `{"clase": "VALORABLE", "aspecto": "ATENCION"}` · VAL_CLAR `{"clase": "VALORABLE", "aspecto": "CLARIDAD"}` · SIN_DOMINIO `{"sin_dominio": true}` |
+| `ADV_T` | AHORA `{"tiempo": "AHORA"}` · FUTURO `{"tiempo": "FUTURO"}` |
 
 ### 1.3 Política de normalización
 
@@ -80,57 +90,106 @@ categoría`, y una palabra nueva se incorpora eligiendo su subcategoría, sin to
 | **Un lexema, una categoría** | `agente` es rol (`2 AGENTE:`) y sustantivo (`el agente fue amable`, caso 04). El lexer no ve contexto: siempre emite `AGENTE`, y el **parser** decide según la posición. |
 | `SIN` separado de `NEG` | «sin» precede a un sustantivo («sigo sin internet», caso 02) y «no» a un predicado. Con una sola categoría la gramática aceptaba «sigo no internet». |
 | `Y` como categoría propia | «y» une cláusulas («está lento y se corta»); como `RELLENO` desaparecía y la segunda cláusula se perdía. |
-| Verbos por construcción, no por palabra | `V_COP`, `V_EST_*`, `V_CONT` y los de acción (`V_ENTENDER`, `V_SOLICITUD`, `V_COMPROMISO`, `V_VAL_*`): un verbo nuevo («falla») entra en la subcategoría de su construcción. |
-| `V_EST_RECUR` aparte de `V_EST_OK`/`V_EST_FALLA` | «corta» solo se acepta con «se» (`SE V_EST_RECUR`): sin «se» es la lectura transitiva («el agente corta la llamada»). |
-| Formas verbales de «atender» y «explicar» como verbos | «atendiste» y «explicó» son `V_VAL_ATEN` / `V_VAL_CLAR`; los sustantivos «atención» y «explicación» son `SUST_ATEN` / `SUST_CLAR`. Permite «no me atendieron bien». |
+| Verbos por construcción, no por palabra | `V_COP` (+ cualidad), `V_EST` (estado del servicio), `V_CONT` (seguir) y `V_ACC` (acción con objeto). Un verbo nuevo («colapsa») entra en la categoría de su construcción con los rasgos de un perfil existente (FALLA). |
+| Significado por rasgos, no por categoría | `LENTO` y `BUENO` son ambas `ADJ`; las distinguen sus rasgos (`pol` −1 y +1, perfiles NEGATIVO y POSITIVO). Así la gramática es chica (19 terminales en el texto) y una palabra nueva no requiere tocarla. |
+| Rasgos dentro de la tabla léxica | Se guardan en la misma entrada que las formas, no en un archivo aparte; la justificación está en §1.6. |
+| Formas verbales de «atender» y «explicar» como verbos | «atendiste» y «explicó» son `V_ACC` (perfiles VAL_ATEN y VAL_CLAR); los sustantivos «atención» y «explicación» son `SUST`. Permite «no me atendieron bien». |
+| «corta» exige «se» | Lo exige su rasgo `pronominal` (perfil RECUR), y lo verifica la semántica: «el agente corta la llamada» (lectura transitiva) queda en abstención. |
 | `gracias` en `CORTESIA` | No es valoración; así el caso 06 da `SIN_EVIDENCIA`. |
 | `RELLENO` | Pertenece al lenguaje (no es `NO_INTERPRETADO`) pero no aporta semántica; el parser lo saltea. |
 | El corrector actúa solo sobre `PALABRA` | `no`, números y `TK-xxx` quedan intactos sin reglas especiales. |
 | Estructura fuera del JSON | En el caso 08 el diccionario es `{lenta, lento}`, pero la sesión igual debe poder leerse. |
 
-### 1.5 Tabla de símbolos léxica persistente
+### 1.5 Tabla de símbolos léxica persistente e interactiva
 
-La tabla léxica se **precarga** a mano y se **enriquece** sesión a sesión con las respuestas del usuario.
-Se guarda en tres archivos JSON (sin base de datos):
+La tabla léxica se **precarga** a mano y se **enriquece** sesión a sesión con las respuestas del usuario. Se guarda en
+archivos JSON, sin base de datos:
 
 | Archivo | Contenido | Quién lo escribe |
 |---|---|---|
-| `vocabulario.json` | precarga manual (`categoría → canónico → formas`) | solo el grupo, a mano; el programa **nunca** lo modifica |
-| `vocabulario_aprendido.json` | `{forma: {categoria, canonico, fecha, origen}}`; origen = archivo, sesión, turno, desplazamiento y texto | el programa, con escritura atómica (archivo temporal + `os.replace`) |
-| `vocabulario_auditoria.jsonl` | una línea JSON por cambio: `fecha`, `operacion`, `forma`, `antes`, `despues`, `operador`, `origen`, `decision` | el programa; **solo se agregan líneas** |
+| `vocabulario.json` | precarga: `{categoría: {canónico: {"rasgos": {...}, "formas": [...]}}}` | solo el grupo, a mano; el programa **nunca** lo modifica |
+| `vocabulario_aprendido.json` | lo aprendido, **con el mismo formato**: una forma canónica de la precarga aparece solo con `"formas"` (las variantes aprendidas heredan sus rasgos); una forma canónica nueva aparece con `"rasgos"` (copiados del perfil elegido) y `"formas"` | el programa, con **una** escritura atómica por cambio (archivo temporal + `os.replace`) |
 
-Tabla vigente = precarga ∪ aprendido. Operaciones:
+No hay archivo de auditoría (se decidió quitarlo). Lo aprendido se ve con `python3 main.py --tabla` («+» marca cada
+forma y forma canónica aprendida) y, para cada ejecución, en el JSON de resultados: cada inserción es una corrección
+`INSERTADA` con su turno, desplazamiento, categoría y forma canónica. Ejemplo de `vocabulario_aprendido.json` después de insertar «fatal» como variante de `MALO` y crear
+`COLAPSAR`:
 
-- **buscar(forma)** → `(categoría, canónico, origen)`, con origen `PRECARGA` o `APRENDIDA`.
-- **insertar(forma, categoría, canónico)** → falla si la forma ya existe (control de duplicados); si no, persiste y
-  audita `INSERTAR`.
-- **Conciliación**: si una forma aprendida se agrega después a la precarga, gana la precarga y la entrada aprendida se
-  da de baja (`BAJA_POR_PRECARGA` en la auditoría). Sin esto la forma tendría dos entradas y el léxico la rechazaría.
-
-**Consulta al usuario** (`consulta.py`). Toda palabra desconocida (`PALABRA` de al menos `MIN_LONG = 4` letras) pasa
-por Levenshtein y se consulta:
-
-```
-Palabra desconocida «lentto» · sesión S01, turno 3: «El internet está lentto.»
-   1) usar «lento» (ADJ_NEG / LENTO) solo en esta aparición
-   n) insertar «lentto» como palabra nueva en la tabla de símbolos léxica
-   Enter) regla del enunciado: corregir a «lento» (único candidato a distancia 1)
+```json
+{"ADJ":   {"MALO":     {"formas": ["fatal"]}},
+ "V_EST": {"COLAPSAR": {"rasgos": {"decl": "FALLA", "pol": -1}, "formas": ["colapsa"]}}}
 ```
 
-| Respuesta | Efecto | ¿Cambia la tabla? | Acción registrada |
-|---|---|---|---|
-| `1..k` | se toma ese candidato **solo en esta aparición** | no | `CORREGIDA_USUARIO` |
-| `n` | se elige la subcategoría en un menú agrupado por tipo de palabra (cualidad, cosa, acción, momento, palabra gramatical, `RELLENO` o `FUERA_DE_GRAMATICA`) y el canónico; la forma se incorpora | sí, con auditoría | `INSERTADA` |
-| Enter | regla del enunciado: candidato único → se corrige; empate o ninguno → se conserva | no | `CORREGIDA`, `EMPATE`, `SIN_CANDIDATO` |
+Operaciones de la tabla (`TablaSimbolosLexica`):
 
-- Los errores de tipeo no se guardan: elegir «lento» para «lentto» no agrega «lentto» a la tabla.
-- `FUERA_DE_GRAMATICA` sirve para palabras conocidas sin función en la gramática («igual», «ayer»): quedan
-  `NO_INTERPRETADO` y el corrector no las vuelve a tocar.
-- Cada palabra se consulta una vez por ejecución. Una forma insertada se reconoce en el resto del lote y, en la
-  ejecución siguiente, el AFD ya la incluye como patrón.
-- Si la entrada estándar se termina (Ctrl-D o `< /dev/null`), el resto se resuelve con la regla del enunciado. Así
-  Enter (o ninguna respuesta) reproduce siempre los resultados de la guía (casos 05 y 08).
-- `--dic` (caso 08) usa una tabla solo en memoria: lo insertado no se guarda.
+| Operación | Efecto |
+|---|---|
+| `buscar(forma)` | → `(categoría, canónico, origen)`, con origen `PRECARGA` o `APRENDIDA` |
+| `insertar(forma, categoría, canónico)` | agrega una forma como variante de una forma canónica **existente** (hereda sus rasgos); rechaza formas repetidas |
+| `alta_canonico(categoría, nombre, perfil)` | crea una forma canónica con los rasgos de un perfil **existente** de la categoría (el programa los copia); normaliza el nombre (sin tildes, mayúsculas, espacios como `_`) y rechaza nombres repetidos en la categoría |
+| `mostrar()` (`main.py --tabla-inicial`, `main.py --tabla [CAT]`) | la tabla inicial (precarga) o la vigente, una fila por forma canónica (perfil, rasgos, formas); «+» marca lo aprendido |
+| `reiniciar()` (`main.py --reiniciar-aprendido`) | borra `vocabulario_aprendido.json` y vuelve a la precarga |
+| validación al abrir | los rasgos de cada forma canónica (precarga y aprendida) deben coincidir con un perfil; si no, la tabla no se abre y se informa la entrada |
+| conciliación al abrir | si algo aprendido se agregó después a la precarga, gana la precarga (la forma o los rasgos de la forma canónica) y `main.py` avisa qué se quitó |
+
+**Consulta al usuario** (`consulta.py`). Se pregunta **después del corrector**, solo cuando la regla del enunciado no
+resuelve la palabra (`PALABRA` de al menos `MIN_LONG = 4` letras):
+
+| Resultado del corrector | ¿Se pregunta? | Opciones |
+|---|---|---|
+| un candidato a distancia 1 | no: se corrige (`CORREGIDA`) | — |
+| `EMPATE` | sí | un candidato (corrige **solo esa aparición**: `CORREGIDA_USUARIO`), `n` (insertar) o Enter (se conserva el empate) |
+| `SIN_CANDIDATO` | sí | `n` (insertar) o Enter (queda `NO_INTERPRETADO`) |
+| palabra de menos de 4 letras | no (`OMITIDA_CORTA`) | — |
+
+Al insertar, el menú es **cerrado**:
+
+```
+Palabra desconocida «colapsa» · sesión S01, turno 1: «El internet colapsa seguido.»
+     (sin candidatos a distancia 1)
+   n) insertar «colapsa» en la tabla de símbolos léxica
+   Enter) regla del enunciado: conservar la palabra (NO_INTERPRETADO)
+  1) ¿Qué tipo de palabra es «colapsa»?          → solo las categorías existentes (agrupadas por tipo)
+  2) ¿De qué forma canónica de V_EST es variante? → primero las existentes, con sus rasgos:
+                                                    CORTAR {"pol": -1, "decl": "RECUR", "pronominal": true} …
+       c) crear una forma canónica nueva          → nombre normalizado (COLAPSAR), sin repetir en la categoría
+  3) ¿Qué significa? (perfil de V_EST)           → solo los perfiles existentes, con sus rasgos:
+                                                    OK {"pol": 1, "decl": "OK"} · FALLA {"pol": -1, "decl": "FALLA"} · RECUR …
+  ✔ forma canónica nueva V_EST/COLAPSAR (perfil FALLA, rasgos {"pol": -1, "decl": "FALLA"})
+```
+
+- Los errores de tipeo no se guardan: elegir «lento» para un empate corrige solo esa aparición.
+- Lo aprendido vale para el resto de la misma entrada: las otras apariciones se reconocen sin preguntar.
+- **`SIN_DOMINIO`** (rasgo `sin_dominio`, en perfiles de `SUST`, `ADJ` y `V_ACC`) registra palabras que la gramática debe reconocer en su lugar
+  pero sin significado para el dominio («hace», «ruido», «técnico»): la cláusula se reconoce entera y no se
+  interpreta. `FUERA_DE_GRAMATICA` y `RELLENO`, en cambio, descartan la palabra antes del parser.
+- Si la entrada estándar se termina (Ctrl-D o `< /dev/null`), el resto se resuelve con la regla del enunciado.
+- **Modo no interactivo**: `pruebas.py` y el golden no preguntan y usan solo la precarga, así lo aprendido no cambia
+  los resultados esperados. `--dic` (caso 08) usa una tabla solo en memoria.
+
+### 1.6 Por qué los rasgos están en `vocabulario.json` (y no en un archivo aparte)
+
+Durante el desarrollo se probó separar el significado en `significados.json` (forma canónica → perfil) y lo aprendido
+en dos archivos (`vocabulario_aprendido.json` y `significados_aprendido.json`). Se volvió a una sola estructura por
+cómo funciona la **interactividad** de la tabla de símbolos léxica:
+
+| Aspecto de la interactividad | Con un archivo aparte de significados | Con los rasgos en la misma entrada (actual) |
+|---|---|---|
+| Alta de forma canónica desde el menú | toca dos estructuras: la forma canónica (sin significado) y su perfil | una entrada `{rasgos, formas}`, creada de una vez |
+| Persistencia de cada cambio | cada archivo se escribe de forma atómica, pero el cambio completo no; la consistencia depende del orden de escritura | **una** escritura atómica de `vocabulario_aprendido.json` por cambio |
+| Borrar, restaurar o copiar lo aprendido | si se mueve un archivo sin el otro, quedan formas cuya forma canónica no tiene significado y la tabla no carga | un solo archivo: queda entero o no queda |
+| «Lo aprendido vale para el resto de la entrada» | el corrector mira el diccionario y la semántica la tabla de significados: dos objetos vivos que actualizar juntos | un solo objeto vivo (`tabla.vocabulario()`) que usan el corrector y la semántica |
+| Lo que muestra el menú | rasgos de un archivo, formas de otro | los rasgos de la misma entrada en la que se inserta la palabra |
+| Pasar lo aprendido a la precarga | dos archivos que editar | copiar la entrada: lo aprendido tiene el formato de la precarga |
+| Reinicio y conciliación | sobre dos archivos | sobre uno |
+
+Lo que **no** cambia: el menú sigue cerrado. Los rasgos no se escriben desde el programa, se copian de un perfil del
+catálogo `semantica.PERFILES`, y la validación al cargar rechaza un rasgo editado a mano que no coincida con ningún
+perfil (prueba «rasgos validados al cargar contra los perfiles» en `pruebas.py`).
+
+Costo aceptado: los rasgos de un perfil se repiten en cada forma canónica (`{"pol": -1}` aparece en cuatro
+adjetivos), y si se cambia un perfil en el código hay que actualizar sus entradas en `vocabulario.json`. La validación
+de carga las señala una por una.
 
 ---
 
@@ -148,7 +207,7 @@ La **prioridad** es el orden de declaración (índice menor = más prioridad).
 | 4 | `DOSPUNTOS`, `PUNTO`, `COMA`, `SIGNO` | `:` · `.` · `,` · `[¿?¡!]` | puntuación |
 | 5 | `TICKET` | `tk- D{3,6}` | ver sección 3 |
 | 6 | `TICKET_MAL` | `tk- D*` | error léxico específico |
-| 7 | las 29 subcategorías del vocabulario (`SUST_*`, `ADJ_*`, `V_*`, `T_*`, `NEG`, `SIN`, `Y`, …) | unión de las formas que tiene la tabla de símbolos léxica (precarga ∪ aprendido) | ver sección 1; la ER cambia cuando el usuario inserta una palabra |
+| 7 | las 16 categorías del vocabulario (`SUST`, `ADJ`, `V_EST`, `V_ACC`, `ADV_T`, `NEG`, `SIN`, `Y`, …) | unión de las formas que tiene la tabla de símbolos léxica (precarga ∪ aprendido) | ver sección 1; la ER cambia cuando el usuario inserta una palabra |
 | 8 | `PALABRA` | `letra+` | palabra desconocida; entrada del corrector |
 | — | `DESCONOCIDO` | ningún patrón acepta | un carácter; error léxico |
 
@@ -186,7 +245,7 @@ Entrada: `2 CLIENTE: El internet está lentto. Ver TK-204, TK-12 y TK-1234567 ¡
 | 2 | CLIENTE | `CLIENTE` | `cliente` | CLIENTE |
 | 9 | DOSPUNTOS | `:` | `:` | – |
 | 11 | RELLENO | `El` | `el` | ART |
-| 14 | SUST_SERV | `internet` | `internet` | SERVICIO |
+| 14 | SUST | `internet` | `internet` | SERVICIO |
 | 23 | V_COP | `está` | `esta` | SER_ESTAR |
 | 28 | PALABRA | `lentto` | `lentto` | – |
 | 34 | PUNTO | `.` | `.` | – |
@@ -288,12 +347,13 @@ devolver ultimo       # si es nulo → error léxico
 - No hay palabras compuestas: «todos los días» son tres tokens (`FREC`, `RELLENO`, `FREC`) y la gramática los compone.
 - Una forma tiene una sola entrada en la tabla: los homógrafos obligan a elegir una lectura («falla» y «corta» son verbos; «corte» y «cortes», sustantivos; «esta» es la cópula «está»).
 - Los tiempos verbales no se distinguen: quedan fuera del alcance.
+- Desde el menú no se crean categorías ni perfiles: un significado nuevo requiere un perfil nuevo en `semantica.PERFILES`.
 - Está pendiente la minimización del AFD completo (Clase 5, §5.4); el AFD de `TICKET` ya es mínimo.
 
 ## 5. Etapas siguientes del pipeline
 
 1. Lector de formato (`lector.py`): `SESION Sxx` / turno / `FIN`. Antes de escanear normaliza cada línea a NFC
    (una «á» escrita como `a` + tilde combinante pasa a ser un solo carácter) y descarta el BOM inicial.
-2. Corrector (`corrector.py`, `consulta.py`): Levenshtein sobre los tokens `PALABRA`, con consulta al usuario (§1.5).
+2. Corrector (`corrector.py`, `consulta.py`): Levenshtein sobre los tokens `PALABRA`; consulta al usuario en empates y palabras sin candidato (§1.5).
 3. Gramática LL(1) y parser (`GRAMATICA.md`, `DERIVACION.md`), con estas categorías como terminales.
 4. Reglas semánticas y estado (`REGLAS_SEMANTICAS.md`) y tabla de entidades (`entidades.py`).

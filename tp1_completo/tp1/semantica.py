@@ -5,15 +5,18 @@ atributos sintetizados que devuelve a su padre (reglas semánticas con valores d
 Resultado de cada cláusula: un "hecho" con actor, aspecto, valoración, declaración de funcionamiento
 y la lista de reglas aplicadas (para la trazabilidad: turno + fragmento + regla).
 
-El significado de cada palabra sale de su FORMA CANÓNICA: el diccionario solo guarda categoría -> forma canónica ->
-formas superficiales, y la tabla SIGNIFICADO (sección 1) dice qué significa cada forma canónica (aspecto, polaridad,
-declaración, clase, tiempo). Una palabra nueva se incorpora como variante de una forma canónica existente y hereda
-su significado sin tocar el código.
+El significado de cada palabra sale de los RASGOS de su forma canónica, guardados en la propia tabla de símbolos
+léxica (vocabulario.json + lo aprendido): categoría -> forma canónica -> {rasgos, formas superficiales}. PERFILES
+(sección 1) es el catálogo cerrado de combinaciones de rasgos válidas por categoría (aspecto, polaridad, declaración,
+clase, tiempo). Una palabra nueva se incorpora como variante de una forma canónica, o como forma canónica nueva con los
+rasgos de un perfil existente, sin tocar el código.
 
-Para modificar el comportamiento en la defensa basta con editar la tabla SIGNIFICADO (sección 1),
+Para modificar el comportamiento en la defensa basta con editar los rasgos en vocabulario.json o PERFILES (sección 1),
 la regla de la producción (sección 3), la de compatibilidad (COMPAT), la decisión de estado (sección 5) o los
 interruptores de la sección 0.
 """
+import json
+
 from sintaxis import Nodo, G
 from lexico import Token
 
@@ -28,57 +31,128 @@ LO_ULTIMO_PREVALECE = True
 ASPECTOS = ('SERVICIO', 'ATENCION', 'CLARIDAD')
 NOMBRE_POL = {+1: 'POSITIVA', -1: 'NEGATIVA'}
 
-# ============================================================ 1. Significado de las formas canónicas
-# El diccionario (vocabulario.json y lo aprendido) solo guarda categoría -> forma canónica -> formas superficiales.
-# QUÉ SIGNIFICA cada forma canónica se define aquí, en las reglas semánticas. Una forma superficial nueva hereda el
-# significado de la forma canónica a la que el usuario la asigna; una forma canónica nueva con significado requiere
-# agregar su línea en esta tabla. Las categorías que no figuran aquí (NEG, SIN, INT, PERO, Y, SE, V_COP, V_CONT, FREC,
-# CORTESIA, RELLENO) no aportan significado por forma: su efecto lo da la producción en la que aparecen.
-SIGNIFICADO = {
-    'SUST': {    # clase: para la compatibilidad; asp: aspecto; pol: −1 si nombra un problema; ent: entidad
-        'SERVICIO': dict(clase='SERVICIO', asp='SERVICIO', pol=0,  ent=None,     desc='el servicio'),
-        'ATENCION': dict(clase='ATENCION', asp='ATENCION', pol=0,  ent=None,     desc='la atención'),
-        'CLARIDAD': dict(clase='CLARIDAD', asp='CLARIDAD', pol=0,  ent=None,     desc='la explicación'),
-        'ROUTER':   dict(clase='EQUIPO',   asp='SERVICIO', pol=0,  ent='EQUIPO', desc='un equipo (valora el servicio)'),
-        'TICKET':   dict(clase='TICKET',   asp=None,       pol=0,  ent='TICKET', desc='un ticket o caso'),
-        'CORTE':    dict(clase='PROBLEMA', asp='SERVICIO', pol=-1, ent=None,     desc='un problema del servicio'),
+# ============================================================ 1. Rasgos y perfiles
+# La tabla de símbolos léxica (vocabulario.json + lo aprendido) guarda, para cada forma canónica, sus RASGOS y sus
+# formas superficiales:   {categoría: {forma canónica: {"rasgos": {...}, "formas": [...]}}}
+# Las reglas semánticas leen los rasgos con sig(). Los rasgos posibles NO son libres: PERFILES es el catálogo
+# CERRADO de combinaciones válidas por categoría (una plantilla por perfil). Al cargar la tabla, los rasgos de cada
+# forma canónica tienen que coincidir exactamente con una plantilla de su categoría (errores_de_rasgos); al crear una
+# forma canónica desde el menú, el programa copia los rasgos de la plantilla elegida (el usuario no los escribe).
+# Solo un significado realmente nuevo (una plantilla nueva) requiere tocar el código.
+#
+# Rasgos:  aspecto (SERVICIO | ATENCION | CLARIDAD)   entidad (EQUIPO | TICKET)   pol (+1 | −1)
+#          decl (OK | FALLA | RECUR: declaración de funcionamiento)   pronominal (va con «se»)
+#          clase (COMPRENSION | SOLICITUD | COMPROMISO | VALORABLE)   tiempo (AHORA | FUTURO)
+#          sin_dominio (la gramática la reconoce, pero no tiene significado para el dominio: R-SINDOM)
+def _p(desc, **rasgos):
+    return {'rasgos': rasgos, 'desc': desc}
+
+
+PERFILES = {
+    'SUST': {
+        'SERVICIO':    _p('habla del servicio (internet, conexión)', aspecto='SERVICIO'),
+        'ATENCION':    _p('habla de la atención (trato)', aspecto='ATENCION'),
+        'CLARIDAD':    _p('habla de la explicación (indicaciones)', aspecto='CLARIDAD'),
+        'EQUIPO':      _p('un equipo; valora el servicio (router, módem)', aspecto='SERVICIO', entidad='EQUIPO'),
+        'TICKET':      _p('un ticket o caso', entidad='TICKET'),
+        'PROBLEMA':    _p('un problema del servicio (corte)', aspecto='SERVICIO', pol=-1),
+        'SIN_DOMINIO': _p('sin significado para el dominio (ruido, técnico)', sin_dominio=True),
     },
     'ADJ': {
-        'BUENO': dict(pol=+1, desc='positiva'), 'RAPIDO': dict(pol=+1, desc='positiva'),
-        'ESTABLE': dict(pol=+1, desc='positiva'), 'AMABLE': dict(pol=+1, desc='positiva'),
-        'CLARO': dict(pol=+1, desc='positiva'),
-        'MALO': dict(pol=-1, desc='negativa'), 'LENTO': dict(pol=-1, desc='negativa'),
-        'INESTABLE': dict(pol=-1, desc='negativa'), 'CONFUSO': dict(pol=-1, desc='negativa'),
+        'POSITIVO':    _p('cualidad buena (bien, rápido, amable)', pol=+1),
+        'NEGATIVO':    _p('cualidad mala (mal, lento, confuso)', pol=-1),
+        'SIN_DOMINIO': _p('cualidad sin valor para el dominio (raro)', sin_dominio=True),
     },
-    'V_EST': {   # pol: el servicio anda bien (+1) o mal (−1); pron: exige «se»
-        'FUNCIONAR': dict(pol=+1, pron=False, desc='el servicio anda bien'),
-        'FALLAR':    dict(pol=-1, pron=False, desc='el servicio anda mal'),
-        'CORTAR':    dict(pol=-1, pron=True,  desc='falla que se repite; va con «se»'),
+    'V_EST': {
+        'OK':          _p('el servicio anda bien (funciona, anda)', pol=+1, decl='OK'),
+        'FALLA':       _p('el servicio anda mal (falla)', pol=-1, decl='FALLA'),
+        'RECUR':       _p('falla que se repite; va con «se» (se corta)', pol=-1, decl='RECUR', pronominal=True),
     },
-    'V_ACC': {   # clase: ENT (comprender), SOLIC (pedido), COMPR (promesa), VAL (valora un aspecto)
-        'ENTENDER':  dict(clase='ENT',   asp='CLARIDAD', desc='comprender'),
-        'REINICIAR': dict(clase='SOLIC', asp=None,       desc='pedido al cliente'),
-        'REVISAR':   dict(clase='COMPR', asp=None,       desc='promesa a futuro'),
-        'LLAMAR':    dict(clase='COMPR', asp=None,       desc='promesa a futuro'),
-        'ESCALAR':   dict(clase='COMPR', asp=None,       desc='promesa a futuro'),
-        'ATENDER':   dict(clase='VAL',   asp='ATENCION', desc='valora la atención'),
-        'EXPLICAR':  dict(clase='VAL',   asp='CLARIDAD', desc='valora la explicación'),
+    'V_ACC': {
+        'COMPRENSION': _p('comprender (entendí)', clase='COMPRENSION', aspecto='CLARIDAD'),
+        'SOLICITUD':   _p('pedido al cliente (reinicie)', clase='SOLICITUD'),
+        'COMPROMISO':  _p('promesa a futuro (revisaremos)', clase='COMPROMISO'),
+        'VAL_ATEN':    _p('valora la atención (atendiste)', clase='VALORABLE', aspecto='ATENCION'),
+        'VAL_CLAR':    _p('valora la explicación (explicaste)', clase='VALORABLE', aspecto='CLARIDAD'),
+        'SIN_DOMINIO': _p('acción sin significado para el dominio (hace, tiene)', sin_dominio=True),
     },
     'ADV_T': {
-        'AHORA':  dict(t='AHORA',  desc='el momento actual'),
-        'MAÑANA': dict(t='FUTURO', desc='más adelante'),
+        'AHORA':       _p('el momento actual (ahora, ya)', tiempo='AHORA'),
+        'FUTURO':      _p('más adelante (mañana, luego)', tiempo='FUTURO'),
     },
+    # categorías cuyo efecto lo da la producción en la que aparecen: un único perfil, sin rasgos
+    'V_COP':    {'COPULA':          _p('ser o estar')},
+    'V_CONT':   {'CONTINUIDAD':     _p('seguir')},
+    'NEG':      {'NEGACION':        _p('niega el predicado que sigue')},
+    'SIN':      {'PRIVACION':       _p('«sin» + sustantivo')},
+    'INT':      {'INTENSIFICADOR':  _p('intensifica el adjetivo (muy)')},
+    'PERO':     {'CONTRASTE':       _p('contraste entre cláusulas')},
+    'Y':        {'UNION':           _p('une cláusulas')},
+    'SE':       {'PRONOMINAL':      _p('marca de verbo pronominal')},
+    'FREC':     {'FRECUENCIA':      _p('frecuencia (siempre, todos los días)')},
+    'CORTESIA': {'CORTESIA':        _p('cortesía (gracias, hola)')},
+    'RELLENO':  {'SIN_SIGNIFICADO': _p('artículo, clítico o preposición; se filtra antes del parser')},
+    'FUERA_DE_GRAMATICA': {'FUERA': _p('conocida, sin función en la gramática; queda NO_INTERPRETADO')},
 }
+
+# clase de V_ACC (rasgo) -> tipo de predicado que usan las reglas de la sección 3
+_TIPO_ACC = {'COMPRENSION': 'ENT', 'SOLICITUD': 'SOLIC', 'COMPROMISO': 'COMPR', 'VALORABLE': 'VAL'}
+
+
+def perfil_de_rasgos(categoria, rasgos):
+    """Nombre de la plantilla de PERFILES cuyos rasgos son exactamente `rasgos`; None si ninguna coincide."""
+    for nombre, p in PERFILES.get(categoria, {}).items():
+        if p['rasgos'] == rasgos:
+            return nombre
+    return None
+
+
+def errores_de_rasgos(vocab):
+    """Entradas de la tabla de símbolos léxica que no se pueden usar: categoría desconocida, entrada sin «rasgos» o
+    sin «formas», o rasgos que no coinciden con ninguna plantilla de la categoría."""
+    errs = []
+    for cat, canons in vocab.items():
+        if cat not in PERFILES:
+            errs.append(f'categoría {cat} desconocida (no es terminal de la gramática ni RELLENO/FUERA_DE_GRAMATICA)')
+            continue
+        for canon, e in canons.items():
+            if not isinstance(e, dict) or not isinstance(e.get('rasgos'), dict) or not isinstance(e.get('formas'), list):
+                errs.append(f'{cat}/{canon}: se esperaba {{"rasgos": {{...}}, "formas": [...]}}')
+            elif perfil_de_rasgos(cat, e['rasgos']) is None:
+                errs.append(f'{cat}/{canon}: rasgos {json.dumps(e["rasgos"], ensure_ascii=False)} no coinciden con '
+                            f'ningún perfil de {cat} ({", ".join(PERFILES[cat])})')
+    return errs
+
+
+# Tabla de símbolos léxica vigente. La fija analizar_lote() con usar_vocabulario(); es el mismo objeto que mantiene
+# TablaSimbolosLexica, así que una forma canónica creada durante la ejecución vale para el resto de la entrada.
+VOCAB = {}
+
+
+def usar_vocabulario(vocab):
+    global VOCAB
+    VOCAB = vocab
+
+
+def rasgos(tok):
+    return VOCAB[tok.categoria][tok.canon]['rasgos']
 
 
 def sig(tok):
-    """Significado del token según su categoría y su forma canónica (tabla SIGNIFICADO) + el token."""
-    return {**SIGNIFICADO[tok.categoria][tok.canon], 'tok': tok}
-
-
-def canonicos_sin_significado(vocab):
-    """Formas canónicas del vocabulario que no tienen significado definido (el vocabulario no se puede usar)."""
-    return [f'{cat}/{canon}' for cat in SIGNIFICADO for canon in vocab.get(cat, {}) if canon not in SIGNIFICADO[cat]]
+    """Atributos semánticos del token, calculados a partir de los rasgos de su forma canónica:
+    asp (aspecto), pol (polaridad, 0 si no tiene), ent (entidad), pron (pronominal), t (tiempo) y clase:
+    en SUST, el perfil (SERVICIO, EQUIPO, PROBLEMA…, la usa COMPAT); en V_ACC, el tipo de predicado (ENT, SOLIC, COMPR,
+    VAL). Con sin_dominio, clase = SIN_DOMINIO."""
+    r = rasgos(tok)
+    a = {'asp': r.get('aspecto'), 'pol': r.get('pol', 0), 'ent': r.get('entidad'), 'pron': r.get('pronominal', False),
+         't': r.get('tiempo'), 'decl': r.get('decl'), 'tok': tok}
+    if r.get('sin_dominio'):
+        a['clase'] = 'SIN_DOMINIO'
+    elif tok.categoria == 'SUST':
+        a['clase'] = perfil_de_rasgos('SUST', r)
+    elif tok.categoria == 'V_ACC':
+        a['clase'] = _TIPO_ACC[r['clase']]
+    return a
 
 
 # Compatibilidad sujeto-predicado (el «chequeo de tipos» del análisis semántico): qué tipos de predicado (atributo k)
@@ -95,26 +169,27 @@ COMPAT = {
 
 # ============================================================ 2. Catálogo de reglas (id -> descripción)
 REGLAS = {
-    'R-SUJ':    'SUST ⇒ aspecto según su forma canónica (SERVICIO, ROUTER, CORTE→SERVICIO; ATENCION→ATENCION; CLARIDAD→CLARIDAD); AGENTE→ATENCION',
+    'R-SUJ':    'SUST ⇒ aspecto = rasgo «aspecto» de su forma canónica (perfiles SERVICIO, EQUIPO, PROBLEMA→SERVICIO; ATENCION; CLARIDAD); AGENTE→ATENCION',
     'R-COP':    'sujeto [V_COP] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo',
-    'R-EST':    'V_EST [compl] ⇒ SERVICIO; FUNCIONAR toma la polaridad del complemento (POSITIVA si no hay), FALLAR es NEGATIVA; declaración OK/FALLA',
+    'R-EST':    'V_EST [compl] ⇒ SERVICIO; con pol +1 (perfil OK) toma la polaridad del complemento (POSITIVA si no hay), con pol −1 (perfil FALLA) es NEGATIVA; declaración OK/FALLA',
     'R-NEG':    'NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg y no cruza PERO, COMA ni Y',
     'R-MUY':    'INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad',
     'R-SIN':    'SIN SUST ⇒ NEGATIVA si falta algo (sin internet); POSITIVA si lo que falta es un problema (sin cortes)',
     'R-SEG-ADJ': '[sujeto] V_CONT modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK',
     'R-SEG-SIN': 'V_CONT SIN SUST («sigo sin internet») ⇒ aspecto del sustantivo, polaridad de R-SIN; en SERVICIO declara FALLA u OK',
-    'R-CORTE':  '[sujeto] SE V_EST pronominal (CORTAR) [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin frecuencia)',
-    'R-ENT':    '[NEG] V_ACC de comprensión (ENTENDER) [SUST] ⇒ CLARIDAD: positiva si entendió, negativa con NEG',
-    'R-VAL':    'V_ACC valorativo (ATENDER, EXPLICAR) modif («me atendiste muy bien») ⇒ valoración de ATENCION / CLARIDAD',
+    'R-CORTE':  '[sujeto] SE V_EST pronominal (perfil RECUR, «se corta») [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin frecuencia)',
+    'R-ENT':    '[NEG] V_ACC de clase COMPRENSION [SUST] ⇒ CLARIDAD: positiva si entendió, negativa con NEG',
+    'R-VAL':    'V_ACC de clase VALORABLE + modif («me atendiste muy bien») ⇒ valoración del rasgo «aspecto» del verbo (ATENCION / CLARIDAD)',
     'R-MEN':    'sujeto o verbo valorativo sin cualidad ⇒ mención NEUTRA del aspecto (sin polaridad)',
-    'R-SOLIC':  'V_ACC de pedido (REINICIAR) [SUST] ⇒ solicitud de seguimiento (no es compromiso ni valoración)',
-    'R-COMPR':  '[ADV_T] V_ACC de promesa (REVISAR, LLAMAR, ESCALAR) [TICKET|plazo] ⇒ compromiso futuro',
-    'R-TICKET': 'SUST TICKET [V_COP] TICKET | TICKET ⇒ referencia a un ticket (entidad)',
+    'R-SOLIC':  'V_ACC de clase SOLICITUD [SUST] ⇒ solicitud de seguimiento (no es compromiso ni valoración)',
+    'R-COMPR':  '[ADV_T] V_ACC de clase COMPROMISO [TICKET|plazo] ⇒ compromiso futuro',
+    'R-TICKET': 'SUST con entidad TICKET [V_COP] TICKET | TICKET ⇒ referencia a un ticket (entidad)',
     'R-CORT':   'CORTESIA ⇒ sin valoración ni estado',
-    'R-AHORA':  'ADV_T AHORA ⇒ la cláusula se refiere al momento actual',
+    'R-AHORA':  'ADV_T con tiempo AHORA ⇒ la cláusula se refiere al momento actual',
     'R-POSP':   'sujeto después del verbo («no funciona el internet») ⇒ aporta el aspecto como un sujeto explícito',
     'R-COMPAT': 'sujeto y predicado incompatibles (tabla COMPAT), verbo pronominal sin «se» o no pronominal con «se», '
                 'dos sujetos o V_CONT sin complemento ⇒ la cláusula no se interpreta',
+    'R-SINDOM': 'la cláusula contiene una palabra con el rasgo sin_dominio ⇒ se reconoce pero no se interpreta (abstención)',
     'R-PERO':   'PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado',
     'R-EST-RES':  'última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO',
     'R-EST-NORES': 'última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO',
@@ -260,11 +335,11 @@ def _p_mencion(n):
 
 
 def _p_est(n, con_se):
-    """V_EST compl [sujp] y SE V_EST compl [sujp]. Un verbo pronominal (CORTAR) exige «se»; los demás, no."""
+    """V_EST compl [sujp] y SE V_EST compl [sujp]. Un verbo con el rasgo pronominal (perfil RECUR) exige «se»; los demás, no."""
     i = 1 if con_se else 0
     v, c, pos = sig(n.hijos[i]), ev(n.hijos[i + 1]), _pos(n, i + 2)
     if v['pron'] != con_se:
-        return {'k': 'SE_INCOMPATIBLE', 'reglas': []}            # «el agente corta…», «se funciona»
+        return {'k': 'SE_INCOMPATIBLE', 'reglas': []}            # «el servicio corta…», «se funciona»
     if v['pron']:
         return {'k': 'CORTE', 'pol': -1, 'pos': pos, 'reglas': ['R-CORTE']}
     pol = -1 if v['pol'] == -1 else (c['pol'] if c else +1)     # un verbo de falla no se vuelve positivo por el adjetivo
@@ -404,6 +479,10 @@ def _n_cort(n):
 
 @acc('clausula', 'adv_t_op nucleo frec')
 def _clausula(n):
+    # R-SINDOM: si alguna palabra de la cláusula tiene el rasgo sin_dominio, se reconoce pero no se interpreta. Se revisa
+    # ANTES de evaluar el núcleo: la palabra ocupa su lugar en el árbol, así que no se «pegan» las palabras restantes.
+    if any(tk.categoria in PERFILES and rasgos(tk).get('sin_dominio') for tk in n.hojas()):
+        return _hecho('SIN_DOMINIO', reglas=['R-SINDOM'])
     t, h = ev(n.hijos[0]), ev(n.hijos[1])
     if t and t['t'] == 'AHORA' and h['tipo'] != 'INCOMPATIBLE':
         h['temporal'] = 'AHORA'

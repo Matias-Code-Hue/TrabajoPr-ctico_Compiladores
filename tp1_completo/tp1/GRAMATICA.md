@@ -52,9 +52,9 @@ Antes del parser, el filtro de tokens elimina `RELLENO` y `SIGNO` (sin semántic
 ```
 
 La gramática describe **construcciones** con categorías léxicas generales (`SUST`, `ADJ`, `V_EST`, `V_ACC`, `ADV_T`…).
-No distingue qué significa cada palabra: eso lo dice su **forma canónica**, que las reglas semánticas consultan en la
-tabla `SIGNIFICADO` (ver `REGLAS_SEMANTICAS.md` §3). Por eso una palabra nueva solo necesita su categoría y la forma
-canónica de la que es variante: la tabla de símbolos léxica se puede enriquecer sin tocar la gramática.
+No distingue qué significa cada palabra: eso lo dice el **perfil** de su forma canónica, que las reglas semánticas
+consultan (ver `REGLAS_SEMANTICAS.md` §3). Por eso una palabra nueva solo necesita su categoría y su forma canónica
+(existente, o nueva de un perfil existente): la tabla de símbolos léxica se enriquece sin tocar la gramática.
 
 ### 2.1 Qué significa cada no terminal
 
@@ -77,7 +77,7 @@ canónica de la que es variante: la tabla de símbolos léxica se puede enriquec
 | `frec` | expresión de frecuencia («todos los días») |
 Los verbos se agrupan por **cómo se construyen**, no por palabra: `V_COP` (ser/estar + cualidad), `V_EST` (solo o con
 complemento, y con o sin «se»), `V_CONT` (seguir + complemento) y `V_ACC` (con objeto). Que «corta» exija «se» y
-«funciona» no lo admita depende de la forma canónica, así que lo verifica la semántica (R-COMPAT).
+«funciona» no lo admita depende del perfil (RECUR frente a OK y FALLA), así que lo verifica la semántica (R-COMPAT).
 
 ### 2.2 Cobertura de los casos guía y de las construcciones nuevas
 
@@ -113,7 +113,7 @@ Decisiones de diseño asociadas:
 - Se exige `PUNTO` *entre* oraciones. Si se admitieran oraciones sin separador, `NEG` pertenecería a PRIM(`oracion`)
   y a SGTE(`pred_s`) y aparecería un conflicto en `pred_s → ε`.
 - «se» precede a un verbo de estado (`SE V_EST compl`). La gramática acepta «corta» sin «se» y «se funciona»; los
-  descarta la semántica: la forma canónica CORTAR exige «se» y las demás no lo admiten. Así «el agente corta la
+  descarta la semántica: el perfil RECUR exige «se» y los perfiles OK y FALLA no lo admiten. Así «el agente corta la
   llamada» (lectura transitiva) queda en abstención.
 - `SIN` es una categoría distinta de `NEG`: «sin» precede a un sustantivo y «no» a un predicado.
 - La gramática acepta combinaciones que no tienen sentido («el agente se corta», «el servicio corta»). Las descarta

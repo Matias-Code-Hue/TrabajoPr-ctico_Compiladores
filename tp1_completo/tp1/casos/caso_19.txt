@@ -1,0 +1,5 @@
+SESION S01
+1 CLIENTE: La conexion esta intermitente y el modem no conecta.
+2 AGENTE: Reinicie el modem.
+3 CLIENTE: Ahora conecta bien.
+FIN

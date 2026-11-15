@@ -176,11 +176,13 @@ def cargar_vocabulario(ruta):
 
 
 def patrones_vocabulario(vocab):
-    """Control de duplicados: una forma superficial no puede tener dos categorías/canónicos."""
+    """vocab: {categoría: {forma canónica: {"rasgos": {...}, "formas": [...]}}}. El léxico solo usa las formas
+    superficiales (los rasgos son para las reglas semánticas). Control de duplicados: una forma superficial no puede
+    tener dos categorías/canónicos."""
     vistos, pats = {}, []
     for categoria, canonicos in vocab.items():
-        for canon, formas in canonicos.items():
-            for forma in formas:
+        for canon, entrada in canonicos.items():
+            for forma in entrada['formas']:
                 forma = ''.join(plegar(c) for c in forma)
                 if forma in vistos:
                     raise ValueError(f'forma duplicada {forma!r}: {vistos[forma]} vs {(categoria, canon)}')

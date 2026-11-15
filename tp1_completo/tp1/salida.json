@@ -1,6 +1,6 @@
 {
   "lote": {
-    "archivo": "./casos/caso_11.txt",
+    "archivo": "./casos/caso_08.txt",
     "sesiones": 1,
     "completas": 1,
     "parciales": 0
@@ -14,155 +14,55 @@
           "numero": 1,
           "rol": "CLIENTE",
           "linea": 2,
-          "texto": "Mi router hace ruidos raros.",
+          "texto": "servicia",
           "tokens": [
             {
-              "categoria": "RELLENO",
-              "lexema": "Mi",
-              "normalizado": "mi",
-              "canonico": "ART",
-              "desp": 11
-            },
-            {
-              "categoria": "ROUTER",
-              "lexema": "router",
-              "normalizado": "router",
-              "canonico": "ROUTER",
-              "desp": 14
-            },
-            {
-              "categoria": "FUERA_DE_GRAMATICA",
-              "lexema": "hace",
-              "normalizado": "hace",
-              "canonico": "HACE",
-              "desp": 21
-            },
-            {
-              "categoria": "FUERA_DE_GRAMATICA",
-              "lexema": "ruidos",
-              "normalizado": "ruidos",
-              "canonico": "RUIDOS",
-              "desp": 26
-            },
-            {
-              "categoria": "ADJ_NEG",
-              "lexema": "raros",
-              "normalizado": "raros",
-              "canonico": "RAROS",
-              "desp": 33
-            },
-            {
-              "categoria": "PUNTO",
-              "lexema": ".",
-              "normalizado": ".",
-              "canonico": null,
-              "desp": 38
+              "categoria": "SUST",
+              "lexema": "servicia",
+              "normalizado": "servicio",
+              "canonico": "SERVICIO",
+              "desp": 11,
+              "corregido_de": "servicia"
             }
           ],
-          "estructura": "texto!ERROR",
-          "clausulas": [],
-          "valoraciones": {
-            "SERVICIO": "SIN_EVIDENCIA",
-            "ATENCION": "SIN_EVIDENCIA",
-            "CLARIDAD": "SIN_EVIDENCIA"
-          },
-          "no_interpretado": [
-            {
-              "turno": 1,
-              "desp": 14,
-              "lexema": "router",
-              "motivo": "FUERA_DE_GRAMATICA"
-            },
-            {
-              "turno": 1,
-              "desp": 21,
-              "lexema": "hace",
-              "motivo": "FUERA_DE_GRAMATICA"
-            },
-            {
-              "turno": 1,
-              "desp": 26,
-              "lexema": "ruidos",
-              "motivo": "FUERA_DE_GRAMATICA"
-            },
-            {
-              "turno": 1,
-              "desp": 33,
-              "lexema": "raros",
-              "motivo": "FUERA_DE_GRAMATICA"
-            }
-          ]
-        },
-        {
-          "numero": 2,
-          "rol": "CLIENTE",
-          "linea": 3,
-          "texto": "Muchas gracias.",
-          "tokens": [
-            {
-              "categoria": "FREC",
-              "lexema": "Muchas",
-              "normalizado": "muchas",
-              "canonico": "MUCHAS",
-              "desp": 11
-            },
-            {
-              "categoria": "CORTESIA",
-              "lexema": "gracias",
-              "normalizado": "gracias",
-              "canonico": "GRACIAS",
-              "desp": 18
-            },
-            {
-              "categoria": "PUNTO",
-              "lexema": ".",
-              "normalizado": ".",
-              "canonico": null,
-              "desp": 25
-            }
-          ],
-          "estructura": "texto[oracion[clausula[nucleo[CORTESIA«gracias»]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«servicia»]]]]]",
           "clausulas": [
             {
-              "id": "C2.1",
-              "turno": 2,
+              "id": "C1.1",
+              "turno": 1,
               "actor": "CLIENTE",
-              "fragmento": "gracias",
-              "desde": 18,
-              "hasta": 25,
+              "fragmento": "servicia",
+              "desde": 11,
+              "hasta": 19,
               "conector": null,
-              "tipo": "CORTESIA",
-              "aspecto": null,
-              "valoracion": null,
+              "tipo": "MENCION",
+              "aspecto": "SERVICIO",
+              "valoracion": "NEUTRA",
               "intensidad": null,
               "negada": false,
               "declaracion": null,
               "entidades": [],
               "reglas": [
-                "R-CORT"
+                "R-SUJ",
+                "R-MEN"
               ],
               "temporal": null
             }
           ],
           "valoraciones": {
-            "SERVICIO": "SIN_EVIDENCIA",
+            "SERVICIO": "NEUTRA",
             "ATENCION": "SIN_EVIDENCIA",
             "CLARIDAD": "SIN_EVIDENCIA"
           },
-          "no_interpretado": [
-            {
-              "turno": 2,
-              "desp": 11,
-              "lexema": "Muchas",
-              "motivo": "FUERA_DE_GRAMATICA"
-            }
-          ]
+          "no_interpretado": []
         }
       ],
       "resumen_aspectos": {
         "SERVICIO": {
-          "valoracion": "SIN_EVIDENCIA",
-          "evidencias": [],
+          "valoracion": "NEUTRA",
+          "evidencias": [
+            "C1.1"
+          ],
           "opiniones_agente": []
         },
         "ATENCION": {
@@ -191,11 +91,6 @@
                 "turno": 1,
                 "desp": 2,
                 "lexema": "CLIENTE"
-              },
-              {
-                "turno": 2,
-                "desp": 2,
-                "lexema": "CLIENTE"
               }
             ],
             "atributos": {}
@@ -206,117 +101,65 @@
       "correcciones": [
         {
           "turno": 1,
-          "desp": 21,
-          "original": "hace",
-          "normalizado": "hace",
-          "resultado": "hace",
-          "accion": "INSERTADA",
-          "candidatos": [],
-          "categoria": "FUERA_DE_GRAMATICA",
-          "canonico": "HACE"
-        },
-        {
-          "turno": 1,
-          "desp": 26,
-          "original": "ruidos",
-          "normalizado": "ruidos",
-          "resultado": "ruidos",
-          "accion": "INSERTADA",
-          "candidatos": [],
-          "categoria": "FUERA_DE_GRAMATICA",
-          "canonico": "RUIDOS"
-        },
-        {
-          "turno": 1,
-          "desp": 33,
-          "original": "raros",
-          "normalizado": "raros",
-          "resultado": "raros",
-          "accion": "INSERTADA",
-          "candidatos": [],
-          "categoria": "ADJ_NEG",
-          "canonico": "RAROS"
-        },
-        {
-          "turno": 2,
           "desp": 11,
-          "original": "Muchas",
-          "normalizado": "muchas",
-          "resultado": "muchas",
-          "accion": "INSERTADA",
-          "candidatos": [],
-          "categoria": "FREC",
-          "canonico": "MUCHAS"
+          "original": "servicia",
+          "normalizado": "servicia",
+          "resultado": "servicio",
+          "accion": "CORREGIDA",
+          "candidatos": [
+            "servicio"
+          ]
         }
       ],
-      "errores": [
+      "errores": [],
+      "no_interpretado": [],
+      "evidencias": [
         {
-          "tipo": "SINTAXIS",
+          "id": "C1.1",
           "turno": 1,
-          "codigo": "SINTAXIS",
-          "desp": 14,
-          "detalle": "token ROUTER inesperado al analizar <texto>"
-        },
-        {
-          "tipo": "SINTAXIS",
-          "turno": 2,
-          "codigo": "SINTAXIS",
-          "desp": 11,
-          "detalle": "token FREC inesperado al analizar <texto>"
+          "actor": "CLIENTE",
+          "fragmento": "servicia",
+          "desde": 11,
+          "hasta": 19,
+          "conector": null,
+          "tipo": "MENCION",
+          "aspecto": "SERVICIO",
+          "valoracion": "NEUTRA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": null,
+          "entidades": [],
+          "reglas": [
+            "R-SUJ",
+            "R-MEN"
+          ],
+          "temporal": null
         }
-      ],
-      "no_interpretado": [
-        {
-          "turno": 1,
-          "desp": 14,
-          "lexema": "router",
-          "motivo": "FUERA_DE_GRAMATICA"
-        },
-        {
-          "turno": 1,
-          "desp": 21,
-          "lexema": "hace",
-          "motivo": "FUERA_DE_GRAMATICA"
-        },
-        {
-          "turno": 1,
-          "desp": 26,
-          "lexema": "ruidos",
-          "motivo": "FUERA_DE_GRAMATICA"
-        },
-        {
-          "turno": 1,
-          "desp": 33,
-          "lexema": "raros",
-          "motivo": "FUERA_DE_GRAMATICA"
-        },
-        {
-          "turno": 2,
-          "desp": 11,
-          "lexema": "Muchas",
-          "motivo": "FUERA_DE_GRAMATICA"
-        }
-      ],
-      "evidencias": []
+      ]
     }
   ],
   "errores_globales": [],
   "catalogo_reglas": {
-    "R-SUJ": "sujeto ⇒ aspecto: ASP_SERV→SERVICIO, ASP_ATEN→ATENCION, ASP_CLAR→CLARIDAD, AGENTE→ATENCION",
-    "R-COP": "sujeto [V_COPULA] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
-    "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
-    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA",
+    "R-SUJ": "SUST ⇒ aspecto = rasgo «aspecto» de su forma canónica (perfiles SERVICIO, EQUIPO, PROBLEMA→SERVICIO; ATENCION; CLARIDAD); AGENTE→ATENCION",
+    "R-COP": "sujeto [V_COP] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-EST": "V_EST [compl] ⇒ SERVICIO; con pol +1 (perfil OK) toma la polaridad del complemento (POSITIVA si no hay), con pol −1 (perfil FALLA) es NEGATIVA; declaración OK/FALLA",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg y no cruza PERO, COMA ni Y",
     "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
-    "R-SEG-ADJ": "[sujeto] V_SEGUIR modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK",
-    "R-SEG-SIN": "V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA",
-    "R-CORTE": "[sujeto] SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin expresión de frecuencia)",
-    "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
-    "R-MEN": "sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)",
-    "R-SOLIC": "V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
-    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|T_FUTURO] ⇒ compromiso futuro",
-    "R-TICKET": "TICKET_PAL [V_COPULA] TICKET | TICKET ⇒ referencia a un ticket (entidad)",
+    "R-SIN": "SIN SUST ⇒ NEGATIVA si falta algo (sin internet); POSITIVA si lo que falta es un problema (sin cortes)",
+    "R-SEG-ADJ": "[sujeto] V_CONT modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK",
+    "R-SEG-SIN": "V_CONT SIN SUST («sigo sin internet») ⇒ aspecto del sustantivo, polaridad de R-SIN; en SERVICIO declara FALLA u OK",
+    "R-CORTE": "[sujeto] SE V_EST pronominal (perfil RECUR, «se corta») [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin frecuencia)",
+    "R-ENT": "[NEG] V_ACC de clase COMPRENSION [SUST] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-VAL": "V_ACC de clase VALORABLE + modif («me atendiste muy bien») ⇒ valoración del rasgo «aspecto» del verbo (ATENCION / CLARIDAD)",
+    "R-MEN": "sujeto o verbo valorativo sin cualidad ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-SOLIC": "V_ACC de clase SOLICITUD [SUST] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-COMPR": "[ADV_T] V_ACC de clase COMPROMISO [TICKET|plazo] ⇒ compromiso futuro",
+    "R-TICKET": "SUST con entidad TICKET [V_COP] TICKET | TICKET ⇒ referencia a un ticket (entidad)",
     "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
-    "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-AHORA": "ADV_T con tiempo AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-POSP": "sujeto después del verbo («no funciona el internet») ⇒ aporta el aspecto como un sujeto explícito",
+    "R-COMPAT": "sujeto y predicado incompatibles (tabla COMPAT), verbo pronominal sin «se» o no pronominal con «se», dos sujetos o V_CONT sin complemento ⇒ la cláusula no se interpreta",
+    "R-SINDOM": "la cláusula contiene una palabra con el rasgo sin_dominio ⇒ se reconoce pero no se interpreta (abstención)",
     "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
     "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
     "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",

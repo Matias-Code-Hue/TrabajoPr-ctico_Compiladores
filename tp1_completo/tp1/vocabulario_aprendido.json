@@ -1,0 +1,69 @@
+{
+  "ADJ": {
+    "INESTABLE": {
+      "formas": [
+        "intermitente"
+      ]
+    },
+    "RAROS": {
+      "formas": [
+        "raros"
+      ],
+      "rasgos": {
+        "pol": -1
+      }
+    }
+  },
+  "INT": {
+    "MUY": {
+      "formas": [
+        "muchas"
+      ]
+    }
+  },
+  "SUST": {
+    "RUIDOS": {
+      "formas": [
+        "ruidos"
+      ],
+      "rasgos": {
+        "sin_dominio": true
+      }
+    }
+  },
+  "V_ACC": {
+    "HACE": {
+      "formas": [
+        "hace"
+      ],
+      "rasgos": {
+        "sin_dominio": true
+      }
+    },
+    "VERIFICAR": {
+      "formas": [
+        "verificaremos"
+      ],
+      "rasgos": {
+        "clase": "COMPROMISO"
+      }
+    }
+  },
+  "V_EST": {
+    "DESCONECTAR": {
+      "formas": [
+        "desconecta"
+      ],
+      "rasgos": {
+        "decl": "RECUR",
+        "pol": -1,
+        "pronominal": true
+      }
+    },
+    "FUNCIONAR": {
+      "formas": [
+        "conecta"
+      ]
+    }
+  }
+}

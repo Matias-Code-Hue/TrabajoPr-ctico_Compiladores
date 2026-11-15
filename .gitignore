@@ -1,0 +1,5 @@
+# Archivos que no forman parte de la entrega
+resultados_prueba/
+MaterialesClases/*.pdf
+__pycache__/
+*.pyc

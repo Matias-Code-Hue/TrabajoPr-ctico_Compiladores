@@ -1,27 +1,32 @@
 {
   "catalogo_reglas": {
-    "R-AHORA": "T_AHORA ⇒ la cláusula se refiere al momento actual",
-    "R-COMPR": "[T_FUTURO] V_COMPROMISO [TICKET|T_FUTURO] ⇒ compromiso futuro",
-    "R-COP": "sujeto [V_COPULA] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-AHORA": "ADV_T con tiempo AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-COMPAT": "sujeto y predicado incompatibles (tabla COMPAT), verbo pronominal sin «se» o no pronominal con «se», dos sujetos o V_CONT sin complemento ⇒ la cláusula no se interpreta",
+    "R-COMPR": "[ADV_T] V_ACC de clase COMPROMISO [TICKET|plazo] ⇒ compromiso futuro",
+    "R-COP": "sujeto [V_COP] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
     "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
-    "R-CORTE": "[sujeto] SE V_CORTA [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin expresión de frecuencia)",
-    "R-ENT": "[NEG] V_ENTENDER [ASP_CLAR] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-CORTE": "[sujeto] SE V_EST pronominal (perfil RECUR, «se corta») [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin frecuencia)",
+    "R-ENT": "[NEG] V_ACC de clase COMPRENSION [SUST] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-EST": "V_EST [compl] ⇒ SERVICIO; con pol +1 (perfil OK) toma la polaridad del complemento (POSITIVA si no hay), con pol −1 (perfil FALLA) es NEGATIVA; declaración OK/FALLA",
     "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
     "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
     "R-EST-PEND": "compromiso futuro del agente sin declaración posterior del CLIENTE ⇒ PENDIENTE",
     "R-EST-PREC": "precedencia: prevalece lo último entre la última declaración del CLIENTE y la última promesa del agente",
     "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
     "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
-    "R-FUNC": "V_FUNC [modif] ⇒ SERVICIO; polaridad del adjetivo (POSITIVA si no hay adjetivo); declaración OK/FALLA",
-    "R-MEN": "sujeto sin predicado ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-MEN": "sujeto o verbo valorativo sin cualidad ⇒ mención NEUTRA del aspecto (sin polaridad)",
     "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
-    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg/seg y no cruza PERO ni COMA",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg y no cruza PERO, COMA ni Y",
     "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
-    "R-SEG-ADJ": "[sujeto] V_SEGUIR modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK",
-    "R-SEG-SIN": "V_SEGUIR NEG ASP_SERV («sigo sin internet») ⇒ SERVICIO NEGATIVA; declaración FALLA",
-    "R-SOLIC": "V_SOLICITUD [ROUTER] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
-    "R-SUJ": "sujeto ⇒ aspecto: ASP_SERV→SERVICIO, ASP_ATEN→ATENCION, ASP_CLAR→CLARIDAD, AGENTE→ATENCION",
-    "R-TICKET": "TICKET_PAL [V_COPULA] TICKET | TICKET ⇒ referencia a un ticket (entidad)"
+    "R-POSP": "sujeto después del verbo («no funciona el internet») ⇒ aporta el aspecto como un sujeto explícito",
+    "R-SEG-ADJ": "[sujeto] V_CONT modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK",
+    "R-SEG-SIN": "V_CONT SIN SUST («sigo sin internet») ⇒ aspecto del sustantivo, polaridad de R-SIN; en SERVICIO declara FALLA u OK",
+    "R-SIN": "SIN SUST ⇒ NEGATIVA si falta algo (sin internet); POSITIVA si lo que falta es un problema (sin cortes)",
+    "R-SINDOM": "la cláusula contiene una palabra con el rasgo sin_dominio ⇒ se reconoce pero no se interpreta (abstención)",
+    "R-SOLIC": "V_ACC de clase SOLICITUD [SUST] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-SUJ": "SUST ⇒ aspecto = rasgo «aspecto» de su forma canónica (perfiles SERVICIO, EQUIPO, PROBLEMA→SERVICIO; ATENCION; CLARIDAD); AGENTE→ATENCION",
+    "R-TICKET": "SUST con entidad TICKET [V_COP] TICKET | TICKET ⇒ referencia a un ticket (entidad)",
+    "R-VAL": "V_ACC de clase VALORABLE + modif («me atendiste muy bien») ⇒ valoración del rasgo «aspecto» del verbo (ATENCION / CLARIDAD)"
   },
   "errores_globales": [],
   "lote": {
@@ -174,7 +179,7 @@
           "intensidad": null,
           "negada": false,
           "reglas": [
-            "R-FUNC",
+            "R-EST",
             "R-AHORA"
           ],
           "temporal": "AHORA",
@@ -252,7 +257,7 @@
               "valoracion": "NEGATIVA"
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[sujeto[ASP_SERV«conexion»] pred_s[V_COPULA«esta» modif[adj[ADJ_NEG«inestabl»]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«conexion»] pred_s[V_COP«esta» atrib[modif[ADJ«inestabl»]]]]]] texto_r[PUNTO«.»]]",
           "linea": 2,
           "no_interpretado": [],
           "numero": 1,
@@ -268,21 +273,21 @@
             },
             {
               "canonico": "SERVICIO",
-              "categoria": "ASP_SERV",
+              "categoria": "SUST",
               "desp": 14,
               "lexema": "conexion",
               "normalizado": "conexion"
             },
             {
               "canonico": "SER_ESTAR",
-              "categoria": "V_COPULA",
+              "categoria": "V_COP",
               "desp": 23,
               "lexema": "esta",
               "normalizado": "esta"
             },
             {
               "canonico": "INESTABLE",
-              "categoria": "ADJ_NEG",
+              "categoria": "ADJ",
               "corregido_de": "inestabl",
               "desp": 28,
               "lexema": "inestabl",
@@ -327,7 +332,7 @@
               "valoracion": null
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[pred_l[T_FUTURO«Mañana» V_COMPROMISO«revisaremos» ref_op[TICKET«TK-310»]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Mañana»] nucleo[pred_l[V_ACC«revisaremos» obj[TICKET«TK-310»]]]]] texto_r[PUNTO«.»]]",
           "linea": 3,
           "no_interpretado": [],
           "numero": 2,
@@ -336,14 +341,14 @@
           "tokens": [
             {
               "canonico": "MAÑANA",
-              "categoria": "T_FUTURO",
+              "categoria": "ADV_T",
               "desp": 10,
               "lexema": "Mañana",
               "normalizado": "mañana"
             },
             {
               "canonico": "REVISAR",
-              "categoria": "V_COMPROMISO",
+              "categoria": "V_ACC",
               "desp": 17,
               "lexema": "revisaremos",
               "normalizado": "revisaremos"
@@ -384,7 +389,7 @@
               "intensidad": null,
               "negada": false,
               "reglas": [
-                "R-FUNC",
+                "R-EST",
                 "R-AHORA"
               ],
               "temporal": "AHORA",
@@ -393,7 +398,7 @@
               "valoracion": "POSITIVA"
             }
           ],
-          "estructura": "texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«funciona» compl[modif[ADJ«bien»]]]]]] texto_r[PUNTO«.»]]",
           "linea": 4,
           "no_interpretado": [],
           "numero": 3,
@@ -402,21 +407,21 @@
           "tokens": [
             {
               "canonico": "AHORA",
-              "categoria": "T_AHORA",
+              "categoria": "ADV_T",
               "desp": 11,
               "lexema": "Ahora",
               "normalizado": "ahora"
             },
             {
               "canonico": "FUNCIONAR",
-              "categoria": "V_FUNC",
+              "categoria": "V_EST",
               "desp": 17,
               "lexema": "funciona",
               "normalizado": "funciona"
             },
             {
               "canonico": "BUENO",
-              "categoria": "ADJ_POS",
+              "categoria": "ADJ",
               "desp": 26,
               "lexema": "bien",
               "normalizado": "bien"
@@ -460,7 +465,7 @@
               "valoracion": null
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_COMPROMISO«Revisaremos» ref_op[TICKET«TK-310»]]]]] texto_r[PUNTO«.»]]",
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_ACC«Revisaremos» obj[TICKET«TK-310»]]]]] texto_r[PUNTO«.»]]",
           "linea": 5,
           "no_interpretado": [],
           "numero": 4,
@@ -469,7 +474,7 @@
           "tokens": [
             {
               "canonico": "REVISAR",
-              "categoria": "V_COMPROMISO",
+              "categoria": "V_ACC",
               "desp": 10,
               "lexema": "Revisaremos",
               "normalizado": "revisaremos"

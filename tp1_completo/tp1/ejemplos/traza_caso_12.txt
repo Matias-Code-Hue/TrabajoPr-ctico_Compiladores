@@ -15,7 +15,7 @@
   Error FORMATO/ORDEN_INCONSISTENTE (línea 6): turno 6, se esperaba 5; se descarta el resto de la sesión
   Error FORMATO/TURNO_DESCARTADO (línea 7): turno 5 posterior a un orden inconsistente
   Error LEXICO/TICKET_MAL_FORMADO (T2@18): «TK-12» no es un lexema válido
-  Error SINTAXIS/SINTAXIS (T2@24): token NEG inesperado al analizar <tk_op>
+  Error SINTAXIS/SINTAXIS (T2@24): token SIN inesperado al analizar <pred_s>
   NO_INTERPRETADO: T2@11 «Ticket» (FUERA_DE_GRAMATICA)
   NO_INTERPRETADO: T2@18 «TK-12» (TICKET_MAL_FORMADO)
   NO_INTERPRETADO: T2@24 «sin» (FUERA_DE_GRAMATICA)
@@ -36,20 +36,8 @@ Lote: 2 sesiones (1 completas, 1 parciales) → ejemplos/salida_caso_12.json
 ┌── TRAZA DE LA SESIÓN S01 ────────────────────────────────────────
 │ Turno 1 · CLIENTE · línea 2
 │  [1] Texto original : 1 CLIENTE: El servicio está lento.
-│  [2] Tokens         : RELLENO«El»@11=ART  ASP_SERV«servicio»@14=SERVICIO  V_COPULA«está»@23=SER_ESTAR  ADJ_NEG«lento»@28=LENTO  PUNTO«.»@33
-│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[ASP_SERV«servicio»] pred_s[V_COPULA«está» modif[adj[ADJ_NEG«lento»]]]]]] texto_r[PUNTO«.»]]
-│        · M[texto, ASP_SERV] = texto → oracion texto_r
-│        · M[oracion, ASP_SERV] = oracion → clausula cola
-│        · M[clausula, ASP_SERV] = clausula → ahora_op nucleo
-│        · M[ahora_op, ASP_SERV] = ahora_op → ε
-│        · M[nucleo, ASP_SERV] = nucleo → sujeto pred_s
-│        · M[sujeto, ASP_SERV] = sujeto → ASP_SERV
-│        · M[pred_s, V_COPULA] = pred_s → V_COPULA modif
-│        · M[modif, ADJ_NEG] = modif → adj
-│        · M[adj, ADJ_NEG] = adj → ADJ_NEG
-│        · M[cola, PUNTO] = cola → ε
-│        · M[texto_r, PUNTO] = texto_r → PUNTO texto_rr
-│        · M[texto_rr, EOL] = texto_rr → ε
+│  [2] Tokens         : RELLENO«El»@11=ART  SUST«servicio»@14=SERVICIO  V_COP«está»@23=SER_ESTAR  ADJ«lento»@28=LENTO  PUNTO«.»@33
+│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[SUST«servicio»] pred_s[V_COP«está» atrib[modif[ADJ«lento»]]]]]] texto_r[PUNTO«.»]]
 │  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> NO_EXISTE
 │        INSERTAR PARTICIPANTE CLIENTE @S01 (apariciones=1)
@@ -59,19 +47,9 @@ Lote: 2 sesiones (1 completas, 1 parciales) → ejemplos/salida_caso_12.json
 │
 │ Turno 2 · CLIENTE · línea 3
 │  [1] Texto original : 2 CLIENTE: Ticket TK-12 sin respuesta.
-│  [2] Tokens         : TICKET_PAL«Ticket»@11=TICKET  TICKET_MAL«TK-12»@18  NEG«sin»@24=SIN  PALABRA«respuesta»@28  PUNTO«.»@37
+│  [2] Tokens         : SUST«Ticket»@11=TICKET  TICKET_MAL«TK-12»@18  SIN«sin»@24=SIN  PALABRA«respuesta»@28  PUNTO«.»@37
 │      corrector      : «respuesta» → SIN_CANDIDATO
-│  [3] Estructura     : texto[oracion[clausula[nucleo[TICKET_PAL«Ticket»]]] texto_r[PUNTO«.»]]
-│        · M[texto, TICKET_PAL] = texto → oracion texto_r
-│        · M[oracion, TICKET_PAL] = oracion → clausula cola
-│        · M[clausula, TICKET_PAL] = clausula → ahora_op nucleo
-│        · M[ahora_op, TICKET_PAL] = ahora_op → ε
-│        · M[nucleo, TICKET_PAL] = nucleo → TICKET_PAL tk_op
-│        · ERROR M[tk_op, NEG] vacía → se descartan tokens hasta {COMA, EOL, PERO, PUNTO, TICKET, V_COPULA}
-│        · M[tk_op, PUNTO] = tk_op → ε
-│        · M[cola, PUNTO] = cola → ε
-│        · M[texto_r, PUNTO] = texto_r → PUNTO texto_rr
-│        · M[texto_rr, EOL] = texto_rr → ε
+│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[SUST«Ticket»]]]] texto_r[PUNTO«.»]]
 │  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> ENCONTRADO
 │        DUPLICADO->ENLAZAR PARTICIPANTE CLIENTE @S01 (apariciones=2)
@@ -85,25 +63,13 @@ Lote: 2 sesiones (1 completas, 1 parciales) → ejemplos/salida_caso_12.json
 │
 │ Turno 4 · CLIENTE · línea 5
 │  [1] Texto original : 4 CLIENTE: Ahora funciona bien.
-│  [2] Tokens         : T_AHORA«Ahora»@11=AHORA  V_FUNC«funciona»@17=FUNCIONAR  ADJ_POS«bien»@26=BUENO  PUNTO«.»@30
-│  [3] Estructura     : texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]
-│        · M[texto, T_AHORA] = texto → oracion texto_r
-│        · M[oracion, T_AHORA] = oracion → clausula cola
-│        · M[clausula, T_AHORA] = clausula → ahora_op nucleo
-│        · M[ahora_op, T_AHORA] = ahora_op → T_AHORA
-│        · M[nucleo, V_FUNC] = nucleo → pred_l
-│        · M[pred_l, V_FUNC] = pred_l → V_FUNC modif_op
-│        · M[modif_op, ADJ_POS] = modif_op → modif
-│        · M[modif, ADJ_POS] = modif → adj
-│        · M[adj, ADJ_POS] = adj → ADJ_POS
-│        · M[cola, PUNTO] = cola → ε
-│        · M[texto_r, PUNTO] = texto_r → PUNTO texto_rr
-│        · M[texto_rr, EOL] = texto_rr → ε
+│  [2] Tokens         : ADV_T«Ahora»@11=AHORA  V_EST«funciona»@17=FUNCIONAR  ADJ«bien»@26=BUENO  PUNTO«.»@30
+│  [3] Estructura     : texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«funciona» compl[modif[ADJ«bien»]]]]]] texto_r[PUNTO«.»]]
 │  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> ENCONTRADO
 │        DUPLICADO->ENLAZAR PARTICIPANTE CLIENTE @S01 (apariciones=3)
 │  [5] Acción semántica:
-│        C4.1 «Ahora funciona bien» → SERVICIO=POSITIVA declaración=OK  [R-FUNC, R-AHORA]
+│        C4.1 «Ahora funciona bien» → SERVICIO=POSITIVA declaración=OK  [R-EST, R-AHORA]
 │  [6] Resultado      : SERVICIO: POSITIVA | ATENCION: SIN_EVIDENCIA | CLARIDAD: SIN_EVIDENCIA
 │
 └────────────────────────────────────────────────────────────

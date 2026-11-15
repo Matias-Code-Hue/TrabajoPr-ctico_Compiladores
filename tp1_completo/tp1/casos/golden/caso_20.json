@@ -1,0 +1,436 @@
+{
+  "catalogo_reglas": {
+    "R-AHORA": "ADV_T con tiempo AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-COMPAT": "sujeto y predicado incompatibles (tabla COMPAT), verbo pronominal sin «se» o no pronominal con «se», dos sujetos o V_CONT sin complemento ⇒ la cláusula no se interpreta",
+    "R-COMPR": "[ADV_T] V_ACC de clase COMPROMISO [TICKET|plazo] ⇒ compromiso futuro",
+    "R-COP": "sujeto [V_COP] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
+    "R-CORTE": "[sujeto] SE V_EST pronominal (perfil RECUR, «se corta») [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin frecuencia)",
+    "R-ENT": "[NEG] V_ACC de clase COMPRENSION [SUST] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-EST": "V_EST [compl] ⇒ SERVICIO; con pol +1 (perfil OK) toma la polaridad del complemento (POSITIVA si no hay), con pol −1 (perfil FALLA) es NEGATIVA; declaración OK/FALLA",
+    "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
+    "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
+    "R-EST-PEND": "compromiso futuro del agente sin declaración posterior del CLIENTE ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: prevalece lo último entre la última declaración del CLIENTE y la última promesa del agente",
+    "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
+    "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
+    "R-MEN": "sujeto o verbo valorativo sin cualidad ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg y no cruza PERO, COMA ni Y",
+    "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
+    "R-POSP": "sujeto después del verbo («no funciona el internet») ⇒ aporta el aspecto como un sujeto explícito",
+    "R-SEG-ADJ": "[sujeto] V_CONT modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK",
+    "R-SEG-SIN": "V_CONT SIN SUST («sigo sin internet») ⇒ aspecto del sustantivo, polaridad de R-SIN; en SERVICIO declara FALLA u OK",
+    "R-SIN": "SIN SUST ⇒ NEGATIVA si falta algo (sin internet); POSITIVA si lo que falta es un problema (sin cortes)",
+    "R-SINDOM": "la cláusula contiene una palabra con el rasgo sin_dominio ⇒ se reconoce pero no se interpreta (abstención)",
+    "R-SOLIC": "V_ACC de clase SOLICITUD [SUST] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-SUJ": "SUST ⇒ aspecto = rasgo «aspecto» de su forma canónica (perfiles SERVICIO, EQUIPO, PROBLEMA→SERVICIO; ATENCION; CLARIDAD); AGENTE→ATENCION",
+    "R-TICKET": "SUST con entidad TICKET [V_COP] TICKET | TICKET ⇒ referencia a un ticket (entidad)",
+    "R-VAL": "V_ACC de clase VALORABLE + modif («me atendiste muy bien») ⇒ valoración del rasgo «aspecto» del verbo (ATENCION / CLARIDAD)"
+  },
+  "errores_globales": [],
+  "lote": {
+    "archivo": "caso_20.txt",
+    "completas": 1,
+    "parciales": 0,
+    "sesiones": 1
+  },
+  "sesiones": [
+    {
+      "analisis": "COMPLETO",
+      "correcciones": [
+        {
+          "accion": "INSERTADA",
+          "candidatos": [],
+          "canonico": "DESCONECTAR",
+          "categoria": "V_EST",
+          "desp": 22,
+          "normalizado": "desconecta",
+          "original": "desconecta",
+          "resultado": "desconecta",
+          "turno": 1
+        },
+        {
+          "accion": "INSERTADA",
+          "candidatos": [],
+          "canonico": "VERIFICAR",
+          "categoria": "V_ACC",
+          "desp": 17,
+          "normalizado": "verificaremos",
+          "original": "verificaremos",
+          "resultado": "verificaremos",
+          "turno": 3
+        }
+      ],
+      "entidades": {
+        "participantes": [
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 1
+              }
+            ],
+            "atributos": {},
+            "clave": "CLIENTE",
+            "tipo": "PARTICIPANTE"
+          },
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "AGENTE",
+                "turno": 2
+              },
+              {
+                "desp": 2,
+                "lexema": "AGENTE",
+                "turno": 3
+              }
+            ],
+            "atributos": {},
+            "clave": "AGENTE",
+            "tipo": "PARTICIPANTE"
+          }
+        ],
+        "tickets": [
+          {
+            "apariciones": [
+              {
+                "desp": 23,
+                "lexema": "TK-620",
+                "turno": 2
+              },
+              {
+                "desp": 31,
+                "lexema": "TK-620",
+                "turno": 3
+              }
+            ],
+            "atributos": {
+              "compromiso_actor": "AGENTE",
+              "compromiso_turno": 3,
+              "seguimiento": "COMPROMISO_FUTURO",
+              "ultima_mencion": 3
+            },
+            "clave": "TK-620",
+            "tipo": "TICKET"
+          }
+        ]
+      },
+      "errores": [],
+      "estado": {
+        "evidencias": [
+          "C3.1"
+        ],
+        "nota": "R-EST-PREC: la promesa del agente (C3.1) es posterior a la última declaración del cliente (C1.1, que daba NO_RESUELTO); prevalece lo último",
+        "regla": "R-EST-PEND",
+        "valor": "PENDIENTE"
+      },
+      "evidencias": [
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
+          "declaracion": "RECUR",
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "El wifi se desconecta todos los dias",
+          "hasta": 47,
+          "id": "C1.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-SUJ",
+            "R-CORTE"
+          ],
+          "temporal": null,
+          "tipo": "FUNCIONAMIENTO",
+          "turno": 1,
+          "valoracion": "NEGATIVA"
+        },
+        {
+          "actor": "AGENTE",
+          "aspecto": null,
+          "conector": null,
+          "declaracion": null,
+          "desde": 10,
+          "entidades": [
+            "TK-620"
+          ],
+          "fragmento": "Mañana verificaremos TK-620",
+          "hasta": 37,
+          "id": "C3.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-COMPR"
+          ],
+          "temporal": null,
+          "tipo": "COMPROMISO",
+          "turno": 3,
+          "valoracion": null
+        }
+      ],
+      "id": "S01",
+      "no_interpretado": [],
+      "resumen_aspectos": {
+        "ATENCION": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "CLARIDAD": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "SERVICIO": {
+          "evidencias": [
+            "C1.1"
+          ],
+          "opiniones_agente": [],
+          "valoracion": "NEGATIVA"
+        }
+      },
+      "turnos": [
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": "RECUR",
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "El wifi se desconecta todos los dias",
+              "hasta": 47,
+              "id": "C1.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SUJ",
+                "R-CORTE"
+              ],
+              "temporal": null,
+              "tipo": "FUNCIONAMIENTO",
+              "turno": 1,
+              "valoracion": "NEGATIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«wifi»] pred_s[SE«se» V_EST«desconecta»]] frec[FREC«todos» frec[FREC«dias»]]]] texto_r[PUNTO«.»]]",
+          "linea": 2,
+          "no_interpretado": [],
+          "numero": 1,
+          "rol": "CLIENTE",
+          "texto": "El wifi se desconecta todos los dias.",
+          "tokens": [
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 11,
+              "lexema": "El",
+              "normalizado": "el"
+            },
+            {
+              "canonico": "SERVICIO",
+              "categoria": "SUST",
+              "desp": 14,
+              "lexema": "wifi",
+              "normalizado": "wifi"
+            },
+            {
+              "canonico": "SE",
+              "categoria": "SE",
+              "desp": 19,
+              "lexema": "se",
+              "normalizado": "se"
+            },
+            {
+              "canonico": "DESCONECTAR",
+              "categoria": "V_EST",
+              "desp": 22,
+              "lexema": "desconecta",
+              "normalizado": "desconecta"
+            },
+            {
+              "canonico": "TODOS",
+              "categoria": "FREC",
+              "desp": 33,
+              "lexema": "todos",
+              "normalizado": "todos"
+            },
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 39,
+              "lexema": "los",
+              "normalizado": "los"
+            },
+            {
+              "canonico": "DIA",
+              "categoria": "FREC",
+              "desp": 43,
+              "lexema": "dias",
+              "normalizado": "dias"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 47,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "NEGATIVA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "AGENTE",
+              "aspecto": null,
+              "conector": null,
+              "declaracion": null,
+              "desde": 10,
+              "entidades": [
+                "TK-620"
+              ],
+              "fragmento": "Su ticket es TK-620",
+              "hasta": 29,
+              "id": "C2.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-TICKET"
+              ],
+              "temporal": null,
+              "tipo": "TICKET",
+              "turno": 2,
+              "valoracion": null
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«ticket»] pred_s[V_COP«es» atrib[TICKET«TK-620»]]]]] texto_r[PUNTO«.»]]",
+          "linea": 3,
+          "no_interpretado": [],
+          "numero": 2,
+          "rol": "AGENTE",
+          "texto": "Su ticket es TK-620.",
+          "tokens": [
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 10,
+              "lexema": "Su",
+              "normalizado": "su"
+            },
+            {
+              "canonico": "TICKET",
+              "categoria": "SUST",
+              "desp": 13,
+              "lexema": "ticket",
+              "normalizado": "ticket"
+            },
+            {
+              "canonico": "SER_ESTAR",
+              "categoria": "V_COP",
+              "desp": 20,
+              "lexema": "es",
+              "normalizado": "es"
+            },
+            {
+              "canonico": null,
+              "categoria": "TICKET",
+              "desp": 23,
+              "lexema": "TK-620",
+              "normalizado": "TK-620"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 29,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "AGENTE",
+              "aspecto": null,
+              "conector": null,
+              "declaracion": null,
+              "desde": 10,
+              "entidades": [
+                "TK-620"
+              ],
+              "fragmento": "Mañana verificaremos TK-620",
+              "hasta": 37,
+              "id": "C3.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-COMPR"
+              ],
+              "temporal": null,
+              "tipo": "COMPROMISO",
+              "turno": 3,
+              "valoracion": null
+            }
+          ],
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Mañana»] nucleo[pred_l[V_ACC«verificaremos» obj[TICKET«TK-620»]]]]] texto_r[PUNTO«.»]]",
+          "linea": 4,
+          "no_interpretado": [],
+          "numero": 3,
+          "rol": "AGENTE",
+          "texto": "Mañana verificaremos TK-620.",
+          "tokens": [
+            {
+              "canonico": "MAÑANA",
+              "categoria": "ADV_T",
+              "desp": 10,
+              "lexema": "Mañana",
+              "normalizado": "mañana"
+            },
+            {
+              "canonico": "VERIFICAR",
+              "categoria": "V_ACC",
+              "desp": 17,
+              "lexema": "verificaremos",
+              "normalizado": "verificaremos"
+            },
+            {
+              "canonico": null,
+              "categoria": "TICKET",
+              "desp": 31,
+              "lexema": "TK-620",
+              "normalizado": "TK-620"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 37,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -17,8 +17,8 @@ Lote: 1 sesiones (1 completas, 0 parciales) → ejemplos/salida_caso_01.json
 ┌── TRAZA DE LA SESIÓN S01 ────────────────────────────────────────
 │ Turno 1 · CLIENTE · línea 2
 │  [1] Texto original : 1 CLIENTE: El servicio está lento.
-│  [2] Tokens         : RELLENO«El»@11=ART  ASP_SERV«servicio»@14=SERVICIO  V_COPULA«está»@23=SER_ESTAR  ADJ_NEG«lento»@28=LENTO  PUNTO«.»@33
-│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[ASP_SERV«servicio»] pred_s[V_COPULA«está» modif[adj[ADJ_NEG«lento»]]]]]] texto_r[PUNTO«.»]]
+│  [2] Tokens         : RELLENO«El»@11=ART  SUST«servicio»@14=SERVICIO  V_COP«está»@23=SER_ESTAR  ADJ«lento»@28=LENTO  PUNTO«.»@33
+│  [3] Estructura     : texto[oracion[clausula[nucleo[sujeto[SUST«servicio»] pred_s[V_COP«está» atrib[modif[ADJ«lento»]]]]]] texto_r[PUNTO«.»]]
 │  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> NO_EXISTE
 │        INSERTAR PARTICIPANTE CLIENTE @S01 (apariciones=1)
@@ -28,8 +28,8 @@ Lote: 1 sesiones (1 completas, 0 parciales) → ejemplos/salida_caso_01.json
 │
 │ Turno 2 · AGENTE · línea 3
 │  [1] Texto original : 2 AGENTE: Reinicie el router.
-│  [2] Tokens         : V_SOLICITUD«Reinicie»@10=REINICIAR  RELLENO«el»@19=ART  ROUTER«router»@22=ROUTER  PUNTO«.»@28
-│  [3] Estructura     : texto[oracion[clausula[nucleo[pred_l[V_SOLICITUD«Reinicie» obj_router[ROUTER«router»]]]]] texto_r[PUNTO«.»]]
+│  [2] Tokens         : V_ACC«Reinicie»@10=REINICIAR  RELLENO«el»@19=ART  SUST«router»@22=ROUTER  PUNTO«.»@28
+│  [3] Estructura     : texto[oracion[clausula[nucleo[pred_l[V_ACC«Reinicie» obj[SUST«router»]]]]] texto_r[PUNTO«.»]]
 │  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE AGENTE @S01 -> NO_EXISTE
 │        INSERTAR PARTICIPANTE AGENTE @S01 (apariciones=1)
@@ -39,13 +39,13 @@ Lote: 1 sesiones (1 completas, 0 parciales) → ejemplos/salida_caso_01.json
 │
 │ Turno 3 · CLIENTE · línea 4
 │  [1] Texto original : 3 CLIENTE: Ahora funciona bien.
-│  [2] Tokens         : T_AHORA«Ahora»@11=AHORA  V_FUNC«funciona»@17=FUNCIONAR  ADJ_POS«bien»@26=BUENO  PUNTO«.»@30
-│  [3] Estructura     : texto[oracion[clausula[ahora_op[T_AHORA«Ahora»] nucleo[pred_l[V_FUNC«funciona» modif_op[modif[adj[ADJ_POS«bien»]]]]]]] texto_r[PUNTO«.»]]
+│  [2] Tokens         : ADV_T«Ahora»@11=AHORA  V_EST«funciona»@17=FUNCIONAR  ADJ«bien»@26=BUENO  PUNTO«.»@30
+│  [3] Estructura     : texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«funciona» compl[modif[ADJ«bien»]]]]]] texto_r[PUNTO«.»]]
 │  [4] Tabla entidades:
 │        BUSCAR PARTICIPANTE CLIENTE @S01 -> ENCONTRADO
 │        DUPLICADO->ENLAZAR PARTICIPANTE CLIENTE @S01 (apariciones=2)
 │  [5] Acción semántica:
-│        C3.1 «Ahora funciona bien» → SERVICIO=POSITIVA declaración=OK  [R-FUNC, R-AHORA]
+│        C3.1 «Ahora funciona bien» → SERVICIO=POSITIVA declaración=OK  [R-EST, R-AHORA]
 │  [6] Resultado      : SERVICIO: POSITIVA | ATENCION: SIN_EVIDENCIA | CLARIDAD: SIN_EVIDENCIA
 │
 └────────────────────────────────────────────────────────────

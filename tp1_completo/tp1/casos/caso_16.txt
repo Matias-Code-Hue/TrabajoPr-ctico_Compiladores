@@ -1,0 +1,9 @@
+SESION S01
+1 CLIENTE: No funciona el internet y el router falla seguido.
+2 AGENTE: Reinicie el router.
+3 CLIENTE: No me atendieron bien, pero ahora funciona sin cortes.
+FIN
+SESION S02
+1 CLIENTE: El agente se corta.
+2 CLIENTE: La explicación funciona bien.
+FIN

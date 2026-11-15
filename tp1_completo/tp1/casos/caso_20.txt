@@ -1,0 +1,5 @@
+SESION S01
+1 CLIENTE: El wifi se desconecta todos los dias.
+2 AGENTE: Su ticket es TK-620.
+3 AGENTE: Mañana verificaremos TK-620.
+FIN

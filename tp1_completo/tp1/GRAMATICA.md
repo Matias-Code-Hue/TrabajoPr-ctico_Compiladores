@@ -26,49 +26,81 @@ porque una BNF libre de contexto no puede expresar «n+1».
 ## 2. Gramática lingüística (texto de un turno)
 
 Antes del parser, el filtro de tokens elimina `RELLENO` y `SIGNO` (sin semántica) y aparta las `PALABRA`,
-`TICKET_MAL`, `NUM` y `DESCONOCIDO` como **NO_INTERPRETADOS**; no se inventa valoración para ellos.
+`TICKET_MAL`, `NUM`, `DESCONOCIDO` y `FUERA_DE_GRAMATICA` como **NO_INTERPRETADOS**; no se inventa valoración para ellos.
 
 ```
 <texto> ::= <oracion> <texto_r>
 <texto_r> ::= PUNTO <texto_rr> | ε
 <texto_rr> ::= <oracion> <texto_r> | ε
 <oracion> ::= <clausula> <cola>
-<cola> ::= PERO <clausula> <cola> | COMA <cola_c> | ε
+<cola> ::= PERO <clausula> <cola> | COMA <cola_c> | Y <clausula> <cola> | ε
 <cola_c> ::= PERO <clausula> <cola> | <clausula> <cola>
-<clausula> ::= <ahora_op> <nucleo>
-<ahora_op> ::= T_AHORA | ε
-<nucleo> ::= <sujeto> <pred_s> | <pred_l> | TICKET_PAL <tk_op> | TICKET | CORTESIA
-<sujeto> ::= ASP_SERV | ASP_ATEN | ASP_CLAR | AGENTE
-<pred_s> ::= NEG <pred_neg> | V_COPULA <modif> | V_FUNC <modif_op> | V_SEGUIR <seg> | SE V_CORTA <frec> | <modif> | ε
-<pred_l> ::= NEG <pred_neg> | V_FUNC <modif_op> | V_SEGUIR <seg> | SE V_CORTA <frec> | V_ENTENDER <obj_clar> | V_SOLICITUD <obj_router> | T_FUTURO V_COMPROMISO <ref_op> | V_COMPROMISO <ref_op>
-<pred_neg> ::= V_FUNC <modif_op> | V_COPULA <modif> | V_ENTENDER <obj_clar>
-<seg> ::= <modif> | NEG ASP_SERV
-<modif> ::= INT <adj> | <adj>
+<clausula> ::= <adv_t_op> <nucleo> <frec>
+<adv_t_op> ::= ADV_T | ε
+<nucleo> ::= <sujeto> <pred_s> | <pred_l> | TICKET | CORTESIA
+<sujeto> ::= SUST | AGENTE
+<pred_s> ::= NEG <pred_neg> | V_COP <atrib> | V_EST <compl> | SE V_EST <compl> | V_CONT <compl> | V_ACC <obj> <modif_op> | <modif> | TICKET | ε
+<pred_l> ::= NEG <pred_neg> | V_COP <atrib> | V_EST <compl> <sujp> | SE V_EST <compl> <sujp> | V_CONT <compl> | V_ACC <obj> <modif_op>
+<pred_neg> ::= V_COP <atrib> | V_EST <compl> <sujp> | SE V_EST <compl> <sujp> | V_CONT <compl> | V_ACC <obj> <modif_op>
+<atrib> ::= <modif> | TICKET
+<compl> ::= <modif> | SIN SUST | ε
+<sujp> ::= SUST | ε
+<obj> ::= SUST | TICKET | ADV_T | ε
+<modif> ::= INT ADJ | ADJ
 <modif_op> ::= <modif> | ε
-<adj> ::= ADJ_POS | ADJ_NEG
 <frec> ::= FREC <frec> | ε
-<obj_clar> ::= ASP_CLAR | ε
-<obj_router> ::= ROUTER | ε
-<ref_op> ::= TICKET | T_FUTURO | ε
-<tk_op> ::= V_COPULA TICKET | TICKET | ε
 ```
 
-### 2.1 Cobertura de los casos guía
+La gramática describe **construcciones** con categorías léxicas generales (`SUST`, `ADJ`, `V_EST`, `V_ACC`, `ADV_T`…).
+No distingue qué significa cada palabra: eso lo dice el **perfil** de su forma canónica, que las reglas semánticas
+consultan (ver `REGLAS_SEMANTICAS.md` §3). Por eso una palabra nueva solo necesita su categoría y su forma canónica
+(existente, o nueva de un perfil existente): la tabla de símbolos léxica se enriquece sin tocar la gramática.
+
+### 2.1 Qué significa cada no terminal
+
+| No terminal | Significado |
+|---|---|
+| `texto` / `texto_r` / `texto_rr` | texto de un turno / resto después de una oración / resto después de un `PUNTO` |
+| `oracion` / `cola` / `cola_c` | oración: cláusulas unidas por `COMA`, `PERO` o `Y` / resto de la oración / resto después de una `COMA` |
+| `clausula` | unidad mínima que se interpreta: marca temporal opcional, núcleo y frecuencia opcional |
+| `adv_t_op` | marca temporal opcional al inicio («ahora», «mañana») |
+| `nucleo` | contenido de la cláusula: sujeto y predicado, predicado solo, un ticket o una cortesía |
+| `sujeto` | de qué se habla: un sustantivo o «el agente» |
+| `pred_s` | predicado que **sigue a un sujeto explícito** |
+| `pred_l` | predicado **sin sujeto delante** (sujeto tácito o pospuesto) |
+| `pred_neg` | predicado dentro del alcance de `NEG` |
+| `atrib` | lo que sigue a una cópula: una cualidad o un ticket («es TK-204») |
+| `compl` | complemento de un verbo de estado o de «seguir»: una cualidad, «sin» + sustantivo, o nada |
+| `sujp` | sujeto después del verbo («no funciona **el internet**») |
+| `obj` | objeto de un verbo de acción: sustantivo, ticket, plazo, o nada |
+| `modif` / `modif_op` | cualidad con o sin intensificador / opcional |
+| `frec` | expresión de frecuencia («todos los días») |
+Los verbos se agrupan por **cómo se construyen**, no por palabra: `V_COP` (ser/estar + cualidad), `V_EST` (solo o con
+complemento, y con o sin «se»), `V_CONT` (seguir + complemento) y `V_ACC` (con objeto). Que «corta» exija «se» y
+«funciona» no lo admita depende del perfil (RECUR frente a OK y FALLA), así que lo verifica la semántica (R-COMPAT).
+
+### 2.2 Cobertura de los casos guía y de las construcciones nuevas
 
 | Frase | Derivación (resumen) |
 |---|---|
-| «El servicio está lento.» | `sujeto(ASP_SERV)` `pred_s → V_COPULA modif → adj(ADJ_NEG)` |
-| «Ahora funciona bien.» | `ahora_op(T_AHORA)` `pred_l → V_FUNC modif_op → adj(ADJ_POS)` |
-| «Me atendiste muy bien, pero sigo sin internet.» | `sujeto(ASP_ATEN)` `pred_s → modif → INT adj` · `cola → COMA cola_c → PERO clausula` · `pred_l → V_SEGUIR seg → NEG ASP_SERV` |
-| «El internet sigue lento.» | `sujeto(ASP_SERV)` `pred_s → V_SEGUIR seg → modif → adj(ADJ_NEG)` |
-| «El servicio se corta todos los días.» | `sujeto(ASP_SERV)` `pred_s → SE V_CORTA frec` (`FREC FREC`) |
-| «Ahora funciona, pero se corta todos los días.» | `V_FUNC modif_op(ε)` · `PERO` · `pred_l → SE V_CORTA frec` (`FREC FREC`) |
-| «No entendí la explicación, pero el agente fue amable.» | `pred_l → NEG pred_neg → V_ENTENDER obj_clar(ASP_CLAR)` · `sujeto(AGENTE) pred_s → V_COPULA modif` |
-| «Mañana revisaremos TK-205.» | `pred_l → T_FUTURO V_COMPROMISO ref_op(TICKET)` |
-| «Reinicie el router.» | `pred_l → V_SOLICITUD obj_router(ROUTER)` |
+| «El servicio está lento.» | `sujeto → SUST«servicio»` · `pred_s → V_COP atrib → modif → ADJ«lento»` |
+| «Ahora funciona bien.» | `adv_t_op → ADV_T«ahora»` · `pred_l → V_EST«funciona» compl(modif) sujp(ε)` |
+| «Me atendiste muy bien, pero sigo sin internet.» | `pred_l → V_ACC«atendiste» obj(ε) modif_op(INT ADJ)` · `cola → COMA cola_c → PERO clausula` · `pred_l → V_CONT compl → SIN SUST` |
+| «Ahora funciona, pero se corta todos los días.» | `V_EST compl(ε)` · `PERO` · `pred_l → SE V_EST«corta» compl(ε) sujp(ε)` · `frec → FREC FREC` |
+| «No entendí la explicación, pero el agente fue amable.» | `pred_l → NEG pred_neg → V_ACC«entendí» obj(SUST)` · `sujeto(AGENTE) pred_s → V_COP atrib` |
+| «Su ticket es TK-204.» | `sujeto → SUST«ticket»` · `pred_s → V_COP atrib → TICKET` |
+| «Mañana revisaremos TK-205.» | `adv_t_op → ADV_T«mañana»` · `pred_l → V_ACC«revisaremos» obj(TICKET)` |
+| «Reinicie el router.» | `pred_l → V_ACC«reinicie» obj(SUST«router»)` |
+| «El internet sigue lento.» | `sujeto(SUST)` · `pred_s → V_CONT compl → modif` |
+| «No funciona el internet.» | `pred_l → NEG pred_neg → V_EST compl(ε) sujp(SUST)` |
+| «El router no anda.» | `sujeto → SUST«router»` · `pred_s → NEG pred_neg → V_EST` |
+| «El internet falla seguido.» | `pred_s → V_EST«falla» compl(ε)` · `frec → FREC` |
+| «No me atendieron bien.» | `pred_l → NEG pred_neg → V_ACC«atendieron» obj(ε) modif_op` |
+| «Funciona sin cortes.» | `pred_l → V_EST compl → SIN SUST«cortes»` |
+| «El servicio está lento y se corta.» | `cola → Y clausula cola` |
 | «Gracias.» | `nucleo → CORTESIA` |
 
-### 2.2 Cómo se llegó a la forma predictiva
+### 2.3 Cómo se llegó a la forma predictiva
 
 La gramática de esta sección es el **resultado final** (L3) de tres transformaciones aplicadas sobre una gramática
 descriptiva original: (1) eliminación de la recursión por la izquierda, (2) factorización por la izquierda y
@@ -76,8 +108,16 @@ descriptiva original: (1) eliminación de la recursión por la izquierda, (2) fa
 diagnóstico calculado de cada gramática y la verificación de que todas generan el mismo lenguaje, están en
 **`DERIVACION.md`** (`python3 derivacion.py`).
 
-Decisión de diseño asociada: se exige `PUNTO` *entre* oraciones. Si se admitieran oraciones sin separador,
-`NEG` pertenecería a PRIM(`oracion`) y a SGTE(`pred_s`) y aparecería un conflicto en `pred_s → ε`.
+Decisiones de diseño asociadas:
+
+- Se exige `PUNTO` *entre* oraciones. Si se admitieran oraciones sin separador, `NEG` pertenecería a PRIM(`oracion`)
+  y a SGTE(`pred_s`) y aparecería un conflicto en `pred_s → ε`.
+- «se» precede a un verbo de estado (`SE V_EST compl`). La gramática acepta «corta» sin «se» y «se funciona»; los
+  descarta la semántica: el perfil RECUR exige «se» y los perfiles OK y FALLA no lo admiten. Así «el agente corta la
+  llamada» (lectura transitiva) queda en abstención.
+- `SIN` es una categoría distinta de `NEG`: «sin» precede a un sustantivo y «no» a un predicado.
+- La gramática acepta combinaciones que no tienen sentido («el agente se corta», «el servicio corta»). Las descarta
+  el análisis semántico (R-COMPAT), como el chequeo de tipos de un compilador.
 
 ## 3. PRIM y SGTE
 
@@ -90,28 +130,26 @@ Decisión de diseño asociada: se exige `PUNTO` *entre* oraciones. Si se admitie
 | `<turnos_r>` | {NUM, ε} | {FIN} |
 | `<turno>` | {NUM} | {FIN, NUM} |
 | `<rol>` | {AGENTE, CLIENTE} | {DOSPUNTOS} |
-| `<texto>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_AHORA, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {EOL} |
+| `<texto>` | {ADV_T, AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST} | {EOL} |
 | `<texto_r>` | {PUNTO, ε} | {EOL} |
-| `<texto_rr>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_AHORA, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD, ε} | {EOL} |
-| `<oracion>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_AHORA, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {EOL, PUNTO} |
-| `<cola>` | {COMA, PERO, ε} | {EOL, PUNTO} |
-| `<cola_c>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, PERO, SE, TICKET, TICKET_PAL, T_AHORA, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {EOL, PUNTO} |
-| `<clausula>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_AHORA, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {COMA, EOL, PERO, PUNTO} |
-| `<ahora_op>` | {T_AHORA, ε} | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} |
-| `<nucleo>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {COMA, EOL, PERO, PUNTO} |
-| `<sujeto>` | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV} | {ADJ_NEG, ADJ_POS, COMA, EOL, INT, NEG, PERO, PUNTO, SE, V_COPULA, V_FUNC, V_SEGUIR} |
-| `<pred_s>` | {ADJ_NEG, ADJ_POS, INT, NEG, SE, V_COPULA, V_FUNC, V_SEGUIR, ε} | {COMA, EOL, PERO, PUNTO} |
-| `<pred_l>` | {NEG, SE, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} | {COMA, EOL, PERO, PUNTO} |
-| `<pred_neg>` | {V_COPULA, V_ENTENDER, V_FUNC} | {COMA, EOL, PERO, PUNTO} |
-| `<seg>` | {ADJ_NEG, ADJ_POS, INT, NEG} | {COMA, EOL, PERO, PUNTO} |
-| `<modif>` | {ADJ_NEG, ADJ_POS, INT} | {COMA, EOL, PERO, PUNTO} |
-| `<modif_op>` | {ADJ_NEG, ADJ_POS, INT, ε} | {COMA, EOL, PERO, PUNTO} |
-| `<adj>` | {ADJ_NEG, ADJ_POS} | {COMA, EOL, PERO, PUNTO} |
-| `<frec>` | {FREC, ε} | {COMA, EOL, PERO, PUNTO} |
-| `<obj_clar>` | {ASP_CLAR, ε} | {COMA, EOL, PERO, PUNTO} |
-| `<obj_router>` | {ROUTER, ε} | {COMA, EOL, PERO, PUNTO} |
-| `<ref_op>` | {TICKET, T_FUTURO, ε} | {COMA, EOL, PERO, PUNTO} |
-| `<tk_op>` | {TICKET, V_COPULA, ε} | {COMA, EOL, PERO, PUNTO} |
+| `<texto_rr>` | {ADV_T, AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST, ε} | {EOL} |
+| `<oracion>` | {ADV_T, AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST} | {EOL, PUNTO} |
+| `<cola>` | {COMA, PERO, Y, ε} | {EOL, PUNTO} |
+| `<cola_c>` | {ADV_T, AGENTE, CORTESIA, NEG, PERO, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST} | {EOL, PUNTO} |
+| `<clausula>` | {ADV_T, AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST} | {COMA, EOL, PERO, PUNTO, Y} |
+| `<adv_t_op>` | {ADV_T, ε} | {AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST} |
+| `<nucleo>` | {AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST} | {COMA, EOL, FREC, PERO, PUNTO, Y} |
+| `<sujeto>` | {AGENTE, SUST} | {ADJ, COMA, EOL, FREC, INT, NEG, PERO, PUNTO, SE, TICKET, V_ACC, V_CONT, V_COP, V_EST, Y} |
+| `<pred_s>` | {ADJ, INT, NEG, SE, TICKET, V_ACC, V_CONT, V_COP, V_EST, ε} | {COMA, EOL, FREC, PERO, PUNTO, Y} |
+| `<pred_l>` | {NEG, SE, V_ACC, V_CONT, V_COP, V_EST} | {COMA, EOL, FREC, PERO, PUNTO, Y} |
+| `<pred_neg>` | {SE, V_ACC, V_CONT, V_COP, V_EST} | {COMA, EOL, FREC, PERO, PUNTO, Y} |
+| `<atrib>` | {ADJ, INT, TICKET} | {COMA, EOL, FREC, PERO, PUNTO, Y} |
+| `<compl>` | {ADJ, INT, SIN, ε} | {COMA, EOL, FREC, PERO, PUNTO, SUST, Y} |
+| `<sujp>` | {SUST, ε} | {COMA, EOL, FREC, PERO, PUNTO, Y} |
+| `<obj>` | {ADV_T, SUST, TICKET, ε} | {ADJ, COMA, EOL, FREC, INT, PERO, PUNTO, Y} |
+| `<modif>` | {ADJ, INT} | {COMA, EOL, FREC, PERO, PUNTO, SUST, Y} |
+| `<modif_op>` | {ADJ, INT, ε} | {COMA, EOL, FREC, PERO, PUNTO, Y} |
+| `<frec>` | {FREC, ε} | {COMA, EOL, PERO, PUNTO, Y} |
 
 ## 4. Verificación LL(1)
 
@@ -121,7 +159,7 @@ Condiciones comprobadas por `verificar_ll1()`:
 2. Para cada variable, los PRIM de sus alternativas son **disjuntos** (sin factor común directo ni indirecto).
 3. Si una alternativa deriva `ε`, su SGTE es disjunto de los PRIM de las demás, y hay como máximo una alternativa anulable.
 
-**Resultado: ningún conflicto.** La gramática es LL(1) y la tabla predictiva tiene 199 celdas sin colisiones.
+**Resultado: ningún conflicto.** La gramática es LL(1) y la tabla predictiva tiene 170 celdas sin colisiones.
 
 ### 4.1 Decisiones del parser (variables con más de una alternativa)
 
@@ -135,71 +173,70 @@ Condiciones comprobadas por `verificar_ll1()`:
 | `<rol>` | AGENTE | {AGENTE} |
 | `<texto_r>` | PUNTO <texto_rr> | {PUNTO} |
 | `<texto_r>` | ε | se elige con SGTE(`<texto_r>`) = {EOL} |
-| `<texto_rr>` | <oracion> <texto_r> | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_AHORA, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} |
+| `<texto_rr>` | <oracion> <texto_r> | {ADV_T, AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST} |
 | `<texto_rr>` | ε | se elige con SGTE(`<texto_rr>`) = {EOL} |
 | `<cola>` | PERO <clausula> <cola> | {PERO} |
 | `<cola>` | COMA <cola_c> | {COMA} |
+| `<cola>` | Y <clausula> <cola> | {Y} |
 | `<cola>` | ε | se elige con SGTE(`<cola>`) = {EOL, PUNTO} |
 | `<cola_c>` | PERO <clausula> <cola> | {PERO} |
-| `<cola_c>` | <clausula> <cola> | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_AHORA, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} |
-| `<ahora_op>` | T_AHORA | {T_AHORA} |
-| `<ahora_op>` | ε | se elige con SGTE(`<ahora_op>`) = {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV, CORTESIA, NEG, SE, TICKET, TICKET_PAL, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} |
-| `<nucleo>` | <sujeto> <pred_s> | {AGENTE, ASP_ATEN, ASP_CLAR, ASP_SERV} |
-| `<nucleo>` | <pred_l> | {NEG, SE, T_FUTURO, V_COMPROMISO, V_ENTENDER, V_FUNC, V_SEGUIR, V_SOLICITUD} |
-| `<nucleo>` | TICKET_PAL <tk_op> | {TICKET_PAL} |
+| `<cola_c>` | <clausula> <cola> | {ADV_T, AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST} |
+| `<adv_t_op>` | ADV_T | {ADV_T} |
+| `<adv_t_op>` | ε | se elige con SGTE(`<adv_t_op>`) = {AGENTE, CORTESIA, NEG, SE, SUST, TICKET, V_ACC, V_CONT, V_COP, V_EST} |
+| `<nucleo>` | <sujeto> <pred_s> | {AGENTE, SUST} |
+| `<nucleo>` | <pred_l> | {NEG, SE, V_ACC, V_CONT, V_COP, V_EST} |
 | `<nucleo>` | TICKET | {TICKET} |
 | `<nucleo>` | CORTESIA | {CORTESIA} |
-| `<sujeto>` | ASP_SERV | {ASP_SERV} |
-| `<sujeto>` | ASP_ATEN | {ASP_ATEN} |
-| `<sujeto>` | ASP_CLAR | {ASP_CLAR} |
+| `<sujeto>` | SUST | {SUST} |
 | `<sujeto>` | AGENTE | {AGENTE} |
 | `<pred_s>` | NEG <pred_neg> | {NEG} |
-| `<pred_s>` | V_COPULA <modif> | {V_COPULA} |
-| `<pred_s>` | V_FUNC <modif_op> | {V_FUNC} |
-| `<pred_s>` | V_SEGUIR <seg> | {V_SEGUIR} |
-| `<pred_s>` | SE V_CORTA <frec> | {SE} |
-| `<pred_s>` | <modif> | {ADJ_NEG, ADJ_POS, INT} |
-| `<pred_s>` | ε | se elige con SGTE(`<pred_s>`) = {COMA, EOL, PERO, PUNTO} |
+| `<pred_s>` | V_COP <atrib> | {V_COP} |
+| `<pred_s>` | V_EST <compl> | {V_EST} |
+| `<pred_s>` | SE V_EST <compl> | {SE} |
+| `<pred_s>` | V_CONT <compl> | {V_CONT} |
+| `<pred_s>` | V_ACC <obj> <modif_op> | {V_ACC} |
+| `<pred_s>` | <modif> | {ADJ, INT} |
+| `<pred_s>` | TICKET | {TICKET} |
+| `<pred_s>` | ε | se elige con SGTE(`<pred_s>`) = {COMA, EOL, FREC, PERO, PUNTO, Y} |
 | `<pred_l>` | NEG <pred_neg> | {NEG} |
-| `<pred_l>` | V_FUNC <modif_op> | {V_FUNC} |
-| `<pred_l>` | V_SEGUIR <seg> | {V_SEGUIR} |
-| `<pred_l>` | SE V_CORTA <frec> | {SE} |
-| `<pred_l>` | V_ENTENDER <obj_clar> | {V_ENTENDER} |
-| `<pred_l>` | V_SOLICITUD <obj_router> | {V_SOLICITUD} |
-| `<pred_l>` | T_FUTURO V_COMPROMISO <ref_op> | {T_FUTURO} |
-| `<pred_l>` | V_COMPROMISO <ref_op> | {V_COMPROMISO} |
-| `<pred_neg>` | V_FUNC <modif_op> | {V_FUNC} |
-| `<pred_neg>` | V_COPULA <modif> | {V_COPULA} |
-| `<pred_neg>` | V_ENTENDER <obj_clar> | {V_ENTENDER} |
-| `<seg>` | <modif> | {ADJ_NEG, ADJ_POS, INT} |
-| `<seg>` | NEG ASP_SERV | {NEG} |
-| `<modif>` | INT <adj> | {INT} |
-| `<modif>` | <adj> | {ADJ_NEG, ADJ_POS} |
-| `<modif_op>` | <modif> | {ADJ_NEG, ADJ_POS, INT} |
-| `<modif_op>` | ε | se elige con SGTE(`<modif_op>`) = {COMA, EOL, PERO, PUNTO} |
-| `<adj>` | ADJ_POS | {ADJ_POS} |
-| `<adj>` | ADJ_NEG | {ADJ_NEG} |
+| `<pred_l>` | V_COP <atrib> | {V_COP} |
+| `<pred_l>` | V_EST <compl> <sujp> | {V_EST} |
+| `<pred_l>` | SE V_EST <compl> <sujp> | {SE} |
+| `<pred_l>` | V_CONT <compl> | {V_CONT} |
+| `<pred_l>` | V_ACC <obj> <modif_op> | {V_ACC} |
+| `<pred_neg>` | V_COP <atrib> | {V_COP} |
+| `<pred_neg>` | V_EST <compl> <sujp> | {V_EST} |
+| `<pred_neg>` | SE V_EST <compl> <sujp> | {SE} |
+| `<pred_neg>` | V_CONT <compl> | {V_CONT} |
+| `<pred_neg>` | V_ACC <obj> <modif_op> | {V_ACC} |
+| `<atrib>` | <modif> | {ADJ, INT} |
+| `<atrib>` | TICKET | {TICKET} |
+| `<compl>` | <modif> | {ADJ, INT} |
+| `<compl>` | SIN SUST | {SIN} |
+| `<compl>` | ε | se elige con SGTE(`<compl>`) = {COMA, EOL, FREC, PERO, PUNTO, SUST, Y} |
+| `<sujp>` | SUST | {SUST} |
+| `<sujp>` | ε | se elige con SGTE(`<sujp>`) = {COMA, EOL, FREC, PERO, PUNTO, Y} |
+| `<obj>` | SUST | {SUST} |
+| `<obj>` | TICKET | {TICKET} |
+| `<obj>` | ADV_T | {ADV_T} |
+| `<obj>` | ε | se elige con SGTE(`<obj>`) = {ADJ, COMA, EOL, FREC, INT, PERO, PUNTO, Y} |
+| `<modif>` | INT ADJ | {INT} |
+| `<modif>` | ADJ | {ADJ} |
+| `<modif_op>` | <modif> | {ADJ, INT} |
+| `<modif_op>` | ε | se elige con SGTE(`<modif_op>`) = {COMA, EOL, FREC, PERO, PUNTO, Y} |
 | `<frec>` | FREC <frec> | {FREC} |
-| `<frec>` | ε | se elige con SGTE(`<frec>`) = {COMA, EOL, PERO, PUNTO} |
-| `<obj_clar>` | ASP_CLAR | {ASP_CLAR} |
-| `<obj_clar>` | ε | se elige con SGTE(`<obj_clar>`) = {COMA, EOL, PERO, PUNTO} |
-| `<obj_router>` | ROUTER | {ROUTER} |
-| `<obj_router>` | ε | se elige con SGTE(`<obj_router>`) = {COMA, EOL, PERO, PUNTO} |
-| `<ref_op>` | TICKET | {TICKET} |
-| `<ref_op>` | T_FUTURO | {T_FUTURO} |
-| `<ref_op>` | ε | se elige con SGTE(`<ref_op>`) = {COMA, EOL, PERO, PUNTO} |
-| `<tk_op>` | V_COPULA TICKET | {V_COPULA} |
-| `<tk_op>` | TICKET | {TICKET} |
-| `<tk_op>` | ε | se elige con SGTE(`<tk_op>`) = {COMA, EOL, PERO, PUNTO} |
+| `<frec>` | ε | se elige con SGTE(`<frec>`) = {COMA, EOL, PERO, PUNTO, Y} |
 
 ## 5. Alcance de la negación y de la intensificación (decisión de diseño)
 
 El alcance **queda determinado por la gramática**, no por una heurística:
 
-- `NEG` solo aparece al inicio de `pred_neg` (o en `seg → NEG ASP_SERV`). Su alcance es **exactamente** el predicado
-  o el sustantivo que lo sigue dentro de la misma cláusula: «no funciona», «no está lento», «sin internet».
-- `NEG` **no cruza** `PERO` ni `COMA`: cada cláusula es una derivación independiente de `clausula`, por eso
-  «No entendí la explicación, pero el agente fue amable» conserva CLARIDAD negativa y ATENCION positiva por separado.
+- `NEG` solo aparece en `pred_s → NEG pred_neg` y `pred_l → NEG pred_neg`. Su alcance es **exactamente** el predicado
+  `pred_neg` que lo sigue dentro de la misma cláusula: «no funciona», «no está lento», «no me atendieron bien».
+- `SIN` solo aparece en `compl → SIN SUST`: afecta únicamente al sustantivo inmediato («sin internet», «sin cortes»).
+- Ninguno de los dos **cruza** `PERO`, `COMA`, `Y` ni `PUNTO`: cada cláusula es una derivación independiente de
+  `clausula`, por eso «No entendí la explicación, pero el agente fue amable» conserva CLARIDAD negativa y ATENCION
+  positiva por separado.
 - `INT` (muy) solo aparece en `modif → INT adj`: intensifica únicamente al adjetivo inmediato.
 
 ## 6. Parser y recuperación de errores (implementado en `sintaxis.py`)

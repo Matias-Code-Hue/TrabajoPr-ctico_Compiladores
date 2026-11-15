@@ -1,0 +1,764 @@
+{
+  "catalogo_reglas": {
+    "R-AHORA": "ADV_T con tiempo AHORA ⇒ la cláusula se refiere al momento actual",
+    "R-COMPAT": "sujeto y predicado incompatibles (tabla COMPAT), verbo pronominal sin «se» o no pronominal con «se», dos sujetos o V_CONT sin complemento ⇒ la cláusula no se interpreta",
+    "R-COMPR": "[ADV_T] V_ACC de clase COMPROMISO [TICKET|plazo] ⇒ compromiso futuro",
+    "R-COP": "sujeto [V_COP] modif ⇒ valoración del aspecto del sujeto con la polaridad del adjetivo",
+    "R-CORT": "CORTESIA ⇒ sin valoración ni estado",
+    "R-CORTE": "[sujeto] SE V_EST pronominal (perfil RECUR, «se corta») [FREC…] ⇒ SERVICIO NEGATIVA; declaración RECUR (con o sin frecuencia)",
+    "R-ENT": "[NEG] V_ACC de clase COMPRENSION [SUST] ⇒ CLARIDAD: positiva si entendió, negativa con NEG",
+    "R-EST": "V_EST [compl] ⇒ SERVICIO; con pol +1 (perfil OK) toma la polaridad del complemento (POSITIVA si no hay), con pol −1 (perfil FALLA) es NEGATIVA; declaración OK/FALLA",
+    "R-EST-NC": "sin evidencia suficiente ⇒ NO_CONFIRMADO",
+    "R-EST-NORES": "última declaración del CLIENTE = la falla persiste ⇒ NO_RESUELTO",
+    "R-EST-PEND": "compromiso futuro del agente sin declaración posterior del CLIENTE ⇒ PENDIENTE",
+    "R-EST-PREC": "precedencia: prevalece lo último entre la última declaración del CLIENTE y la última promesa del agente",
+    "R-EST-RES": "última declaración del CLIENTE = funciona (OK) ⇒ RESUELTO",
+    "R-EST-TEMP": "el CLIENTE informa recuperación y también recurrencia ⇒ TEMPORAL",
+    "R-MEN": "sujeto o verbo valorativo sin cualidad ⇒ mención NEUTRA del aspecto (sin polaridad)",
+    "R-MUY": "INT («muy») marca intensidad ALTA del adjetivo inmediato; no cambia la polaridad",
+    "R-NEG": "NEG invierte la polaridad del predicado que le sigue; su alcance es pred_neg y no cruza PERO, COMA ni Y",
+    "R-PERO": "PERO ⇒ la cláusula queda en contraste con la anterior; ambas se conservan por separado",
+    "R-POSP": "sujeto después del verbo («no funciona el internet») ⇒ aporta el aspecto como un sujeto explícito",
+    "R-SEG-ADJ": "[sujeto] V_CONT modif ⇒ aspecto del sujeto (SERVICIO si no hay); en SERVICIO, adjetivo negativo = FALLA y positivo = OK",
+    "R-SEG-SIN": "V_CONT SIN SUST («sigo sin internet») ⇒ aspecto del sustantivo, polaridad de R-SIN; en SERVICIO declara FALLA u OK",
+    "R-SIN": "SIN SUST ⇒ NEGATIVA si falta algo (sin internet); POSITIVA si lo que falta es un problema (sin cortes)",
+    "R-SINDOM": "la cláusula contiene una palabra con el rasgo sin_dominio ⇒ se reconoce pero no se interpreta (abstención)",
+    "R-SOLIC": "V_ACC de clase SOLICITUD [SUST] ⇒ solicitud de seguimiento (no es compromiso ni valoración)",
+    "R-SUJ": "SUST ⇒ aspecto = rasgo «aspecto» de su forma canónica (perfiles SERVICIO, EQUIPO, PROBLEMA→SERVICIO; ATENCION; CLARIDAD); AGENTE→ATENCION",
+    "R-TICKET": "SUST con entidad TICKET [V_COP] TICKET | TICKET ⇒ referencia a un ticket (entidad)",
+    "R-VAL": "V_ACC de clase VALORABLE + modif («me atendiste muy bien») ⇒ valoración del rasgo «aspecto» del verbo (ATENCION / CLARIDAD)"
+  },
+  "errores_globales": [],
+  "lote": {
+    "archivo": "caso_17.txt",
+    "completas": 2,
+    "parciales": 0,
+    "sesiones": 2
+  },
+  "sesiones": [
+    {
+      "analisis": "COMPLETO",
+      "correcciones": [],
+      "entidades": {
+        "participantes": [
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 1
+              },
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 3
+              }
+            ],
+            "atributos": {},
+            "clave": "CLIENTE",
+            "tipo": "PARTICIPANTE"
+          },
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "AGENTE",
+                "turno": 2
+              }
+            ],
+            "atributos": {},
+            "clave": "AGENTE",
+            "tipo": "PARTICIPANTE"
+          }
+        ],
+        "tickets": []
+      },
+      "errores": [],
+      "estado": {
+        "evidencias": [
+          "C3.2"
+        ],
+        "regla": "R-EST-NORES",
+        "valor": "NO_RESUELTO"
+      },
+      "evidencias": [
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
+          "declaracion": null,
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "La red esta muy lenta",
+          "hasta": 32,
+          "id": "C1.1",
+          "intensidad": "ALTA",
+          "negada": false,
+          "reglas": [
+            "R-SUJ",
+            "R-COP",
+            "R-MUY"
+          ],
+          "temporal": null,
+          "tipo": "VALORACION",
+          "turno": 1,
+          "valoracion": "NEGATIVA"
+        },
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
+          "declaracion": "FALLA",
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "No funciona",
+          "hasta": 22,
+          "id": "C3.1",
+          "intensidad": null,
+          "negada": true,
+          "reglas": [
+            "R-EST",
+            "R-NEG"
+          ],
+          "temporal": null,
+          "tipo": "FUNCIONAMIENTO",
+          "turno": 3,
+          "valoracion": "NEGATIVA"
+        },
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": "COMA",
+          "declaracion": "FALLA",
+          "desde": 24,
+          "entidades": [],
+          "fragmento": "la conexion sigue lenta",
+          "hasta": 47,
+          "id": "C3.2",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-SUJ",
+            "R-SEG-ADJ"
+          ],
+          "temporal": null,
+          "tipo": "FUNCIONAMIENTO",
+          "turno": 3,
+          "valoracion": "NEGATIVA"
+        }
+      ],
+      "id": "S01",
+      "no_interpretado": [],
+      "resumen_aspectos": {
+        "ATENCION": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "CLARIDAD": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "SERVICIO": {
+          "evidencias": [
+            "C1.1",
+            "C3.1",
+            "C3.2"
+          ],
+          "opiniones_agente": [],
+          "valoracion": "NEGATIVA"
+        }
+      },
+      "turnos": [
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": null,
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "La red esta muy lenta",
+              "hasta": 32,
+              "id": "C1.1",
+              "intensidad": "ALTA",
+              "negada": false,
+              "reglas": [
+                "R-SUJ",
+                "R-COP",
+                "R-MUY"
+              ],
+              "temporal": null,
+              "tipo": "VALORACION",
+              "turno": 1,
+              "valoracion": "NEGATIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«red»] pred_s[V_COP«esta» atrib[modif[INT«muy» ADJ«lenta»]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 2,
+          "no_interpretado": [],
+          "numero": 1,
+          "rol": "CLIENTE",
+          "texto": "La red esta muy lenta.",
+          "tokens": [
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 11,
+              "lexema": "La",
+              "normalizado": "la"
+            },
+            {
+              "canonico": "SERVICIO",
+              "categoria": "SUST",
+              "desp": 14,
+              "lexema": "red",
+              "normalizado": "red"
+            },
+            {
+              "canonico": "SER_ESTAR",
+              "categoria": "V_COP",
+              "desp": 18,
+              "lexema": "esta",
+              "normalizado": "esta"
+            },
+            {
+              "canonico": "MUY",
+              "categoria": "INT",
+              "desp": 23,
+              "lexema": "muy",
+              "normalizado": "muy"
+            },
+            {
+              "canonico": "LENTO",
+              "categoria": "ADJ",
+              "desp": 27,
+              "lexema": "lenta",
+              "normalizado": "lenta"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 32,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "NEGATIVA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "AGENTE",
+              "aspecto": null,
+              "conector": null,
+              "declaracion": null,
+              "desde": 10,
+              "entidades": [
+                "ROUTER"
+              ],
+              "fragmento": "Reinicie el router",
+              "hasta": 28,
+              "id": "C2.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SOLIC"
+              ],
+              "temporal": null,
+              "tipo": "SOLICITUD",
+              "turno": 2,
+              "valoracion": null
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_ACC«Reinicie» obj[SUST«router»]]]]] texto_r[PUNTO«.»]]",
+          "linea": 3,
+          "no_interpretado": [],
+          "numero": 2,
+          "rol": "AGENTE",
+          "texto": "Reinicie el router.",
+          "tokens": [
+            {
+              "canonico": "REINICIAR",
+              "categoria": "V_ACC",
+              "desp": 10,
+              "lexema": "Reinicie",
+              "normalizado": "reinicie"
+            },
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 19,
+              "lexema": "el",
+              "normalizado": "el"
+            },
+            {
+              "canonico": "ROUTER",
+              "categoria": "SUST",
+              "desp": 22,
+              "lexema": "router",
+              "normalizado": "router"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 28,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": "FALLA",
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "No funciona",
+              "hasta": 22,
+              "id": "C3.1",
+              "intensidad": null,
+              "negada": true,
+              "reglas": [
+                "R-EST",
+                "R-NEG"
+              ],
+              "temporal": null,
+              "tipo": "FUNCIONAMIENTO",
+              "turno": 3,
+              "valoracion": "NEGATIVA"
+            },
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": "COMA",
+              "declaracion": "FALLA",
+              "desde": 24,
+              "entidades": [],
+              "fragmento": "la conexion sigue lenta",
+              "hasta": 47,
+              "id": "C3.2",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SUJ",
+                "R-SEG-ADJ"
+              ],
+              "temporal": null,
+              "tipo": "FUNCIONAMIENTO",
+              "turno": 3,
+              "valoracion": "NEGATIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[NEG«No» pred_neg[V_EST«funciona»]]]] cola[COMA«,» cola_c[clausula[nucleo[sujeto[SUST«conexion»] pred_s[V_CONT«sigue» compl[modif[ADJ«lenta»]]]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 4,
+          "no_interpretado": [],
+          "numero": 3,
+          "rol": "CLIENTE",
+          "texto": "No funciona, la conexion sigue lenta.",
+          "tokens": [
+            {
+              "canonico": "NO",
+              "categoria": "NEG",
+              "desp": 11,
+              "lexema": "No",
+              "normalizado": "no"
+            },
+            {
+              "canonico": "FUNCIONAR",
+              "categoria": "V_EST",
+              "desp": 14,
+              "lexema": "funciona",
+              "normalizado": "funciona"
+            },
+            {
+              "canonico": null,
+              "categoria": "COMA",
+              "desp": 22,
+              "lexema": ",",
+              "normalizado": ","
+            },
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 24,
+              "lexema": "la",
+              "normalizado": "la"
+            },
+            {
+              "canonico": "SERVICIO",
+              "categoria": "SUST",
+              "desp": 27,
+              "lexema": "conexion",
+              "normalizado": "conexion"
+            },
+            {
+              "canonico": "SEGUIR",
+              "categoria": "V_CONT",
+              "desp": 36,
+              "lexema": "sigue",
+              "normalizado": "sigue"
+            },
+            {
+              "canonico": "LENTO",
+              "categoria": "ADJ",
+              "desp": 42,
+              "lexema": "lenta",
+              "normalizado": "lenta"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 47,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "NEGATIVA"
+          }
+        }
+      ]
+    },
+    {
+      "analisis": "COMPLETO",
+      "correcciones": [],
+      "entidades": {
+        "participantes": [
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 1
+              },
+              {
+                "desp": 2,
+                "lexema": "CLIENTE",
+                "turno": 3
+              }
+            ],
+            "atributos": {},
+            "clave": "CLIENTE",
+            "tipo": "PARTICIPANTE"
+          },
+          {
+            "apariciones": [
+              {
+                "desp": 2,
+                "lexema": "AGENTE",
+                "turno": 2
+              }
+            ],
+            "atributos": {},
+            "clave": "AGENTE",
+            "tipo": "PARTICIPANTE"
+          }
+        ],
+        "tickets": []
+      },
+      "errores": [],
+      "estado": {
+        "evidencias": [
+          "C3.1"
+        ],
+        "regla": "R-EST-RES",
+        "valor": "RESUELTO"
+      },
+      "evidencias": [
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
+          "declaracion": "FALLA",
+          "desde": 11,
+          "entidades": [
+            "MODEM"
+          ],
+          "fragmento": "El modem anda lento",
+          "hasta": 30,
+          "id": "C1.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-SUJ",
+            "R-EST"
+          ],
+          "temporal": null,
+          "tipo": "FUNCIONAMIENTO",
+          "turno": 1,
+          "valoracion": "NEGATIVA"
+        },
+        {
+          "actor": "CLIENTE",
+          "aspecto": "SERVICIO",
+          "conector": null,
+          "declaracion": "OK",
+          "desde": 11,
+          "entidades": [],
+          "fragmento": "Ahora anda rapido",
+          "hasta": 28,
+          "id": "C3.1",
+          "intensidad": null,
+          "negada": false,
+          "reglas": [
+            "R-EST",
+            "R-AHORA"
+          ],
+          "temporal": "AHORA",
+          "tipo": "FUNCIONAMIENTO",
+          "turno": 3,
+          "valoracion": "POSITIVA"
+        }
+      ],
+      "id": "S02",
+      "no_interpretado": [],
+      "resumen_aspectos": {
+        "ATENCION": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "CLARIDAD": {
+          "evidencias": [],
+          "opiniones_agente": [],
+          "valoracion": "SIN_EVIDENCIA"
+        },
+        "SERVICIO": {
+          "evidencias": [
+            "C1.1",
+            "C3.1"
+          ],
+          "opiniones_agente": [],
+          "valoracion": "MIXTA"
+        }
+      },
+      "turnos": [
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": "FALLA",
+              "desde": 11,
+              "entidades": [
+                "MODEM"
+              ],
+              "fragmento": "El modem anda lento",
+              "hasta": 30,
+              "id": "C1.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SUJ",
+                "R-EST"
+              ],
+              "temporal": null,
+              "tipo": "FUNCIONAMIENTO",
+              "turno": 1,
+              "valoracion": "NEGATIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«modem»] pred_s[V_EST«anda» compl[modif[ADJ«lento»]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 7,
+          "no_interpretado": [],
+          "numero": 1,
+          "rol": "CLIENTE",
+          "texto": "El modem anda lento.",
+          "tokens": [
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 11,
+              "lexema": "El",
+              "normalizado": "el"
+            },
+            {
+              "canonico": "ROUTER",
+              "categoria": "SUST",
+              "desp": 14,
+              "lexema": "modem",
+              "normalizado": "modem"
+            },
+            {
+              "canonico": "FUNCIONAR",
+              "categoria": "V_EST",
+              "desp": 20,
+              "lexema": "anda",
+              "normalizado": "anda"
+            },
+            {
+              "canonico": "LENTO",
+              "categoria": "ADJ",
+              "desp": 25,
+              "lexema": "lento",
+              "normalizado": "lento"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 30,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "NEGATIVA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "AGENTE",
+              "aspecto": null,
+              "conector": null,
+              "declaracion": null,
+              "desde": 10,
+              "entidades": [
+                "MODEM"
+              ],
+              "fragmento": "Reinicie el modem",
+              "hasta": 27,
+              "id": "C2.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-SOLIC"
+              ],
+              "temporal": null,
+              "tipo": "SOLICITUD",
+              "turno": 2,
+              "valoracion": null
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_ACC«Reinicie» obj[SUST«modem»]]]]] texto_r[PUNTO«.»]]",
+          "linea": 8,
+          "no_interpretado": [],
+          "numero": 2,
+          "rol": "AGENTE",
+          "texto": "Reinicie el modem.",
+          "tokens": [
+            {
+              "canonico": "REINICIAR",
+              "categoria": "V_ACC",
+              "desp": 10,
+              "lexema": "Reinicie",
+              "normalizado": "reinicie"
+            },
+            {
+              "canonico": "ART",
+              "categoria": "RELLENO",
+              "desp": 19,
+              "lexema": "el",
+              "normalizado": "el"
+            },
+            {
+              "canonico": "ROUTER",
+              "categoria": "SUST",
+              "desp": 22,
+              "lexema": "modem",
+              "normalizado": "modem"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 27,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "SIN_EVIDENCIA"
+          }
+        },
+        {
+          "clausulas": [
+            {
+              "actor": "CLIENTE",
+              "aspecto": "SERVICIO",
+              "conector": null,
+              "declaracion": "OK",
+              "desde": 11,
+              "entidades": [],
+              "fragmento": "Ahora anda rapido",
+              "hasta": 28,
+              "id": "C3.1",
+              "intensidad": null,
+              "negada": false,
+              "reglas": [
+                "R-EST",
+                "R-AHORA"
+              ],
+              "temporal": "AHORA",
+              "tipo": "FUNCIONAMIENTO",
+              "turno": 3,
+              "valoracion": "POSITIVA"
+            }
+          ],
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«anda» compl[modif[ADJ«rapido»]]]]]] texto_r[PUNTO«.»]]",
+          "linea": 9,
+          "no_interpretado": [],
+          "numero": 3,
+          "rol": "CLIENTE",
+          "texto": "Ahora anda rapido.",
+          "tokens": [
+            {
+              "canonico": "AHORA",
+              "categoria": "ADV_T",
+              "desp": 11,
+              "lexema": "Ahora",
+              "normalizado": "ahora"
+            },
+            {
+              "canonico": "FUNCIONAR",
+              "categoria": "V_EST",
+              "desp": 17,
+              "lexema": "anda",
+              "normalizado": "anda"
+            },
+            {
+              "canonico": "RAPIDO",
+              "categoria": "ADJ",
+              "desp": 22,
+              "lexema": "rapido",
+              "normalizado": "rapido"
+            },
+            {
+              "canonico": null,
+              "categoria": "PUNTO",
+              "desp": 28,
+              "lexema": ".",
+              "normalizado": "."
+            }
+          ],
+          "valoraciones": {
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA",
+            "SERVICIO": "POSITIVA"
+          }
+        }
+      ]
+    }
+  ]
+}

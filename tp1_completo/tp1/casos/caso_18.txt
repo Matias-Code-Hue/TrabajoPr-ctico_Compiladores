@@ -1,0 +1,10 @@
+SESION S01
+1 CLIENTE: El wifi se corta siempre.
+2 AGENTE: Su ticket es TK-512.
+3 AGENTE: Escalaremos TK-512.
+4 CLIENTE: Ya no se corta, pero la red sigue lenta.
+FIN
+SESION S02
+1 CLIENTE: Sigo sin conexion.
+2 AGENTE: Mañana revisaremos TK-512.
+FIN

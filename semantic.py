@@ -119,7 +119,7 @@ class AnalizadorSemantico:
         tiene_no = "no" in normas
         tiene_pero = "pero" in normas
 
-        if "lento" in normas or "lentitud" in normas or "corte" in normas or "cortes" in normas or "sigue" in normas and "lento" in normas:
+        if "lento" in normas or "lentitud" in normas or "corte" in normas or "cortes" in normas or "mal" in normas or "raro" in normas or "raros" in normas or "ruido" in normas or "ruidos" in normas:
             if tiene_no and ("funcionar" in normas or "bien" in normas):
                 val_servicio = "POSITIVA"
             else:

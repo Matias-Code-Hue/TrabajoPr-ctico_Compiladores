@@ -1,0 +1,1 @@
+{"fecha": "2026-11-14T20:29:11", "operacion": "INSERTAR", "forma": "muchas", "antes": null, "despues": {"categoria": "INT", "canonico": "MUCHAS"}, "operador": "DELL", "origen": {"archivo": "caso_11.txt", "sesion": "S01", "turno": 2, "desp": 11, "lexema": "Muchas", "texto": "Muchas gracias."}, "decision": {"candidatos": [], "propuesta_enunciado": "SIN_CANDIDATO"}}

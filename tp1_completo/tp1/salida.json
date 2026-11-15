@@ -1,6 +1,6 @@
 {
   "lote": {
-    "archivo": "./casos/caso_11.txt",
+    "archivo": ".\\casos\\caso_11.txt",
     "sesiones": 1,
     "completas": 1,
     "parciales": 0
@@ -31,24 +31,24 @@
               "desp": 14
             },
             {
-              "categoria": "FUERA_DE_GRAMATICA",
+              "categoria": "VERBO_GEN",
               "lexema": "hace",
               "normalizado": "hace",
-              "canonico": "HACE",
+              "canonico": "ACCION",
               "desp": 21
             },
             {
-              "categoria": "FUERA_DE_GRAMATICA",
+              "categoria": "SUSTANTIVO",
               "lexema": "ruidos",
               "normalizado": "ruidos",
-              "canonico": "RUIDOS",
+              "canonico": "OBJETO",
               "desp": 26
             },
             {
               "categoria": "ADJ_NEG",
               "lexema": "raros",
               "normalizado": "raros",
-              "canonico": "RAROS",
+              "canonico": "MALO",
               "desp": 33
             },
             {
@@ -100,7 +100,7 @@
           "texto": "Muchas gracias.",
           "tokens": [
             {
-              "categoria": "FREC",
+              "categoria": "INT",
               "lexema": "Muchas",
               "normalizado": "muchas",
               "canonico": "MUCHAS",
@@ -203,52 +203,7 @@
         ],
         "tickets": []
       },
-      "correcciones": [
-        {
-          "turno": 1,
-          "desp": 21,
-          "original": "hace",
-          "normalizado": "hace",
-          "resultado": "hace",
-          "accion": "INSERTADA",
-          "candidatos": [],
-          "categoria": "FUERA_DE_GRAMATICA",
-          "canonico": "HACE"
-        },
-        {
-          "turno": 1,
-          "desp": 26,
-          "original": "ruidos",
-          "normalizado": "ruidos",
-          "resultado": "ruidos",
-          "accion": "INSERTADA",
-          "candidatos": [],
-          "categoria": "FUERA_DE_GRAMATICA",
-          "canonico": "RUIDOS"
-        },
-        {
-          "turno": 1,
-          "desp": 33,
-          "original": "raros",
-          "normalizado": "raros",
-          "resultado": "raros",
-          "accion": "INSERTADA",
-          "candidatos": [],
-          "categoria": "ADJ_NEG",
-          "canonico": "RAROS"
-        },
-        {
-          "turno": 2,
-          "desp": 11,
-          "original": "Muchas",
-          "normalizado": "muchas",
-          "resultado": "muchas",
-          "accion": "INSERTADA",
-          "candidatos": [],
-          "categoria": "FREC",
-          "canonico": "MUCHAS"
-        }
-      ],
+      "correcciones": [],
       "errores": [
         {
           "tipo": "SINTAXIS",
@@ -262,7 +217,7 @@
           "turno": 2,
           "codigo": "SINTAXIS",
           "desp": 11,
-          "detalle": "token FREC inesperado al analizar <texto>"
+          "detalle": "token INT inesperado al analizar <texto>"
         }
       ],
       "no_interpretado": [

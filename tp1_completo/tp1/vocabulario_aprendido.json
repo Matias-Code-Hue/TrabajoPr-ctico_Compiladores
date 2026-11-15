@@ -1,0 +1,15 @@
+{
+  "muchas": {
+    "canonico": "MUCHAS",
+    "categoria": "INT",
+    "fecha": "2026-11-14T20:29:11",
+    "origen": {
+      "archivo": "caso_11.txt",
+      "desp": 11,
+      "lexema": "Muchas",
+      "sesion": "S01",
+      "texto": "Muchas gracias.",
+      "turno": 2
+    }
+  }
+}

@@ -20,25 +20,29 @@ _PROD = [
     ('oracion',   ['clausula cola']),
     ('cola',      ['PERO clausula cola', 'COMA cola_c', 'ε']),
     ('cola_c',    ['PERO clausula cola', 'clausula cola']),
-    ('clausula',  ['ahora_op nucleo']),
-    ('ahora_op',  ['T_AHORA', 'ε']),
-    ('nucleo',    ['sujeto pred_s', 'pred_l', 'TICKET_PAL tk_op', 'TICKET', 'CORTESIA']),
-    ('sujeto',    ['ASP_SERV', 'ASP_ATEN', 'ASP_CLAR', 'AGENTE']),
-    ('pred_s',    ['NEG pred_neg', 'V_COPULA modif', 'V_FUNC modif_op', 'V_SEGUIR seg', 'SE V_CORTA frec',
-                   'modif', 'ε']),
-    ('pred_l',    ['NEG pred_neg', 'V_FUNC modif_op', 'V_SEGUIR seg', 'SE V_CORTA frec',
-                   'V_ENTENDER obj_clar', 'V_SOLICITUD obj_router',
-                   'T_FUTURO V_COMPROMISO ref_op', 'V_COMPROMISO ref_op']),
-    ('pred_neg',  ['V_FUNC modif_op', 'V_COPULA modif', 'V_ENTENDER obj_clar']),
-    ('seg',       ['modif', 'NEG ASP_SERV']),
+    ('clausula',  ['adv_t_op nucleo frec']),
+    ('adv_t_op',  ['adv_t', 'ε']),
+    ('adv_t',     ['T_AHORA', 'T_FUTURO']),
+    ('nucleo',    ['sujeto pred_s', 'pred_l', 'TICKET', 'CORTESIA']),
+    ('sujeto',    ['sust', 'AGENTE']),
+    ('sust',      ['SUST_SERV', 'SUST_ATEN', 'SUST_CLAR', 'SUST_EQUIPO', 'SUST_TICKET', 'SUST_PROB']),
+    ('pred_s',    ['NEG pred_neg', 'V_COP atrib', 'v_est compl', 'SE V_EST_RECUR', 'V_CONT compl',
+                   'v_acc obj modif_op', 'atrib', 'ε']),
+    ('pred_l',    ['NEG pred_neg', 'V_COP atrib', 'v_est compl', 'SE V_EST_RECUR', 'V_CONT compl',
+                   'v_acc obj modif_op']),
+    ('pred_neg',  ['v_est compl', 'V_COP atrib', 'v_acc obj modif_op']),
+    ('v_est',     ['V_EST_OK', 'V_EST_FALLA']),
+    ('v_acc',     ['V_ENTENDER', 'V_SOLICITUD', 'V_COMPROMISO', 'V_VAL_ATEN', 'V_VAL_CLAR']),
+    ('compl',     ['modif', 'SIN sust', 'ε']),
+    ('atrib',     ['modif', 'TICKET']),
     ('modif',     ['INT adj', 'adj']),
     ('modif_op',  ['modif', 'ε']),
     ('adj',       ['ADJ_POS', 'ADJ_NEG']),
     ('frec',      ['FREC frec', 'ε']),
-    ('obj_clar',  ['ASP_CLAR', 'ε']),
-    ('obj_router', ['ROUTER', 'ε']),
+    ('obj',       ['sust', 'TICKET', 'adv_t', 'ε']),
+    ('obj_clar',  ['SUST_CLAR', 'ε']),
+    ('obj_router', ['SUST_EQUIPO', 'ε']),
     ('ref_op',    ['TICKET', 'T_FUTURO', 'ε']),
-    ('tk_op',     ['V_COPULA TICKET', 'TICKET', 'ε']),
 ]
 G = {a: [[] if x == EPS else x.split() for x in alts] for a, alts in _PROD}
 INICIO = 'lote'
@@ -101,11 +105,11 @@ def verificar_ll1(P, S):
             for j in range(i + 1, len(alts)):
                 inter = (prims[i] - {EPS}) & (prims[j] - {EPS})
                 if inter:
-                    conflictos.append((A, i, j, 'PRIM∩PRIM', inter))
+                    conflictos.append((A, i, j, 'PRIM INTERSECCION PRIM', inter))
             if EPS in prims[i]:
                 for j in range(len(alts)):
                     if j != i and (prims[j] - {EPS}) & S[A]:
-                        conflictos.append((A, i, j, 'PRIM∩SGTE', (prims[j] - {EPS}) & S[A]))
+                        conflictos.append((A, i, j, 'PRIM INTERSECCION SGTE', (prims[j] - {EPS}) & S[A]))
         if sum(EPS in p for p in prims) > 1:
             conflictos.append((A, -1, -1, 'dos alternativas anulables', set()))
     # no recursión por la izquierda: ningún A deriva A como primer símbolo (directo o indirecto)
@@ -116,7 +120,7 @@ def verificar_ll1(P, S):
             for alt in G[X]:
                 for s in alt:
                     if s == A:
-                        conflictos.append((A, -1, -1, 'recursión por la izquierda', {A}))
+                        conflictos.append((A, -1, -1, 'recursion por la izquierda', {A}))
                     if s in G and s not in vistos:
                         vistos.add(s); pila.append(s)
                     if s not in G or EPS not in P[s]:
@@ -145,10 +149,6 @@ def fmt(conj):
 if __name__ == '__main__':
     P = primero(); S = siguiente(P)
     print('Terminales:', sorted({s for alts in G.values() for alt in alts for s in alt if s not in G}))
-    for A in G:
-        print(f'PRIM({A}) = {fmt(P[A])}')
-    for A in G:
-        print(f'SGTE({A}) = {fmt(S[A])}')
     c = verificar_ll1(P, S)
-    print('Conflictos LL(1):', c if c else 'NINGUNO → la gramática es LL(1)')
+    print('Conflictos LL(1):', c if c else 'NINGUNO -> la gramatica es LL(1)')
     print('Celdas de la tabla:', len(tabla_ll1(P, S)))

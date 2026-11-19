@@ -1,0 +1,59 @@
+% titulo: AFN de Thompson de TICKET = tk- D{3,6}
+% requiere \usetikzlibrary{automata,positioning,arrows.meta}
+\begin{tikzpicture}[shorten >=1pt, auto, >={Stealth[round]},
+                    every state/.style={minimum size=8mm, inner sep=1pt}]
+  \node[state,initial] (n0) at (0.00,0.00) {$n_{0}$};
+  \node[state] (n1) at (1.90,0.00) {$n_{1}$};
+  \node[state] (n2) at (3.80,0.00) {$n_{2}$};
+  \node[state] (n3) at (5.70,0.00) {$n_{3}$};
+  \node[state] (n4) at (7.60,0.00) {$n_{4}$};
+  \node[state] (n5) at (9.50,0.00) {$n_{5}$};
+  \node[state] (n6) at (11.40,0.00) {$n_{6}$};
+  \node[state] (n7) at (13.30,0.00) {$n_{7}$};
+  \node[state] (n8) at (15.20,0.00) {$n_{8}$};
+  \node[state] (n9) at (17.10,0.00) {$n_{9}$};
+  \node[state] (n10) at (19.00,0.00) {$n_{10}$};
+  \node[state] (n11) at (20.90,0.00) {$n_{11}$};
+  \node[state] (n12) at (22.80,0.00) {$n_{12}$};
+  \node[state] (n13) at (0.00,-3.40) {$n_{13}$};
+  \node[state] (n14) at (1.90,-3.40) {$n_{14}$};
+  \node[state] (n15) at (3.80,-3.40) {$n_{15}$};
+  \node[state] (n16) at (5.70,-3.40) {$n_{16}$};
+  \node[state] (n17) at (7.60,-3.40) {$n_{17}$};
+  \node[state] (n18) at (9.50,-3.40) {$n_{18}$};
+  \node[state] (n19) at (11.40,-3.40) {$n_{19}$};
+  \node[state] (n20) at (13.30,-3.40) {$n_{20}$};
+  \node[state] (n21) at (15.20,-3.40) {$n_{21}$};
+  \node[state] (n22) at (17.10,-3.40) {$n_{22}$};
+  \node[state] (n23) at (19.00,-3.40) {$n_{23}$};
+  \node[state,accepting] (n24) at (20.90,-3.40) {$n_{24}$};
+  \path[->]
+    (n0) edge[, dashed] node{\scriptsize $\varepsilon$} (n1)
+    (n1) edge[] node{\scriptsize t} (n2)
+    (n10) edge[, dashed] node{\scriptsize $\varepsilon$} (n11)
+    (n11) edge[] node{\scriptsize D} (n12)
+    (n12) edge[out=-90, in=90, dashed] node{\scriptsize $\varepsilon$} (n13)
+    (n13) edge[, dashed] node{\scriptsize $\varepsilon$} (n14)
+    (n13) edge[bend left=50, dashed] node{\scriptsize $\varepsilon$} (n24)
+    (n14) edge[] node{\scriptsize D} (n15)
+    (n15) edge[, dashed] node{\scriptsize $\varepsilon$} (n16)
+    (n16) edge[, dashed] node{\scriptsize $\varepsilon$} (n17)
+    (n16) edge[bend left=48, dashed] node{\scriptsize $\varepsilon$} (n23)
+    (n17) edge[] node{\scriptsize D} (n18)
+    (n18) edge[, dashed] node{\scriptsize $\varepsilon$} (n19)
+    (n19) edge[, dashed] node{\scriptsize $\varepsilon$} (n20)
+    (n19) edge[bend left=32, dashed] node{\scriptsize $\varepsilon$} (n22)
+    (n2) edge[, dashed] node{\scriptsize $\varepsilon$} (n3)
+    (n20) edge[] node{\scriptsize D} (n21)
+    (n21) edge[, dashed] node{\scriptsize $\varepsilon$} (n22)
+    (n22) edge[, dashed] node{\scriptsize $\varepsilon$} (n23)
+    (n23) edge[, dashed] node{\scriptsize $\varepsilon$} (n24)
+    (n3) edge[] node{\scriptsize k} (n4)
+    (n4) edge[, dashed] node{\scriptsize $\varepsilon$} (n5)
+    (n5) edge[] node{\scriptsize -} (n6)
+    (n6) edge[, dashed] node{\scriptsize $\varepsilon$} (n7)
+    (n7) edge[] node{\scriptsize D} (n8)
+    (n8) edge[, dashed] node{\scriptsize $\varepsilon$} (n9)
+    (n9) edge[] node{\scriptsize D} (n10)
+  ;
+\end{tikzpicture}

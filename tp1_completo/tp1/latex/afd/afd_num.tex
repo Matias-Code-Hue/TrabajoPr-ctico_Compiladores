@@ -1,0 +1,13 @@
+% titulo: AFD de NUM = D+ (subconjuntos)
+% requiere \usetikzlibrary{automata,positioning,arrows.meta}
+\begin{tikzpicture}[shorten >=1pt, auto, >={Stealth[round]},
+                    every state/.style={minimum size=8mm, inner sep=1pt}]
+  \node[state,initial] (q0) at (0.00,0.00) {$q_{0}$};
+  \node[state,accepting] (q1) at (1.90,0.00) {$q_{1}$};
+  \node[state,accepting] (q2) at (3.80,0.00) {$q_{2}$};
+  \path[->]
+    (q0) edge[] node{\scriptsize D} (q1)
+    (q1) edge[] node{\scriptsize D} (q2)
+    (q2) edge[loop above] node{\scriptsize D} (q2)
+  ;
+\end{tikzpicture}

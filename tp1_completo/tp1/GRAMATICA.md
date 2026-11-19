@@ -241,12 +241,15 @@ El alcance **queda determinado por la gramática**, no por una heurística:
 
 ## 6. Parser y recuperación de errores (implementado en `sintaxis.py`)
 
-**Parser.** Descendente recursivo predictivo: un único procedimiento `parse(A)` consulta la tabla `M[A, a]`
-(Clase 7, §7.5) con el token de anticipación `a`, emite la producción elegida, llama a `parse()` por cada variable
-del cuerpo y a `_match()` por cada terminal (el `match()` de clase). Es el mismo algoritmo del analizador sintáctico
-predictivo de la Clase 8 (§8.2): la pila explícita se reemplaza por la pila de llamadas, lo que permite devolver el
-árbol de derivación sobre el que luego se evalúan las reglas semánticas (`REGLAS_SEMANTICAS.md`).
-Dentro de un turno, `EOL` cumple el papel de `$`.
+**Parser.** Analizador predictivo recursivo guiado por la tabla `M`. Toma la estructura de los apuntes (Clase 1,
+§1.1.5: un procedimiento por no terminal y `match()` por terminal), pero la decisión no sale de
+`if (preanálisis == …)` sino de `M[A, a]` (Clase 7, §7.5), como en el ASP de la Clase 8. Un único procedimiento
+`parse(A)` consulta `M[A, a]` con el token de anticipación `a`, emite la producción elegida, llama a `parse()` por cada
+variable del cuerpo y a `_match()` por cada terminal. Los símbolos pendientes están en la pila de llamadas y no en una
+pila explícita, lo que permite devolver el árbol de derivación sobre el que luego se evalúan las reglas semánticas
+(`REGLAS_SEMANTICAS.md`). En una entrada sin errores emite la misma derivación por la izquierda que el ASP con pila
+explícita de la Clase 8 (§8.2). Dentro de un turno, `EOL` cumple el papel de `$`. Qué tipo de procesador es y por qué:
+`INFORME_TECNICO.md` §2.1.
 
 **Recuperación** (Clase 8, §8.5.4), con sincronización en SGTE:
 

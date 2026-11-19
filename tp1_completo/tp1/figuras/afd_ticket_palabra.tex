@@ -1,0 +1,36 @@
+% titulo: AFD combinado TICKET | TICKET_MAL | PALABRA (lexema más largo)
+% requiere \usetikzlibrary{automata,positioning,arrows.meta}
+\begin{tikzpicture}[shorten >=1pt, auto, >={Stealth[round]},
+                    every state/.style={minimum size=8mm, inner sep=1pt}]
+  \node[state,initial] (q0) at (0.00,0.00) {$q_{0}$};
+  \node[state,accepting] (q1) at (1.90,0.00) {$q_{1}$};
+  \node[state,accepting] (q2) at (1.90,-1.70) {$q_{2}$};
+  \node[state,accepting] (q3) at (3.80,0.00) {$q_{3}$};
+  \node[state,accepting] (q4) at (5.70,0.00) {$q_{4}$};
+  \node[state,accepting] (q5) at (5.70,-1.70) {$q_{5}$};
+  \node[state,accepting] (q6) at (7.60,0.00) {$q_{6}$};
+  \node[state,accepting] (q7) at (9.50,0.00) {$q_{7}$};
+  \node[state,accepting] (q8) at (11.40,0.00) {$q_{8}$};
+  \node[state,accepting] (q9) at (13.30,0.00) {$q_{9}$};
+  \node[state,accepting] (q10) at (15.20,0.00) {$q_{10}$};
+  \node[state,accepting] (q11) at (17.10,0.00) {$q_{11}$};
+  \node[state,accepting] (q12) at (19.00,0.00) {$q_{12}$};
+  \path[->]
+    (q0) edge[] node{\scriptsize t} (q1)
+    (q0) edge[] node{\scriptsize letra $-$ \{t\}} (q2)
+    (q1) edge[] node{\scriptsize k} (q3)
+    (q1) edge[] node{\scriptsize letra $-$ \{k\}} (q5)
+    (q10) edge[] node{\scriptsize D} (q11)
+    (q11) edge[] node{\scriptsize D} (q12)
+    (q12) edge[loop above] node{\scriptsize D} (q12)
+    (q2) edge[bend right=28] node{\scriptsize letra} (q5)
+    (q3) edge[] node{\scriptsize -} (q4)
+    (q3) edge[] node{\scriptsize letra} (q5)
+    (q4) edge[] node{\scriptsize D} (q6)
+    (q5) edge[loop above] node{\scriptsize letra} (q5)
+    (q6) edge[] node{\scriptsize D} (q7)
+    (q7) edge[] node{\scriptsize D} (q8)
+    (q8) edge[] node{\scriptsize D} (q9)
+    (q9) edge[] node{\scriptsize D} (q10)
+  ;
+\end{tikzpicture}

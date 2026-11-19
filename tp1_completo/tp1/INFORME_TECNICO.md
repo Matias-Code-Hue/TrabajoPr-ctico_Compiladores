@@ -68,6 +68,41 @@ archivo.txt
 Python 3.10+, solo biblioteca estándar. El léxico no usa el módulo `re`: el AFD se construye con los algoritmos de
 clase.
 
+### 2.1 Qué tipo de procesador es: ASP con semántica separada, no un TDS
+
+Los apuntes describen dos formas de organizar un procesador de lenguaje. Este proyecto sigue la primera: un compilador
+por etapas cuyo analizador sintáctico es un analizador sintáctico predictivo (ASP) y cuya semántica es una etapa
+aparte.
+
+| Criterio | Qué dicen los apuntes | Qué hace el proyecto |
+|---|---|---|
+| Etapas | «El compilador especializa las tareas en diferentes etapas, mientras que el traductor dirigido por sintaxis las unifica» (Clase 4 §4.4). El TDS agrupa léxico, sintáctico y semántico «en un solo paso, generando el lenguaje de salida directamente» (Clase 1 §1.1.2) | Etapas separadas, cada una en su módulo: lector, AFD, corrector, parser, semántica y tabla de entidades. El léxico no conoce la gramática y el parser no calcula valoraciones |
+| Parser | El ASP usa «una pila y una tabla de análisis sintáctico M para decidir qué producción aplicar» según el no terminal y el token actual, y emite una derivación por la izquierda (Clase 8, Def. 8.1.1) | `parse(A)` decide con `M[A, a]` y emite esa misma derivación; `python3 main.py … --traza S01 --detalle` la muestra producción por producción |
+| Semántica | El ASP «no evalúa por sí mismo reglas semánticas», que «puede implementarse por separado» (Clase 8, Aclaración 8.4.1) | `semantica.py` evalúa las reglas sobre el árbol ya construido (`REGLAS_SEMANTICAS.md` §1) |
+| Salida | El TDS genera el lenguaje de salida mientras reconoce | No se traduce en una pasada: se construye el árbol, se calcula un hecho por cláusula y recién después se combina por aspecto y estado, que dependen de la sesión completa (§7.4) |
+
+**Lo que sí se toma del TDS.** La notación de la semántica: el cuadro BNF | reglas semánticas, con los atributos
+sintetizados como valor de retorno y los heredados como parámetro (Clase 2, Nota 2.1.1), que se usa en §7. Esa notación
+es la de una definición dirigida por la sintaxis; lo que el proyecto no adopta es la arquitectura de un solo paso del
+traductor dirigido por la sintaxis.
+
+**Por qué el parser es recursivo y no usa una pila explícita.**
+
+1. *Es una forma de los apuntes.* La gramática predictiva se convierte en código con una función por no terminal y
+   `match()` por terminal (Clase 1 §1.1.5; Clase 3 §3.2.2). El proyecto conserva esa estructura y reemplaza los
+   `if (preanálisis == …)` por la consulta a M.
+2. *Hay que devolver el árbol.* Los apuntes señalan que «una pila que solo contiene símbolos gramaticales no basta para
+   almacenar y devolver atributos sintetizados» y que integrar acciones semánticas en la pila exige gestionar sus valores
+   y el momento de evaluarlas; el profesor no consideró conveniente tratarlo en clase (Clase 8 §8.4.2). Con recursión,
+   el árbol sale como valor de retorno, y la semántica puede quedar en una etapa separada.
+3. *La tabla no se escribe a mano.* `gramatica.py` la calcula desde la gramática (PRIM, SGTE y M) y el parser solo la
+   consulta, así que tabla y parser no se desincronizan al cambiar una producción.
+
+**Equivalencia y límite.** Los apuntes presentan por separado el ASP con pila explícita (Def. 8.1.1) y la forma
+recursiva (§1.1.5); reunirlas es una decisión de diseño del grupo. Sobre entradas sin errores la derivación es la misma.
+La recuperación de errores aplica las reglas de la Clase 8 §8.5 (sección 6.3), con una diferencia documentada: se
+informa un error por celda vacía y no uno por token descartado.
+
 ## 3. Recorrido de una frase (caso 02)
 
 Entrada: `1 CLIENTE: Me atendiste muy bien, pero sigo sin internet.` Comando:
@@ -111,6 +146,40 @@ El scanner aplica **lexema más largo** (`TK-204` es `TICKET`, no `tk` como `PAL
 **Categoría con su ER y AFD.** `TICKET = tk- D{3,6} = tk- DDD(D(D(D)?)?)?` da un AFD de 10 estados en cadena (q0 a q9),
 con finales q6 a q9 (3 a 6 dígitos); ya es mínimo. Construcción, tabla de transiciones y trazas en
 `INFORME_lexico.md` §3. `TK-12` y `TK-1234567` dan `TICKET_MAL`.
+
+**Construcción a mano, con la convención de clase.** El mismo autómata se construyó a mano. Con la convención de
+clase, en la que la concatenación fusiona el final de un fragmento con el inicio del siguiente, el AFN de Thompson
+tiene 22 estados, del 1 (inicial) al 22 (final); cada `( … )?` se arma como `( … | ε)`. La construcción por
+subconjuntos parte de cerradura-ε({1}) y da:
+
+| Estado AFD | Conjunto del AFN | t | K | - | D | Final |
+|---|---|---|---|---|---|---|
+| A | {1} | B | Error | Error | Error | no |
+| B | {2} | Error | C | Error | Error | no |
+| C | {3} | Error | Error | D | Error | no |
+| D | {4} | Error | Error | Error | E | no |
+| E | {5} | Error | Error | Error | F | no |
+| F | {6} | Error | Error | Error | G | no |
+| G | {7, 8, 20, 21, 22} | Error | Error | Error | H | sí |
+| H | {9, 10, 17, 18, 19, 22} | Error | Error | Error | I | sí |
+| I | {11, 12, 14, 15, 16, 19, 22} | Error | Error | Error | J | sí |
+| J | {13, 16, 19, 22} | Error | Error | Error | Error | sí |
+| Error | ∅ | Error | Error | Error | Error | no |
+
+Son finales los conjuntos que contienen el estado 22 del AFN: G, H, I y J (3, 4, 5 y 6 dígitos). `K` es la `k` de
+`tk-` (el léxico pliega a minúsculas) y `D` es la clase de los dígitos.
+
+![AFD de TICKET construido a mano: estados A a J más el estado Error](figuras/afd_ticket_cuaderno.png)
+
+El grafo se genera desde `figuras/afd_ticket_cuaderno.dot` (Graphviz); `figuras/afd_ticket_cuaderno_sin_error.dot`
+es la versión sin el estado `Error`.
+
+**Coincide con el AFD del programa.** Renombrando A…J como q0…q9 se obtiene el AFD que construye `lexico.py`: las
+mismas transiciones y los mismos finales (G a J son q6 a q9). Cambian dos cosas de forma: el AFN del programa tiene 25
+estados porque une los fragmentos con transiciones ε en lugar de fusionarlos, y su estado de error es implícito
+(transición indefinida) en lugar de un estado `Error` explícito. El AFD mínimo de una ER es único salvo el nombre de los
+estados, así que la convención con la que se arma el AFN no cambia el resultado; en este caso los dos coinciden ya
+antes de minimizar.
 
 ## 5. Tabla de símbolos
 
@@ -257,10 +326,14 @@ predictiva `M` (Clase 7, §7.5) y verifica las condiciones LL(1): sin recursión
 alternativas disjuntos y, para las anulables, SGTE disjunto de los PRIM de las demás. **Resultado: ningún conflicto;
 la tabla tiene 170 celdas.**
 
-`sintaxis.py` es el analizador predictivo de la Clase 8 (§8.2) con la pila de llamadas en lugar de la pila explícita:
-un procedimiento `parse(A)` consulta `M[A, lookahead]`, emite la producción y llama a `parse()` o `match()` por cada
-símbolo del cuerpo. Así devuelve el árbol de derivación sobre el que se evalúan las reglas semánticas. Dentro de un
-turno, `EOL` cumple el papel de `$`.
+`sintaxis.py` es un **analizador predictivo recursivo guiado por la tabla M**. Toma la estructura de los apuntes
+(Clase 1 §1.1.5: un procedimiento por no terminal y `match()` por terminal), pero la decisión no sale de
+`if (preanálisis == …)` sino de `M[A, a]` (Clase 7 §7.5), como en el ASP de la Clase 8. Un único procedimiento `parse(A)`
+consulta `M[A, lookahead]`, emite la producción y llama a `parse()` o `_match()` por cada símbolo del cuerpo. Devuelve
+el árbol de derivación, que es lo que evalúa después la semántica (§2.1). Dentro de un turno, `EOL` cumple el papel
+de `$`. En una entrada sin errores, el orden en que `parse()` expande las variables es una derivación por la izquierda
+con las mismas celdas de M que usaría el ASP con pila explícita; la diferencia es de implementación: los símbolos
+pendientes están en la pila de llamadas y no en una estructura explícita.
 
 **Recuperación de errores** (Clase 8, §8.5.4): terminal esperado distinto del token → se informa sin consumir;
 `M[A, a]` vacía → se descartan tokens hasta uno de PRIM(A) ∪ SGTE(A) ∪ {EOL}; token de SGTE(A) → se abandona `A`. Una

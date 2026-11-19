@@ -1,0 +1,28 @@
+"M[A,a]",$,ADJ,ADV_T,AGENTE,CLIENTE,COMA,CORTESIA,EOL,FIN,FREC,INT,NEG,NUM,PERO,PUNTO,SE,SESION,SIN,SUST,TICKET,V_ACC,V_CONT,V_COP,V_EST,Y
+lote,,,,,,,,,,,,,,,,,lote → sesion lote_r,,,,,,,,
+lote_r,lote_r → ε,,,,,,,,,,,,,,,,lote_r → sesion lote_r,,,,,,,,
+sesion,,,,,,,,,,,,,,,,,sesion → SESION ID_SESION EOL turnos FIN EOL,,,,,,,,
+turnos,,,,,,,,,,,,,turnos → turno turnos_r,,,,,,,,,,,,
+turnos_r,,,,,,,,,turnos_r → ε,,,,turnos_r → turno turnos_r,,,,,,,,,,,,
+turno,,,,,,,,,,,,,turno → NUM rol DOSPUNTOS texto EOL,,,,,,,,,,,,
+rol,,,,rol → AGENTE,rol → CLIENTE,,,,,,,,,,,,,,,,,,,,
+texto,,,texto → oracion texto_r,texto → oracion texto_r,,,texto → oracion texto_r,,,,,texto → oracion texto_r,,,,texto → oracion texto_r,,,texto → oracion texto_r,texto → oracion texto_r,texto → oracion texto_r,texto → oracion texto_r,texto → oracion texto_r,texto → oracion texto_r,
+texto_r,,,,,,,,texto_r → ε,,,,,,,texto_r → PUNTO texto_rr,,,,,,,,,,
+texto_rr,,,texto_rr → oracion texto_r,texto_rr → oracion texto_r,,,texto_rr → oracion texto_r,texto_rr → ε,,,,texto_rr → oracion texto_r,,,,texto_rr → oracion texto_r,,,texto_rr → oracion texto_r,texto_rr → oracion texto_r,texto_rr → oracion texto_r,texto_rr → oracion texto_r,texto_rr → oracion texto_r,texto_rr → oracion texto_r,
+oracion,,,oracion → clausula cola,oracion → clausula cola,,,oracion → clausula cola,,,,,oracion → clausula cola,,,,oracion → clausula cola,,,oracion → clausula cola,oracion → clausula cola,oracion → clausula cola,oracion → clausula cola,oracion → clausula cola,oracion → clausula cola,
+cola,,,,,,cola → COMA cola_c,,cola → ε,,,,,,cola → PERO clausula cola,cola → ε,,,,,,,,,,cola → Y clausula cola
+cola_c,,,cola_c → clausula cola,cola_c → clausula cola,,,cola_c → clausula cola,,,,,cola_c → clausula cola,,cola_c → PERO clausula cola,,cola_c → clausula cola,,,cola_c → clausula cola,cola_c → clausula cola,cola_c → clausula cola,cola_c → clausula cola,cola_c → clausula cola,cola_c → clausula cola,
+clausula,,,clausula → adv_t_op nucleo frec,clausula → adv_t_op nucleo frec,,,clausula → adv_t_op nucleo frec,,,,,clausula → adv_t_op nucleo frec,,,,clausula → adv_t_op nucleo frec,,,clausula → adv_t_op nucleo frec,clausula → adv_t_op nucleo frec,clausula → adv_t_op nucleo frec,clausula → adv_t_op nucleo frec,clausula → adv_t_op nucleo frec,clausula → adv_t_op nucleo frec,
+adv_t_op,,,adv_t_op → ADV_T,adv_t_op → ε,,,adv_t_op → ε,,,,,adv_t_op → ε,,,,adv_t_op → ε,,,adv_t_op → ε,adv_t_op → ε,adv_t_op → ε,adv_t_op → ε,adv_t_op → ε,adv_t_op → ε,
+nucleo,,,,nucleo → sujeto pred_s,,,nucleo → CORTESIA,,,,,nucleo → pred_l,,,,nucleo → pred_l,,,nucleo → sujeto pred_s,nucleo → TICKET,nucleo → pred_l,nucleo → pred_l,nucleo → pred_l,nucleo → pred_l,
+sujeto,,,,sujeto → AGENTE,,,,,,,,,,,,,,,sujeto → SUST,,,,,,
+pred_s,,pred_s → modif,,,,pred_s → ε,,pred_s → ε,,pred_s → ε,pred_s → modif,pred_s → NEG pred_neg,,pred_s → ε,pred_s → ε,pred_s → SE V_EST compl,,,,pred_s → TICKET,pred_s → V_ACC obj modif_op,pred_s → V_CONT compl,pred_s → V_COP atrib,pred_s → V_EST compl,pred_s → ε
+pred_l,,,,,,,,,,,,pred_l → NEG pred_neg,,,,pred_l → SE V_EST compl sujp,,,,,pred_l → V_ACC obj modif_op,pred_l → V_CONT compl,pred_l → V_COP atrib,pred_l → V_EST compl sujp,
+pred_neg,,,,,,,,,,,,,,,,pred_neg → SE V_EST compl sujp,,,,,pred_neg → V_ACC obj modif_op,pred_neg → V_CONT compl,pred_neg → V_COP atrib,pred_neg → V_EST compl sujp,
+atrib,,atrib → modif,,,,,,,,,atrib → modif,,,,,,,,,atrib → TICKET,,,,,
+compl,,compl → modif,,,,compl → ε,,compl → ε,,compl → ε,compl → modif,,,compl → ε,compl → ε,,,compl → SIN SUST,compl → ε,,,,,,compl → ε
+sujp,,,,,,sujp → ε,,sujp → ε,,sujp → ε,,,,sujp → ε,sujp → ε,,,,sujp → SUST,,,,,,sujp → ε
+obj,,obj → ε,obj → ADV_T,,,obj → ε,,obj → ε,,obj → ε,obj → ε,,,obj → ε,obj → ε,,,,obj → SUST,obj → TICKET,,,,,obj → ε
+modif,,modif → ADJ,,,,,,,,,modif → INT ADJ,,,,,,,,,,,,,,
+modif_op,,modif_op → modif,,,,modif_op → ε,,modif_op → ε,,modif_op → ε,modif_op → modif,,,modif_op → ε,modif_op → ε,,,,,,,,,,modif_op → ε
+frec,,,,,,frec → ε,,frec → ε,,frec → FREC frec,,,,frec → ε,frec → ε,,,,,,,,,,frec → ε

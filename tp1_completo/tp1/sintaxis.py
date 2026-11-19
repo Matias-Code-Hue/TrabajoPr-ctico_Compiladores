@@ -2,8 +2,11 @@
 
 Un único procedimiento parse(A) elige la producción con M[A, lookahead] (PRIM / SGTE de clase), llama
 recursivamente a parse() por cada variable de la producción y a _match() por cada terminal.
-Es el analizador sintáctico predictivo de la Clase 8 (§8.2) con la pila de llamadas en lugar de la pila
-explícita, para poder devolver el árbol sobre el que se evalúan las reglas semánticas.
+Es un analizador predictivo RECURSIVO guiado por M: la estructura de los apuntes (Clase 1 §1.1.5, una función por
+no terminal) con la decisión tomada en M[A, a] (Clase 7 §7.5), como el ASP de la Clase 8 (§8.1 y §8.2). Los símbolos
+pendientes están en la pila de llamadas y no en una pila explícita, para poder devolver el árbol sobre el que se
+evalúan las reglas semánticas. En una entrada sin errores emite la misma derivación por la izquierda que el ASP con
+pila explícita.
 Recuperación de errores (Clase 8, §8.5.4), con EOL en el papel de $:
   · terminal esperado ≠ token      -> se informa y NO se consume entrada (se «desapila» el terminal): _match()
   · M[A, a] vacía, a ∉ SGTE(A)     -> se informa y se descartan tokens hasta uno de PRIM(A) ∪ SGTE(A) ∪ {EOL}

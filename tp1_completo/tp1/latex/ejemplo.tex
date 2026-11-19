@@ -1,0 +1,42 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,array,longtable,graphicx}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning,arrows.meta,babel}
+\newcommand{\nt}[1]{\mathit{#1}}     % variable (no terminal)
+\newcommand{\tm}[1]{\mathtt{#1}}     % terminal (categoría del léxico)
+
+\begin{document}
+\section*{Gramáticas}
+Las variables van en cursiva y los terminales (categorías del analizador léxico) en letra de máquina de escribir.
+\input{gramaticas.tex}
+
+\section*{PRIM y SGTE de la gramática final}
+{\small \input{prim_sgte.tex}}
+
+\section*{Autómatas del analizador léxico}
+\subsection*{AFN de Thompson de TICKET = tk- D\{3,6\}}
+\begin{center}\resizebox{\linewidth}{!}{\input{afd/afn_ticket.tex}}\end{center}
+
+\subsection*{AFD de TICKET (subconjuntos; ya mínimo)}
+\begin{center}\resizebox{\linewidth}{!}{\input{afd/afd_ticket.tex}}\end{center}
+
+\subsection*{AFD combinado TICKET | TICKET\_MAL (prioridad en q6-q9)}
+\begin{center}\resizebox{\linewidth}{!}{\input{afd/afd_ticket_ticketmal.tex}}\end{center}
+
+\subsection*{AFD combinado TICKET | TICKET\_MAL | PALABRA (lexema más largo)}
+\begin{center}\resizebox{\linewidth}{!}{\input{afd/afd_ticket_palabra.tex}}\end{center}
+
+\subsection*{AFD de ID\_SESION = s D D}
+\begin{center}\resizebox{\linewidth}{!}{\input{afd/afd_id_sesion.tex}}\end{center}
+
+\subsection*{AFD de NUM = D+ (subconjuntos)}
+\begin{center}\resizebox{\linewidth}{!}{\input{afd/afd_num.tex}}\end{center}
+
+\subsection*{AFD mínimo de NUM = D+}
+\begin{center}\resizebox{\linewidth}{!}{\input{afd/afd_num_min.tex}}\end{center}
+
+\end{document}

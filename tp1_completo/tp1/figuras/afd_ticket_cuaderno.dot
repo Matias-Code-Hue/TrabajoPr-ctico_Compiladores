@@ -1,0 +1,37 @@
+digraph AFD_TICKET {
+  rankdir=LR;
+  node [shape=circle, fontname="Helvetica"];
+  edge [fontname="Helvetica"];
+
+  inicio [shape=plaintext, label="inicio"];
+  inicio -> A;
+
+  G [shape=doublecircle, xlabel="r:(TICKET)"];
+  H [shape=doublecircle, xlabel="r:(TICKET)"];
+  I [shape=doublecircle, xlabel="r:(TICKET)"];
+  J [shape=doublecircle, xlabel="r:(TICKET)"];
+  Error;
+
+  A -> B [label="t"];
+  B -> C [label="K"];
+  C -> D [label="-"];
+  D -> E [label="D"];
+  E -> F [label="D"];
+  F -> G [label="D"];
+  G -> H [label="D"];
+  H -> I [label="D"];
+  I -> J [label="D"];
+
+  // transiciones al estado de error (columnas "Error" de la tabla)
+  A -> Error [label="K, -, D", constraint=false, color=gray45, fontcolor=gray35];
+  B -> Error [label="t, -, D", constraint=false, color=gray45, fontcolor=gray35];
+  C -> Error [label="t, K, D", constraint=false, color=gray45, fontcolor=gray35];
+  D -> Error [label="t, K, -", constraint=false, color=gray45, fontcolor=gray35];
+  E -> Error [label="t, K, -", constraint=false, color=gray45, fontcolor=gray35];
+  F -> Error [label="t, K, -", constraint=false, color=gray45, fontcolor=gray35];
+  G -> Error [label="t, K, -", constraint=false, color=gray45, fontcolor=gray35];
+  H -> Error [label="t, K, -", constraint=false, color=gray45, fontcolor=gray35];
+  I -> Error [label="t, K, -", constraint=false, color=gray45, fontcolor=gray35];
+  J -> Error [label="t, K, -, D", constraint=false, color=gray45, fontcolor=gray35];
+  Error -> Error [label="t, K, -, D", color=gray45, fontcolor=gray35];
+}

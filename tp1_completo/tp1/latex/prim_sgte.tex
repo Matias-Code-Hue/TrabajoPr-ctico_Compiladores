@@ -1,0 +1,32 @@
+% Generado por gramatica_latex.py (requiere \usepackage{longtable})
+\begin{longtable}{>{$}l<{$} >{\raggedright\arraybackslash$}p{6.2cm}<{$} >{\raggedright\arraybackslash$}p{6.2cm}<{$}}
+\textbf{Variable} & \textbf{PRIM} & \textbf{SGTE} \\ \hline
+\endhead
+\nt{lote} & \{\tm{SESION}\} & \{\tm{\$}\} \\
+\nt{lote\_r} & \{\tm{SESION}, \varepsilon\} & \{\tm{\$}\} \\
+\nt{sesion} & \{\tm{SESION}\} & \{\tm{\$}, \tm{SESION}\} \\
+\nt{turnos} & \{\tm{NUM}\} & \{\tm{FIN}\} \\
+\nt{turnos\_r} & \{\tm{NUM}, \varepsilon\} & \{\tm{FIN}\} \\
+\nt{turno} & \{\tm{NUM}\} & \{\tm{FIN}, \tm{NUM}\} \\
+\nt{rol} & \{\tm{AGENTE}, \tm{CLIENTE}\} & \{\tm{DOSPUNTOS}\} \\
+\nt{texto} & \{\tm{ADV\_T}, \tm{AGENTE}, \tm{CORTESIA}, \tm{NEG}, \tm{SE}, \tm{SUST}, \tm{TICKET}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}\} & \{\tm{EOL}\} \\
+\nt{texto\_r} & \{\tm{PUNTO}, \varepsilon\} & \{\tm{EOL}\} \\
+\nt{texto\_rr} & \{\tm{ADV\_T}, \tm{AGENTE}, \tm{CORTESIA}, \tm{NEG}, \tm{SE}, \tm{SUST}, \tm{TICKET}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}, \varepsilon\} & \{\tm{EOL}\} \\
+\nt{oracion} & \{\tm{ADV\_T}, \tm{AGENTE}, \tm{CORTESIA}, \tm{NEG}, \tm{SE}, \tm{SUST}, \tm{TICKET}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}\} & \{\tm{EOL}, \tm{PUNTO}\} \\
+\nt{cola} & \{\tm{COMA}, \tm{PERO}, \tm{Y}, \varepsilon\} & \{\tm{EOL}, \tm{PUNTO}\} \\
+\nt{cola\_c} & \{\tm{ADV\_T}, \tm{AGENTE}, \tm{CORTESIA}, \tm{NEG}, \tm{PERO}, \tm{SE}, \tm{SUST}, \tm{TICKET}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}\} & \{\tm{EOL}, \tm{PUNTO}\} \\
+\nt{clausula} & \{\tm{ADV\_T}, \tm{AGENTE}, \tm{CORTESIA}, \tm{NEG}, \tm{SE}, \tm{SUST}, \tm{TICKET}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}\} & \{\tm{COMA}, \tm{EOL}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\nt{adv\_t\_op} & \{\tm{ADV\_T}, \varepsilon\} & \{\tm{AGENTE}, \tm{CORTESIA}, \tm{NEG}, \tm{SE}, \tm{SUST}, \tm{TICKET}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}\} \\
+\nt{nucleo} & \{\tm{AGENTE}, \tm{CORTESIA}, \tm{NEG}, \tm{SE}, \tm{SUST}, \tm{TICKET}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}\} & \{\tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\nt{sujeto} & \{\tm{AGENTE}, \tm{SUST}\} & \{\tm{ADJ}, \tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{INT}, \tm{NEG}, \tm{PERO}, \tm{PUNTO}, \tm{SE}, \tm{TICKET}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}, \tm{Y}\} \\
+\nt{pred\_s} & \{\tm{ADJ}, \tm{INT}, \tm{NEG}, \tm{SE}, \tm{TICKET}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}, \varepsilon\} & \{\tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\nt{pred\_l} & \{\tm{NEG}, \tm{SE}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}\} & \{\tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\nt{pred\_neg} & \{\tm{SE}, \tm{V\_ACC}, \tm{V\_CONT}, \tm{V\_COP}, \tm{V\_EST}\} & \{\tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\nt{atrib} & \{\tm{ADJ}, \tm{INT}, \tm{TICKET}\} & \{\tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\nt{compl} & \{\tm{ADJ}, \tm{INT}, \tm{SIN}, \varepsilon\} & \{\tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{PERO}, \tm{PUNTO}, \tm{SUST}, \tm{Y}\} \\
+\nt{sujp} & \{\tm{SUST}, \varepsilon\} & \{\tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\nt{obj} & \{\tm{ADV\_T}, \tm{SUST}, \tm{TICKET}, \varepsilon\} & \{\tm{ADJ}, \tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{INT}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\nt{modif} & \{\tm{ADJ}, \tm{INT}\} & \{\tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{PERO}, \tm{PUNTO}, \tm{SUST}, \tm{Y}\} \\
+\nt{modif\_op} & \{\tm{ADJ}, \tm{INT}, \varepsilon\} & \{\tm{COMA}, \tm{EOL}, \tm{FREC}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\nt{frec} & \{\tm{FREC}, \varepsilon\} & \{\tm{COMA}, \tm{EOL}, \tm{PERO}, \tm{PUNTO}, \tm{Y}\} \\
+\end{longtable}

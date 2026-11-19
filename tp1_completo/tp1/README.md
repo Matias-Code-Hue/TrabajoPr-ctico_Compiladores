@@ -1,9 +1,17 @@
 # TP1 · Speech Analytics — Diseño de Compiladores (FPUNA 2026/2)
 
 Analizador determinista de conversaciones de soporte técnico de Internet. Python 3.10+, **sin dependencias externas**
-(no usa el módulo `re` en el léxico: el AFD se construye con Thompson + subconjuntos).
+(no usa el módulo `re` en el léxico: el AFD se construye con Thompson + subconjuntos). Solo el script opcional
+`grafos_afd.py` usa `matplotlib`, y únicamente para los `.png`; el analizador, las pruebas y la generación de `.dot` y
+`.tex` no lo necesitan.
 
 El funcionamiento completo, fase por fase, está en **`INFORME_TECNICO.md`**.
+
+**Qué tipo de procesador es.** Un compilador por etapas (lector, léxico, corrector, parser, semántica, entidades) cuyo
+parser es un analizador sintáctico predictivo guiado por la tabla M (Clase 8), implementado de forma recursiva para
+devolver el árbol de derivación. La semántica es una etapa aparte que evalúa reglas por producción sobre ese árbol. No
+es un traductor dirigido por la sintaxis (TDS), que unifica las etapas en un solo paso. Argumento y fuentes en
+`INFORME_TECNICO.md` §2.1.
 
 ## Ejecución
 
@@ -24,6 +32,10 @@ python3 pruebas.py --golden                          # regenera el golden (sin p
 python3 pruebas.py --informe                         # regenera RESULTADOS_PRUEBAS.md
 python3 gramatica.py                                 # PRIM, SGTE y verificación LL(1)
 python3 derivacion.py                                # derivación L0→L1→L2→L3 con diagnóstico por paso
+python3 grafos_afd.py                                # grafos de los autómatas del léxico en figuras/ (.dot, .tex y .png si hay matplotlib)
+python3 grafos_afd.py --tablas                       # + tablas de transiciones y conjuntos de subconjuntos
+python3 gramatica_latex.py                           # gramáticas, PRIM/SGTE y tabla M en LaTeX/CSV, en latex/
+python3 gramatica_latex.py --texto                   # la gramática final en texto plano, con →
 ```
 
 ## Pipeline y módulos
@@ -33,10 +45,18 @@ python3 derivacion.py                                # derivación L0→L1→L2�
 | 1. Formato | `lector.py` | `SESION Sxx` / `n ROL: texto` / `FIN`; rechaza el turno inválido y continúa en la línea siguiente; tras un **orden inconsistente** descarta el resto de la sesión; rechaza ids de sesión repetidos; normaliza a NFC y tolera BOM |
 | 2. Léxico | `lexico.py`, `tabla_lexica.py` | ER → AFN → AFD sobre el diccionario de la **tabla de símbolos léxica** (16 categorías); lexema más largo + prioridad; posiciones (sesión, turno, desplazamiento); normalización; `TK-` + 3 a 6 dígitos |
 | 3. Corrector | `corrector.py`, `consulta.py` | Levenshtein ≤ 1: candidato único → se corrige; **empate o sin candidato → se consulta al usuario** (elegir un candidato, insertar la palabra o mantener la regla del enunciado) |
-| 4. Parser | `gramatica.py`, `sintaxis.py` | BNF LL(1) (PRIM/SGTE calculados; 170 celdas, sin conflictos); parser predictivo guiado por la tabla; recuperación en modo pánico con SGTE |
+| 4. Parser | `gramatica.py`, `sintaxis.py` | BNF LL(1) (PRIM/SGTE calculados; 170 celdas, sin conflictos); parser predictivo recursivo guiado por la tabla M (ASP; devuelve el árbol de derivación); recuperación en modo pánico con el conjunto de sincronización PRIM ∪ SGTE ∪ {EOL} |
 | 5. Semántica | `semantica.py` | reglas por producción; el significado sale de los **rasgos** de la forma canónica (guardados en la tabla de símbolos léxica); compatibilidad sujeto–predicado; aspecto, valoración, declaración; estado y precedencia |
 | 6. Entidades | `entidades.py` | **tabla de entidades** por sesión (SESION, PARTICIPANTE, TICKET), apariciones, control de duplicados, actualización; efímera |
 | 7. Salida | `analizador.py`, `main.py` | JSON por lote + vista legible + traza |
+
+## Figuras y LaTeX
+
+| Carpeta o archivo | Contenido | Cómo se obtiene |
+|---|---|---|
+| `figuras/afn_ticket`, `afd_ticket`, `afd_ticket_ticketmal`, `afd_ticket_palabra`, `afd_id_sesion`, `afd_num`, `afd_num_min` (`.dot`, `.tex`, `.png`) | AFN de Thompson y AFD de `TICKET`, los combinados con `TICKET_MAL` y `PALABRA` (lexema más largo), `ID_SESION` y `NUM` (antes y después de minimizar) | `python3 grafos_afd.py`: se construyen con el mismo código del léxico (`lexico.thompson` y `lexico.construir`) |
+| `figuras/afd_ticket_cuaderno` y `afd_ticket_cuaderno_sin_error` (`.dot`, `.png`) | AFD de `TICKET` construido a mano con la convención de clase (AFN de 22 estados; estados A a J más `Error`; finales G a J) | transcrito de la tabla del cuaderno; **no** lo regenera `grafos_afd.py`. Para verlo en Graphviz Online, pegar el contenido del `.dot` |
+| `latex/gramaticas.tex`, `prim_sgte.tex`, `tabla_m.csv`, `afd/`, `ejemplo.tex` | gramática base y final con `→` (variables en cursiva, terminales en máquina de escribir), PRIM/SGTE, tabla M para planilla, los AFD en TikZ, y un documento que los reúne | `python3 gramatica_latex.py` genera los fuentes; `ejemplo.tex` es para compilar con LaTeX (p. ej. en Overleaf) |
 
 ## Las tablas
 
@@ -78,7 +98,7 @@ adjetivos). Si se cambia un perfil en el código, la validación de carga señal
 `pruebas.py` y el golden corren sin consultas y con la precarga, así lo aprendido en ejecuciones interactivas no
 cambia los resultados esperados.
 
-Documentación: `INFORME_TECNICO.md` (cómo funciona el proyecto, de punta a punta), `INFORME_lexico.md` (léxico, AFD de
+Documentación: `INFORME_TECNICO.md` (cómo funciona el proyecto, de punta a punta; §2.1: qué tipo de procesador es; §4: el AFD de `TICKET` también construido a mano), `INFORME_lexico.md` (léxico, AFD de
 TICKET y tabla de símbolos léxica), `GRAMATICA.md` (BNF, PRIM/SGTE, parser y recuperación), `DERIVACION.md` (pasos de la
 gramática original a la LL(1)), `REGLAS_SEMANTICAS.md` (perfiles, cuadros BNF | reglas semánticas, estado y árboles
 anotados), `RESULTADOS_PRUEBAS.md` (esperado vs obtenido por caso).
@@ -102,6 +122,7 @@ anotados), `RESULTADOS_PRUEBAS.md` (esperado vs obtenido por caso).
 12. **Rasgos en la tabla de símbolos léxica; perfiles cerrados**: la tabla tiene tres niveles (categoría → forma canónica → formas superficiales) y cada forma canónica guarda sus rasgos. Las combinaciones válidas de rasgos son los perfiles del código. La gramática usa categorías generales (19 terminales en el texto) y una palabra nueva no requiere tocarla (ver la justificación en «Las tablas»).
 13. **Compatibilidad sujeto–predicado** (`R-COMPAT`): la gramática acepta «el agente se corta», pero la semántica no lo interpreta. Es el chequeo de tipos: tabla `COMPAT` en `semantica.py`. También verifica que «se» vaya solo con un verbo de rasgo `pronominal` (perfil RECUR) («el agente corta la llamada» se abstiene).
 14. **`SIN_DOMINIO`**: una palabra reconocida pero sin significado para el dominio («hace», «ruido») ocupa su lugar en el árbol y la cláusula se abstiene (R-SINDOM). Así no se «pegan» las palabras restantes en una valoración inventada.
+15. **Procesador por etapas con parser ASP, no un TDS**: léxico, corrector, parser, semántica y tabla de entidades son etapas separadas (Clase 4 §4.4: el compilador especializa las etapas, el TDS las unifica). El parser decide con la tabla M (ASP, Clase 8) pero es recursivo, para devolver el árbol de derivación; la semántica evalúa sobre ese árbol (Clase 8, Aclaración 8.4.1). Detalle y fuentes: `INFORME_TECNICO.md` §2.1.
 
 ## Dónde tocar en una modificación de reglas (defensa)
 
@@ -117,6 +138,7 @@ anotados), `RESULTADOS_PRUEBAS.md` (esperado vs obtenido por caso).
 | criterio de estado | `semantica.py`, `decidir_estado` |
 | precedencia promesa del agente / declaración del cliente | interruptor `LO_ULTIMO_PREVALECE` en `semantica.py` |
 | distancia o longitud mínima de corrección | `corrector.py` (`MIN_LONG`, `== 1`) |
+| qué se descarta al recuperarse de un error sintáctico | `sintaxis.py`, `sincronizacion()` (PRIM ∪ SGTE ∪ {EOL}) |
 | nueva construcción lingüística | `gramatica.py` + regla en `semantica.py`; luego `python3 gramatica.py` debe seguir sin conflictos |
 
 Tras cualquier cambio: `python3 pruebas.py --regresion`. Una mutación (p. ej. MIXTA promediada a POSITIVA) hace fallar los casos 01, 03, 07, 10, 12, 13, 16, 17, 18 y 19.

@@ -1,0 +1,14 @@
+% titulo: AFD de ID_SESION = s D D
+% requiere \usetikzlibrary{automata,positioning,arrows.meta}
+\begin{tikzpicture}[shorten >=1pt, auto, >={Stealth[round]},
+                    every state/.style={minimum size=8mm, inner sep=1pt}]
+  \node[state,initial] (q0) at (0.00,0.00) {$q_{0}$};
+  \node[state] (q1) at (1.90,0.00) {$q_{1}$};
+  \node[state] (q2) at (3.80,0.00) {$q_{2}$};
+  \node[state,accepting] (q3) at (5.70,0.00) {$q_{3}$};
+  \path[->]
+    (q0) edge[] node{\scriptsize s} (q1)
+    (q1) edge[] node{\scriptsize D} (q2)
+    (q2) edge[] node{\scriptsize D} (q3)
+  ;
+\end{tikzpicture}

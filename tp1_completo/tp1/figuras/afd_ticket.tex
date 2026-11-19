@@ -1,0 +1,26 @@
+% titulo: AFD de TICKET (subconjuntos; ya mínimo)
+% requiere \usetikzlibrary{automata,positioning,arrows.meta}
+\begin{tikzpicture}[shorten >=1pt, auto, >={Stealth[round]},
+                    every state/.style={minimum size=8mm, inner sep=1pt}]
+  \node[state,initial] (q0) at (0.00,0.00) {$q_{0}$};
+  \node[state] (q1) at (1.90,0.00) {$q_{1}$};
+  \node[state] (q2) at (3.80,0.00) {$q_{2}$};
+  \node[state] (q3) at (5.70,0.00) {$q_{3}$};
+  \node[state] (q4) at (7.60,0.00) {$q_{4}$};
+  \node[state] (q5) at (9.50,0.00) {$q_{5}$};
+  \node[state,accepting] (q6) at (11.40,0.00) {$q_{6}$};
+  \node[state,accepting] (q7) at (13.30,0.00) {$q_{7}$};
+  \node[state,accepting] (q8) at (15.20,0.00) {$q_{8}$};
+  \node[state,accepting] (q9) at (17.10,0.00) {$q_{9}$};
+  \path[->]
+    (q0) edge[] node{\scriptsize t} (q1)
+    (q1) edge[] node{\scriptsize k} (q2)
+    (q2) edge[] node{\scriptsize -} (q3)
+    (q3) edge[] node{\scriptsize D} (q4)
+    (q4) edge[] node{\scriptsize D} (q5)
+    (q5) edge[] node{\scriptsize D} (q6)
+    (q6) edge[] node{\scriptsize D} (q7)
+    (q7) edge[] node{\scriptsize D} (q8)
+    (q8) edge[] node{\scriptsize D} (q9)
+  ;
+\end{tikzpicture}

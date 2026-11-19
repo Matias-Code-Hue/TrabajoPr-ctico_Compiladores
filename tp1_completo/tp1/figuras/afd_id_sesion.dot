@@ -1,0 +1,12 @@
+digraph "AFD de ID_SESION = s D D" {
+  rankdir=LR; node [shape=circle, fontname="Helvetica"];
+  edge [fontname="Helvetica"]; __ini [shape=point, label=""];
+  q0 [shape=circle];
+  q1 [shape=circle];
+  q2 [shape=circle];
+  q3 [shape=doublecircle, xlabel="ID_SESION"];
+  __ini -> q0;
+  q0 -> q1 [label="s"];
+  q1 -> q2 [label="D"];
+  q2 -> q3 [label="D"];
+}

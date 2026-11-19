@@ -1,56 +1,149 @@
 {
   "lote": {
-    "archivo": "./casos/caso_08.txt",
-    "sesiones": 1,
+    "archivo": "./casos/caso_07.txt",
+    "sesiones": 2,
     "completas": 1,
-    "parciales": 0
+    "parciales": 1
   },
   "sesiones": [
     {
       "id": "S01",
-      "analisis": "COMPLETO",
+      "analisis": "PARCIAL",
       "turnos": [
         {
           "numero": 1,
           "rol": "CLIENTE",
           "linea": 2,
-          "texto": "servicia",
+          "texto": "El servicio está lento.",
           "tokens": [
             {
+              "categoria": "RELLENO",
+              "lexema": "El",
+              "normalizado": "el",
+              "canonico": "ART",
+              "desp": 11
+            },
+            {
               "categoria": "SUST",
-              "lexema": "servicia",
+              "lexema": "servicio",
               "normalizado": "servicio",
               "canonico": "SERVICIO",
-              "desp": 11,
-              "corregido_de": "servicia"
+              "desp": 14
+            },
+            {
+              "categoria": "V_COP",
+              "lexema": "está",
+              "normalizado": "esta",
+              "canonico": "SER_ESTAR",
+              "desp": 23
+            },
+            {
+              "categoria": "ADJ",
+              "lexema": "lento",
+              "normalizado": "lento",
+              "canonico": "LENTO",
+              "desp": 28
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 33
             }
           ],
-          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«servicia»]]]]]",
+          "estructura": "texto[oracion[clausula[nucleo[sujeto[SUST«servicio»] pred_s[V_COP«está» atrib[modif[ADJ«lento»]]]]]] texto_r[PUNTO«.»]]",
           "clausulas": [
             {
               "id": "C1.1",
               "turno": 1,
               "actor": "CLIENTE",
-              "fragmento": "servicia",
+              "fragmento": "El servicio está lento",
               "desde": 11,
-              "hasta": 19,
+              "hasta": 33,
               "conector": null,
-              "tipo": "MENCION",
+              "tipo": "VALORACION",
               "aspecto": "SERVICIO",
-              "valoracion": "NEUTRA",
+              "valoracion": "NEGATIVA",
               "intensidad": null,
               "negada": false,
               "declaracion": null,
               "entidades": [],
               "reglas": [
                 "R-SUJ",
-                "R-MEN"
+                "R-COP"
               ],
               "temporal": null
             }
           ],
           "valoraciones": {
-            "SERVICIO": "NEUTRA",
+            "SERVICIO": "NEGATIVA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        },
+        {
+          "numero": 3,
+          "rol": "CLIENTE",
+          "linea": 4,
+          "texto": "Ahora funciona bien.",
+          "tokens": [
+            {
+              "categoria": "ADV_T",
+              "lexema": "Ahora",
+              "normalizado": "ahora",
+              "canonico": "AHORA",
+              "desp": 11
+            },
+            {
+              "categoria": "V_EST",
+              "lexema": "funciona",
+              "normalizado": "funciona",
+              "canonico": "FUNCIONAR",
+              "desp": 17
+            },
+            {
+              "categoria": "ADJ",
+              "lexema": "bien",
+              "normalizado": "bien",
+              "canonico": "BUENO",
+              "desp": 26
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 30
+            }
+          ],
+          "estructura": "texto[oracion[clausula[adv_t_op[ADV_T«Ahora»] nucleo[pred_l[V_EST«funciona» compl[modif[ADJ«bien»]]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C3.1",
+              "turno": 3,
+              "actor": "CLIENTE",
+              "fragmento": "Ahora funciona bien",
+              "desde": 11,
+              "hasta": 30,
+              "conector": null,
+              "tipo": "FUNCIONAMIENTO",
+              "aspecto": "SERVICIO",
+              "valoracion": "POSITIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": "OK",
+              "entidades": [],
+              "reglas": [
+                "R-EST",
+                "R-AHORA"
+              ],
+              "temporal": "AHORA"
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "POSITIVA",
             "ATENCION": "SIN_EVIDENCIA",
             "CLARIDAD": "SIN_EVIDENCIA"
           },
@@ -59,7 +152,183 @@
       ],
       "resumen_aspectos": {
         "SERVICIO": {
-          "valoracion": "NEUTRA",
+          "valoracion": "MIXTA",
+          "evidencias": [
+            "C1.1",
+            "C3.1"
+          ],
+          "opiniones_agente": []
+        },
+        "ATENCION": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        },
+        "CLARIDAD": {
+          "valoracion": "SIN_EVIDENCIA",
+          "evidencias": [],
+          "opiniones_agente": []
+        }
+      },
+      "estado": {
+        "valor": "RESUELTO",
+        "regla": "R-EST-RES",
+        "evidencias": [
+          "C3.1"
+        ]
+      },
+      "entidades": {
+        "participantes": [
+          {
+            "tipo": "PARTICIPANTE",
+            "clave": "CLIENTE",
+            "apariciones": [
+              {
+                "turno": 1,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              },
+              {
+                "turno": 3,
+                "desp": 2,
+                "lexema": "CLIENTE"
+              }
+            ],
+            "atributos": {}
+          }
+        ],
+        "tickets": []
+      },
+      "correcciones": [],
+      "errores": [
+        {
+          "tipo": "FORMATO",
+          "linea": 3,
+          "codigo": "ROL_INVALIDO",
+          "detalle": "rol 'SOPORTE': debe ser CLIENTE o AGENTE",
+          "contenido": "2 SOPORTE: Reinicie el router."
+        }
+      ],
+      "no_interpretado": [],
+      "evidencias": [
+        {
+          "id": "C1.1",
+          "turno": 1,
+          "actor": "CLIENTE",
+          "fragmento": "El servicio está lento",
+          "desde": 11,
+          "hasta": 33,
+          "conector": null,
+          "tipo": "VALORACION",
+          "aspecto": "SERVICIO",
+          "valoracion": "NEGATIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": null,
+          "entidades": [],
+          "reglas": [
+            "R-SUJ",
+            "R-COP"
+          ],
+          "temporal": null
+        },
+        {
+          "id": "C3.1",
+          "turno": 3,
+          "actor": "CLIENTE",
+          "fragmento": "Ahora funciona bien",
+          "desde": 11,
+          "hasta": 30,
+          "conector": null,
+          "tipo": "FUNCIONAMIENTO",
+          "aspecto": "SERVICIO",
+          "valoracion": "POSITIVA",
+          "intensidad": null,
+          "negada": false,
+          "declaracion": "OK",
+          "entidades": [],
+          "reglas": [
+            "R-EST",
+            "R-AHORA"
+          ],
+          "temporal": "AHORA"
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "analisis": "COMPLETO",
+      "turnos": [
+        {
+          "numero": 1,
+          "rol": "CLIENTE",
+          "linea": 7,
+          "texto": "Sigo sin internet.",
+          "tokens": [
+            {
+              "categoria": "V_CONT",
+              "lexema": "Sigo",
+              "normalizado": "sigo",
+              "canonico": "SEGUIR",
+              "desp": 11
+            },
+            {
+              "categoria": "SIN",
+              "lexema": "sin",
+              "normalizado": "sin",
+              "canonico": "SIN",
+              "desp": 16
+            },
+            {
+              "categoria": "SUST",
+              "lexema": "internet",
+              "normalizado": "internet",
+              "canonico": "SERVICIO",
+              "desp": 20
+            },
+            {
+              "categoria": "PUNTO",
+              "lexema": ".",
+              "normalizado": ".",
+              "canonico": null,
+              "desp": 28
+            }
+          ],
+          "estructura": "texto[oracion[clausula[nucleo[pred_l[V_CONT«Sigo» compl[SIN«sin» SUST«internet»]]]]] texto_r[PUNTO«.»]]",
+          "clausulas": [
+            {
+              "id": "C1.1",
+              "turno": 1,
+              "actor": "CLIENTE",
+              "fragmento": "Sigo sin internet",
+              "desde": 11,
+              "hasta": 28,
+              "conector": null,
+              "tipo": "FUNCIONAMIENTO",
+              "aspecto": "SERVICIO",
+              "valoracion": "NEGATIVA",
+              "intensidad": null,
+              "negada": false,
+              "declaracion": "FALLA",
+              "entidades": [],
+              "reglas": [
+                "R-SEG-SIN",
+                "R-SIN"
+              ],
+              "temporal": null
+            }
+          ],
+          "valoraciones": {
+            "SERVICIO": "NEGATIVA",
+            "ATENCION": "SIN_EVIDENCIA",
+            "CLARIDAD": "SIN_EVIDENCIA"
+          },
+          "no_interpretado": []
+        }
+      ],
+      "resumen_aspectos": {
+        "SERVICIO": {
+          "valoracion": "NEGATIVA",
           "evidencias": [
             "C1.1"
           ],
@@ -77,9 +346,11 @@
         }
       },
       "estado": {
-        "valor": "NO_CONFIRMADO",
-        "regla": "R-EST-NC",
-        "evidencias": []
+        "valor": "NO_RESUELTO",
+        "regla": "R-EST-NORES",
+        "evidencias": [
+          "C1.1"
+        ]
       },
       "entidades": {
         "participantes": [
@@ -98,19 +369,7 @@
         ],
         "tickets": []
       },
-      "correcciones": [
-        {
-          "turno": 1,
-          "desp": 11,
-          "original": "servicia",
-          "normalizado": "servicia",
-          "resultado": "servicio",
-          "accion": "CORREGIDA",
-          "candidatos": [
-            "servicio"
-          ]
-        }
-      ],
+      "correcciones": [],
       "errores": [],
       "no_interpretado": [],
       "evidencias": [
@@ -118,20 +377,20 @@
           "id": "C1.1",
           "turno": 1,
           "actor": "CLIENTE",
-          "fragmento": "servicia",
+          "fragmento": "Sigo sin internet",
           "desde": 11,
-          "hasta": 19,
+          "hasta": 28,
           "conector": null,
-          "tipo": "MENCION",
+          "tipo": "FUNCIONAMIENTO",
           "aspecto": "SERVICIO",
-          "valoracion": "NEUTRA",
+          "valoracion": "NEGATIVA",
           "intensidad": null,
           "negada": false,
-          "declaracion": null,
+          "declaracion": "FALLA",
           "entidades": [],
           "reglas": [
-            "R-SUJ",
-            "R-MEN"
+            "R-SEG-SIN",
+            "R-SIN"
           ],
           "temporal": null
         }

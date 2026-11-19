@@ -1,0 +1,91 @@
+% Generado por gramatica_latex.py. Requiere las macros \nt y \tm (ver ejemplo.tex).
+
+\paragraph{Gramática de formato base (F0)}
+\[
+\begin{array}{rcl}
+  \nt{lote} & \to & \nt{lote}\;\nt{sesion} \mid \nt{sesion} \\
+  \nt{sesion} & \to & \tm{SESION}\;\tm{ID\_SESION}\;\tm{EOL}\;\nt{turnos}\;\tm{FIN}\;\tm{EOL} \\
+  \nt{turnos} & \to & \nt{turnos}\;\nt{turno} \mid \nt{turno} \\
+  \nt{turno} & \to & \tm{NUM}\;\nt{rol}\;\tm{DOSPUNTOS}\;\nt{texto}\;\tm{EOL} \\
+  \nt{rol} & \to & \tm{CLIENTE} \mid \tm{AGENTE} \\
+\end{array}
+\]
+
+\paragraph{Gramática lingüística base (L0)}
+\[
+\begin{array}{rcl}
+  \nt{texto} & \to & \nt{lista} \mid \nt{lista}\;\tm{PUNTO} \\
+  \nt{lista} & \to & \nt{lista}\;\tm{PUNTO}\;\nt{oracion} \mid \nt{oracion} \\
+  \nt{oracion} & \to & \nt{oracion}\;\nt{sep}\;\nt{clausula} \mid \nt{clausula} \\
+  \nt{sep} & \to & \tm{PERO} \mid \tm{COMA} \mid \tm{COMA}\;\tm{PERO} \\
+   & \mid & \tm{Y} \\
+  \nt{clausula} & \to & \nt{nucleo} \mid \tm{ADV\_T}\;\nt{nucleo} \mid \nt{nucleo}\;\nt{frec} \\
+   & \mid & \tm{ADV\_T}\;\nt{nucleo}\;\nt{frec} \\
+  \nt{nucleo} & \to & \nt{sujeto} \mid \nt{sujeto}\;\tm{V\_COP}\;\nt{atrib} \mid \nt{sujeto}\;\nt{modif} \\
+   & \mid & \nt{sujeto}\;\tm{TICKET} \mid \nt{sujeto}\;\nt{est} \mid \nt{sujeto}\;\tm{SE}\;\nt{est} \\
+   & \mid & \nt{sujeto}\;\tm{V\_CONT} \mid \nt{sujeto}\;\tm{V\_CONT}\;\nt{compl} \mid \nt{sujeto}\;\nt{acc} \\
+   & \mid & \nt{sujeto}\;\tm{NEG}\;\nt{pred\_neg} \mid \nt{pred\_l} \mid \tm{TICKET} \\
+   & \mid & \tm{CORTESIA} \\
+  \nt{pred\_l} & \to & \tm{NEG}\;\nt{pred\_neg} \mid \tm{V\_COP}\;\nt{atrib} \mid \nt{est} \\
+   & \mid & \nt{est}\;\tm{SUST} \mid \tm{SE}\;\nt{est} \mid \tm{SE}\;\nt{est}\;\tm{SUST} \\
+   & \mid & \tm{V\_CONT} \mid \tm{V\_CONT}\;\nt{compl} \mid \nt{acc} \\
+  \nt{pred\_neg} & \to & \tm{V\_COP}\;\nt{atrib} \mid \nt{est} \mid \nt{est}\;\tm{SUST} \\
+   & \mid & \tm{SE}\;\nt{est} \mid \tm{SE}\;\nt{est}\;\tm{SUST} \mid \tm{V\_CONT} \\
+   & \mid & \tm{V\_CONT}\;\nt{compl} \mid \nt{acc} \\
+  \nt{est} & \to & \tm{V\_EST} \mid \tm{V\_EST}\;\nt{compl} \\
+  \nt{acc} & \to & \tm{V\_ACC} \mid \tm{V\_ACC}\;\nt{obj} \mid \tm{V\_ACC}\;\nt{modif} \\
+   & \mid & \tm{V\_ACC}\;\nt{obj}\;\nt{modif} \\
+  \nt{compl} & \to & \nt{modif} \mid \tm{SIN}\;\tm{SUST} \\
+  \nt{obj} & \to & \tm{SUST} \mid \tm{TICKET} \mid \tm{ADV\_T} \\
+  \nt{sujeto} & \to & \tm{SUST} \mid \tm{AGENTE} \\
+  \nt{atrib} & \to & \nt{modif} \mid \tm{TICKET} \\
+  \nt{modif} & \to & \tm{INT}\;\tm{ADJ} \mid \tm{ADJ} \\
+  \nt{frec} & \to & \nt{frec}\;\tm{FREC} \mid \tm{FREC} \\
+\end{array}
+\]
+
+\paragraph{Gramática de formato final LL(1) (F1)}
+\[
+\begin{array}{rcl}
+  \nt{lote} & \to & \nt{sesion}\;\nt{lote\_r} \\
+  \nt{lote\_r} & \to & \nt{sesion}\;\nt{lote\_r} \mid \varepsilon \\
+  \nt{sesion} & \to & \tm{SESION}\;\tm{ID\_SESION}\;\tm{EOL}\;\nt{turnos}\;\tm{FIN}\;\tm{EOL} \\
+  \nt{turnos} & \to & \nt{turno}\;\nt{turnos\_r} \\
+  \nt{turnos\_r} & \to & \nt{turno}\;\nt{turnos\_r} \mid \varepsilon \\
+  \nt{turno} & \to & \tm{NUM}\;\nt{rol}\;\tm{DOSPUNTOS}\;\nt{texto}\;\tm{EOL} \\
+  \nt{rol} & \to & \tm{CLIENTE} \mid \tm{AGENTE} \\
+\end{array}
+\]
+
+\paragraph{Gramática lingüística final LL(1) (L3)}
+\[
+\begin{array}{rcl}
+  \nt{texto} & \to & \nt{oracion}\;\nt{texto\_r} \\
+  \nt{texto\_r} & \to & \tm{PUNTO}\;\nt{texto\_rr} \mid \varepsilon \\
+  \nt{texto\_rr} & \to & \nt{oracion}\;\nt{texto\_r} \mid \varepsilon \\
+  \nt{oracion} & \to & \nt{clausula}\;\nt{cola} \\
+  \nt{cola} & \to & \tm{PERO}\;\nt{clausula}\;\nt{cola} \mid \tm{COMA}\;\nt{cola\_c} \mid \tm{Y}\;\nt{clausula}\;\nt{cola} \\
+   & \mid & \varepsilon \\
+  \nt{cola\_c} & \to & \tm{PERO}\;\nt{clausula}\;\nt{cola} \mid \nt{clausula}\;\nt{cola} \\
+  \nt{clausula} & \to & \nt{adv\_t\_op}\;\nt{nucleo}\;\nt{frec} \\
+  \nt{adv\_t\_op} & \to & \tm{ADV\_T} \mid \varepsilon \\
+  \nt{nucleo} & \to & \nt{sujeto}\;\nt{pred\_s} \mid \nt{pred\_l} \mid \tm{TICKET} \\
+   & \mid & \tm{CORTESIA} \\
+  \nt{sujeto} & \to & \tm{SUST} \mid \tm{AGENTE} \\
+  \nt{pred\_s} & \to & \tm{NEG}\;\nt{pred\_neg} \mid \tm{V\_COP}\;\nt{atrib} \mid \tm{V\_EST}\;\nt{compl} \\
+   & \mid & \tm{SE}\;\tm{V\_EST}\;\nt{compl} \mid \tm{V\_CONT}\;\nt{compl} \mid \tm{V\_ACC}\;\nt{obj}\;\nt{modif\_op} \\
+   & \mid & \nt{modif} \mid \tm{TICKET} \mid \varepsilon \\
+  \nt{pred\_l} & \to & \tm{NEG}\;\nt{pred\_neg} \mid \tm{V\_COP}\;\nt{atrib} \mid \tm{V\_EST}\;\nt{compl}\;\nt{sujp} \\
+   & \mid & \tm{SE}\;\tm{V\_EST}\;\nt{compl}\;\nt{sujp} \mid \tm{V\_CONT}\;\nt{compl} \mid \tm{V\_ACC}\;\nt{obj}\;\nt{modif\_op} \\
+  \nt{pred\_neg} & \to & \tm{V\_COP}\;\nt{atrib} \mid \tm{V\_EST}\;\nt{compl}\;\nt{sujp} \mid \tm{SE}\;\tm{V\_EST}\;\nt{compl}\;\nt{sujp} \\
+   & \mid & \tm{V\_CONT}\;\nt{compl} \mid \tm{V\_ACC}\;\nt{obj}\;\nt{modif\_op} \\
+  \nt{atrib} & \to & \nt{modif} \mid \tm{TICKET} \\
+  \nt{compl} & \to & \nt{modif} \mid \tm{SIN}\;\tm{SUST} \mid \varepsilon \\
+  \nt{sujp} & \to & \tm{SUST} \mid \varepsilon \\
+  \nt{obj} & \to & \tm{SUST} \mid \tm{TICKET} \mid \tm{ADV\_T} \\
+   & \mid & \varepsilon \\
+  \nt{modif} & \to & \tm{INT}\;\tm{ADJ} \mid \tm{ADJ} \\
+  \nt{modif\_op} & \to & \nt{modif} \mid \varepsilon \\
+  \nt{frec} & \to & \tm{FREC}\;\nt{frec} \mid \varepsilon \\
+\end{array}
+\]

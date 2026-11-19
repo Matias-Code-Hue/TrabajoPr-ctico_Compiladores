@@ -45,7 +45,7 @@
             "lenta",
             "lento"
           ],
-          "desp": 11,
+          "desp": 32,
           "normalizado": "lent",
           "original": "lent",
           "resultado": "lent",
@@ -80,6 +80,24 @@
       "no_interpretado": [
         {
           "desp": 11,
+          "lexema": "El",
+          "motivo": "PALABRA_DESCONOCIDA",
+          "turno": 1
+        },
+        {
+          "desp": 14,
+          "lexema": "internet",
+          "motivo": "PALABRA_DESCONOCIDA",
+          "turno": 1
+        },
+        {
+          "desp": 23,
+          "lexema": "funciona",
+          "motivo": "PALABRA_DESCONOCIDA",
+          "turno": 1
+        },
+        {
+          "desp": 32,
           "lexema": "lent",
           "motivo": "EMPATE_LEVENSHTEIN",
           "turno": 1
@@ -110,6 +128,24 @@
           "no_interpretado": [
             {
               "desp": 11,
+              "lexema": "El",
+              "motivo": "PALABRA_DESCONOCIDA",
+              "turno": 1
+            },
+            {
+              "desp": 14,
+              "lexema": "internet",
+              "motivo": "PALABRA_DESCONOCIDA",
+              "turno": 1
+            },
+            {
+              "desp": 23,
+              "lexema": "funciona",
+              "motivo": "PALABRA_DESCONOCIDA",
+              "turno": 1
+            },
+            {
+              "desp": 32,
               "lexema": "lent",
               "motivo": "EMPATE_LEVENSHTEIN",
               "turno": 1
@@ -117,12 +153,33 @@
           ],
           "numero": 1,
           "rol": "CLIENTE",
-          "texto": "lent",
+          "texto": "El internet funciona lent",
           "tokens": [
             {
               "canonico": null,
               "categoria": "PALABRA",
               "desp": 11,
+              "lexema": "El",
+              "normalizado": "el"
+            },
+            {
+              "canonico": null,
+              "categoria": "PALABRA",
+              "desp": 14,
+              "lexema": "internet",
+              "normalizado": "internet"
+            },
+            {
+              "canonico": null,
+              "categoria": "PALABRA",
+              "desp": 23,
+              "lexema": "funciona",
+              "normalizado": "funciona"
+            },
+            {
+              "canonico": null,
+              "categoria": "PALABRA",
+              "desp": 32,
               "lexema": "lent",
               "normalizado": "lent"
             }
